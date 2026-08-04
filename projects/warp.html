@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WARP: Consumer Privacy Overhaul — case study by Tc.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;1,6..144,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/tokens.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>WARP — Tc</title>
+</head>
+<body>
+    <div class="page">
+        <header class="site-header" data-site-header></header>
+
+        <article class="project-page case-study">
+
+            <header class="case-header">
+                <h1>WARP: Consumer Privacy Overhaul</h1>
+                <div class="tag-group"><span class="chip">Consumer B2C</span><span class="chip">Mobile</span><span class="chip">0-to-1 Redesign</span><span class="chip">Rebrand &amp; UXUI</span><span class="chip">User research</span></div>
+                <p>WARP is the complete redesign of 1.1.1.1—Cloudflare’s flagship consumer mobile app, built to democratize internet privacy. </p>
+<p>At the time, the app was already operating at massive global scale with over 15 million installs and nearly 7 million Daily Active Users. But its user base was almost entirely technical—mostly software engineers and site owners. Cloudflare’s vision was much bigger: we wanted to protect privacy for everyday users, for free. </p>
+<p>Embedded in the small product team, I was fortunate to run a true &#x27;dream design process&#x27;. I worked alongside one PM and one Engineer to bridge that gap—transforming a bare-bones technical utility into an accessible, intuitive mobile experience for a broad global audience</p>
+                <figure class="case-figure">
+                    <div class="case-media">
+                        <img src="../assets/projects/warp/cover.png" alt="WARP final design" loading="lazy">
+                    </div>
+                    <figcaption class="case-caption">Final Design</figcaption>
+                </figure>
+            </header>
+            <dl class="case-meta">
+<div>
+                    <dt>Role <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
+                    <dd>Lead product designer</dd>
+                </div>
+<div>
+                    <dt>Timeline <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
+                    <dd>10 month (2023-2024)</dd>
+                </div>
+<div>
+                    <dt>Scope <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
+                    <dd>End-to-end product design<br>
+Visual &amp; UI design</dd>
+                </div>
+<div>
+                    <dt>Deliverables <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
+                    <dd>Mobile (Android &amp; iOS)</dd>
+                </div>
+<div>
+                    <dt>Core team <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
+                    <dd>1 Product manager<br>
+1 Engineer</dd>
+                </div>
+<div>
+                    <dt>Extended team <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
+                    <dd>Content Designer, User researcher, Creative director, Animator</dd>
+                </div>
+</dl>
+            <section class="case-section">
+                <h2>The Goal</h2>
+                <p>Originally launched as 1.1.1.1, the legacy app was engineered strictly for technical users who is familiar with Cloudflare and internet security. Expanding to a broader consumer audience created immediate friction: technical jargon alienated non-technical users, leaving them confused about what the app did or whether they were actively protected.</p>
+<p>My goal was to lead an end-to-end product redesign and rebrand—translating complex backend routing into an intuitive, transparent, and delightful consumer mobile experience for millions of global users.</p>
+                <figure class="case-figure">
+                    <div class="case-media">
+                        <img src="../assets/projects/warp/goal.png" alt="Legacy 1.1.1.1 app" loading="lazy">
+                    </div>
+                    <figcaption class="case-caption">Legacy Design_The 1.1.1.1 App</figcaption>
+                </figure>
+            </section>
+            <section class="case-section">
+                <h2>Initial Survey &amp; Painpoints</h2>
+                <p>To validate our initial hypotheses and establish a quantitative baseline, we partnered with UX Research to launch a initial surveys directly to active users via our Discord community. </p>
+<p>To synthesize these research insights into an actionable roadmap, we ran a cross-functional journey-mapping workshop with cross-functional partners. Together, we mapped the complete user lifecycle across six key stages: Discovery, connection, settings, troubleshooting, upgrade, and churn.</p>
+<p>Overlaying survey data onto this journey immediately exposed the the top critical friction points. Below are the top four that I want to highlight in this case study.</p>
+                <div class="case-insight-grid" role="list" aria-label="Top friction points">
+                    <article class="case-insight" role="listitem">
+                        <h3>1. Missing Onboarding Context</h3>
+                        <p>The legacy app dropped users directly onto a toggle switch with zero context, value proposition, or expectation-setting.</p>
+                    </article>
+                    <article class="case-insight" role="listitem">
+                        <h3>2. Confusing Protection Modes</h3>
+                        <p>Technical terminology (1.1.1.1 vs. WARP) left users confused about what they are and when to use what.</p>
+                    </article>
+                    <article class="case-insight" role="listitem">
+                        <h3>3. Absence of Value Proof</h3>
+                        <p>Protection ran silently in the background without stats or feedback, leading users to wonder whether the app was adding value.</p>
+                    </article>
+                    <article class="case-insight" role="listitem">
+                        <h3>4. Unclear Errors &amp; Feedback Noise</h3>
+                        <p>Unclear error states caused churn and flooded internal support with unhelpful, unstructured bug reports.</p>
+                    </article>
+                </div>
+            </section>
+            <section class="case-section">
+                <h2>1. Onboarding</h2>
+                <p>The legacy 1.1.1.1 app dropped new users directly onto a single toggle button with zero context, forcing them to guess what the product actually did.</p>
+                <p>To establish clear expectations around privacy, speed, and trust before asking for system permissions, we designed an approachable 3-step onboarding flow to highlight the value propositions.</p>
+                <p>After exploring multiple illustration directions, internal feedback showed that literal concepts were significantly more intuitive. Based on these insights, I pivoted away from abstract metaphors toward clear, human-relatable illustrations.</p>
+                <figure class="case-figure">
+                    <div class="case-media">
+                        <img src="../assets/projects/warp/onboarding-a.png" alt="Onboarding visual exploration from abstract to literal" loading="lazy">
+                    </div>
+                    <figcaption class="case-caption">Onboarding Visual Exploration</figcaption>
+                </figure>
+                <div class="case-callout">
+                    <h3 class="case-callout-label">
+                        <img src="../assets/icons/seal-check.svg" alt="" width="24" height="24">
+                        Validation
+                    </h3>
+                    <p>With the new illustration style, I validated the new onboarding flow through unmoderated user testing. Onboarding completion took an average of just 7 seconds with an extremely high task success rate. Users found the concepts easy to understand and noted that the app felt secure and trustworthy.</p>
+                </div>
+                <figure class="case-figure">
+                    <div class="case-media">
+                        <img src="../assets/projects/warp/onboarding-b.png" alt="Final onboarding design screens" loading="lazy">
+                    </div>
+                    <figcaption class="case-caption">Onboarding Design</figcaption>
+                </figure>
+            </section>
+            <section class="case-section">
+                <h2>2. Protection Modes</h2>
+                <p>In the legacy design, protection modes were hidden behind a hamburger menu and used product names like 1.1.1.1 and WARP that meant nothing to everyday users.</p>
+                <p>Working with Content Design, we translated complex network concepts (DNS resolvers vs. encrypted tunnels) into simple mental models: Basic Protection and Full Protection, supported by an bottom sheet for details.</p>
+                <figure class="case-figure">
+                    <div class="case-media case-media--bleed">
+                        <img src="../assets/projects/warp/modes-a.png" alt="Protection Modes Exploration — five grayscale mobile UI iterations, winner marked" loading="lazy">
+                    </div>
+                    <figcaption class="case-caption">Protection Modes Exploration</figcaption>
+                </figure>
+                <div class="case-callout">
+                    <h3 class="case-callout-label">
+                        <img src="../assets/icons/seal-check.svg" alt="" width="24" height="24">
+                        Validation
+                    </h3>
+                    <p>I explored a few design directions and ran unmoderated testing to compare 3 concepts on comprehension and task completion. The winning design was clear: it achieved a higher success rate with zero misclicks, and users could easily explain what each mode meant in their own words.</p>
+                </div>
+                <p>Based on the winning concept, I developed the visual language to clearly communicate different levels of protection. For WARP+, our paid subscription tier, we drew inspiration from user research: participants fondly remembered the space theme from the legacy app. We honored that feedback by modernizing the space aesthetic to create a distinct, premium look for the redesign</p>
+                <figure class="case-figure">
+                    <div class="case-media case-media--bleed">
+                        <img src="../assets/projects/warp/modes-b.png" alt="Protection Modes Design — Disconnected, Basic Protection, Full Protection, and WARP+ screens" loading="lazy">
+                    </div>
+                    <figcaption class="case-caption">Protection Modes Design</figcaption>
+                </figure>
+            </section>
+            <section class="case-section">
+                <h2>3. Insights</h2>
+                <p>One of the biggest challenge from the user the &#x27;Invisible Value&#x27;. Because the application run quietly in the background, users couldn&#x27;t tell whether the app was actively protecting them.</p>
+<p>To solve this, I designed the Insights tab to provide real-time, tangible &#x27;proof of work&#x27;. While engineering had data pipelines for dozens of metrics, surfeiting them all would have created massive cognitive overload. I collaborated with PM and Engineering to select the most intuitive, high-value metrics for MVP—ensuring we provided clear proof of protection without overwhelming the user.</p>
+                <figure class="case-figure">
+                    <div class="case-media">
+                        <img src="../assets/projects/warp/insights.png" alt="Insights" loading="lazy">
+                    </div>
+                    <figcaption class="case-caption">Insights</figcaption>
+                </figure>
+            </section>
+            <section class="case-section">
+                <h2>4. Error &amp; Feedback</h2>
+                <p>Whenever a bug or network drop occurred, users lost connection. In the legacy app, error screens were cold and vague, making users assume the app was broken—which led directly to high drop-offs and uninstalls.</p>
+                <p>To fix this, I collaborated with Engineering to establish a 4-level error system with background auto-retry logic, and partnered with a Content Designer to rewrite error messages in plain, human language. If a user taps &#x27;retry&#x27;, we rotate the illustration so they know the app is not broken.</p>
+                <p>To soften the moment of failure, I picked a series of playful &#x27;guilty dog&#x27; characters to eases user frustration and asks for forgiveness—giving users a reason to granting the app one more chance to recover rather than immediately rage-quitting or uninstalling.</p>
+                <figure class="case-figure">
+                    <div class="case-media case-media--bleed">
+                        <img src="../assets/projects/warp/errors-a.png" alt="Errors" loading="lazy">
+                    </div>
+                    <figcaption class="case-caption">Errors</figcaption>
+                </figure>
+                <p>When an error persists and cannot auto-resolve, users can to report an issue or bug.</p>
+                <p>The Challenge with the legacy experience is that high volume of unstructured feedback flooded support teams with low-value bug tickets for basic, self-resolvable issues.</p>
+                <p>To resolve a poor signal-to-noise ratio in user feedback, I redesigned the submission flow around two interventions: surfacing top-level FAQs for easy self-troubleshooting, and introducing mandatory issue categorization. This deflected routine setup tickets while providing internal teams with actionable diagnostic data to accelerate triage.</p>
+                <figure class="case-figure">
+                    <div class="case-media case-media--bleed">
+                        <img src="../assets/projects/warp/errors-b.png" alt="Feedback Submission" loading="lazy">
+                    </div>
+                    <figcaption class="case-caption">Feedback Submission</figcaption>
+                </figure>
+            </section>
+            <section class="case-section">
+                <h2>UI Architecture &amp; Craft</h2>
+                <p>To scale WARP across Android and iOS devices globally, I built a flexible, component-driven UI Kit based on Material Design principles.</p>
+<p>I extended Cloudflare&#x27;s enterprise design system by introducing an energetic Consumer Purple as the primary accent—bridging the brand&#x27;s classic enterprise blue with a consumer-friendly feel. </p>
+<p>To ensure seamless accessibility across diverse mobile environments, I established custom Dark Mode design tokens and mapped dynamic typography scaling for all screen sizes.</p>
+                <figure class="case-figure">
+                    <div class="case-media">
+                        <img src="../assets/projects/warp/ui-kit.png" alt="Theming and accessibility" loading="lazy">
+                    </div>
+                    <figcaption class="case-caption">Theming &amp; Accessibility</figcaption>
+                </figure>
+            </section>
+
+            <section class="case-section case-result">
+                <h2>Result &amp; Reflection</h2>
+                <div class="case-result-stack">
+                    <div class="case-result-row">
+                        <article class="case-result-card">
+                            <h3 class="case-label">User Validation</h3>
+                            <p>Conducted 8 rounds of moderated and unmoderated testing, proving measurable gains in usability and clarity across onboarding, connections, insights, and errors.</p>
+                        </article>
+                        <article class="case-result-card">
+                            <h3 class="case-label">Operational Readiness</h3>
+                            <p>Structured feedback forms and FAQ deflection reduced ticket noise, allowing support teams to triage incoming reports effortlessly.</p>
+                        </article>
+                    </div>
+                    <div class="case-result-row">
+                        <article class="case-result-card">
+                            <h3 class="case-label">Production Handoff</h3>
+                            <p>Shipped a production-ready TestFlight build with full component libraries and edge-case documentation.</p>
+                        </article>
+                        <article class="case-result-card">
+                            <h3 class="case-label">Brand &amp; mobile UI</h3>
+                            <p>Defined the visual style and mobile UI pattern for the only consumer mobile product at Cloudflare.</p>
+                        </article>
+                    </div>
+                    <aside class="case-takeaway">
+                        <div class="case-takeaway-heading">
+                            <img src="../assets/icons/star-four.svg" width="32" height="32" alt="" aria-hidden="true">
+                            <h3 class="case-label">My Takeaway</h3>
+                        </div>
+                        <p>Craft and moments of delight truly matter. When working in B2B security, it’s easy to get buried in complex technical flows or standard design systems. But introducing thoughtful micro-interactions and visual craft reminds us that behind every complex B2B interface is a human user—and a little delight goes a long way in turning technical friction into trust.</p>
+                    </aside>
+                </div>
+            </section>
+
+
+            <a class="case-next" href="global-icon-system.html">
+                <div class="case-next-flowers" aria-hidden="true">
+                    <img src="../assets/hero/v2/flower.svg" alt="" width="41" height="40">
+                    <img src="../assets/hero/v2/flower.svg" alt="" width="41" height="40">
+                    <img src="../assets/hero/v2/flower.svg" alt="" width="41" height="40">
+                </div>
+                <p>You made it to the bottom!</p>
+                <p>Keep exploring: <span class="case-next-title">Global Icon System</span></p>
+            </a>
+        </article>
+
+        <footer class="site-footer" data-site-footer></footer>
+    </div>
+    <script src="../js/site-chrome.js" data-base="../"></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+/**
+ * Design tokens — Portfolio-2026
+ * Source: Figma Hl0bLM3P7zlajkoFtyNDTm (Work + project frames)
+ */
+
+:root {
+  /* ——— Color primitives ——— */
+  --color-white: #ffffff;
+  --color-cream: #fff6ec;
+  --color-note: #fffbde;
+  --color-peach: #ffd4b8;
+  --color-tape: #fedc00;
+  --color-hat: #fbad41;
+  --color-hat-stripe: #ea8800;
+  --color-orange: #ff873f;
+  --color-pom: #ea5400;
+  --color-accent: #ff5959;
+  --color-outline: #c38d6d;
+  --color-brow: #a26e51;
+  /* Figma Black styles */
+  --color-black-strong: #333333;
+  --color-black-normal: #4d4d4d;
+  --color-black-subtle: #808080;
+  --color-black-border: #e6e6e6;
+  --color-black-background: #f7f7f7;
+
+  --color-ink: var(--color-black-strong);
+  --color-body: var(--color-black-normal);
+  --color-muted: var(--color-black-subtle);
+  --color-charcoal: #3a3a3a;
+  --color-project-fill: #e8e0dc;
+  --color-seal: #14b2ff;
+
+  /* ——— Color semantic ——— */
+  --bg: var(--color-cream);
+  --bg-soft: color-mix(in srgb, var(--color-cream) 20%, transparent);
+  --surface: var(--color-white);
+  /* Text: only Black strong / normal / subtle — no navy */
+  --text: var(--color-black-strong);
+  --text-strong: var(--color-black-strong);
+  --text-ink: var(--color-black-strong);
+  --text-body: var(--color-black-normal);
+  --text-muted: var(--color-black-subtle);
+  --text-80: var(--color-black-normal);
+  --text-66: var(--color-black-subtle);
+  --text-accent: var(--color-accent);
+  --border: var(--color-black-border);
+  --chip: var(--color-black-background);
+  --accent: var(--color-accent);
+  --note: var(--color-note);
+  --note-border: color-mix(in srgb, var(--color-outline) 60%, transparent);
+  --note-divider: color-mix(in srgb, var(--color-outline) 60%, transparent);
+  --note-shadow: color-mix(in srgb, var(--color-orange) 20%, transparent);
+  --outline: color-mix(in srgb, var(--color-outline) 60%, transparent);
+  --dog-peach: color-mix(in srgb, var(--color-peach) 60%, transparent);
+  --hat-pom: var(--color-pom);
+  --project-placeholder: var(--color-project-fill);
+
+  /* ——— Typography primitives ——— */
+  --font-sans: "Google Sans Flex", sans-serif;
+  --font-display: "Capriola", sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* ——— Text styles (from Figma Google Sans Flex) ——— */
+
+  /* Hero title — 64 Semibold / -1.28 */
+  --text-hero-size: clamp(40px, 4.5vw, 64px);
+  --text-hero-weight: var(--font-weight-semibold);
+  --text-hero-line: 1.19;
+  --text-hero-tracking: -1.28px;
+
+  /* Name accent (Tc) — Capriola SemiBold */
+  --text-name-family: var(--font-display);
+  --text-name-weight: var(--font-weight-semibold);
+  --text-name-tracking: -0.04em;
+
+  /* Page title (project h1) — 40 Semibold / -0.8 / lh ~1.252 */
+  --text-display-size: 40px;
+  --text-display-weight: var(--font-weight-semibold);
+  --text-display-line: 1.252;
+  --text-display-tracking: -0.8px;
+
+  /* Section header (h2) — 32 Semibold / -0.64 / lh ~1.252 */
+  --text-title-lg-size: 32px;
+  --text-title-lg-weight: var(--font-weight-semibold);
+  --text-title-lg-line: 1.252;
+  --text-title-lg-tracking: -0.64px;
+
+  /* Subhead / project card title — 24 Semibold / -0.48 / lh ~1.252 */
+  --text-title-md-size: 24px;
+  --text-title-md-weight: var(--font-weight-semibold);
+  --text-title-md-line: 1.252;
+  --text-title-md-tracking: -0.48px;
+
+  /* Hero / section intro — 20 Regular / -0.4 / lh 1.4 */
+  --text-body-lg-size: 20px;
+  --text-body-lg-weight: var(--font-weight-regular);
+  --text-body-lg-line: 1.4;
+  --text-body-lg-tracking: -0.4px;
+
+  /* Body — 16 Regular / -0.08 / lh ~1.45 */
+  --text-body-size: 16px;
+  --text-body-weight: var(--font-weight-regular);
+  --text-body-line: 1.45;
+  --text-body-tracking: -0.08px;
+
+  /* Label / meta / callout / nav — 16 Medium / -0.32 */
+  --text-label-size: 16px;
+  --text-label-weight: var(--font-weight-medium);
+  --text-label-line: 1.252;
+  --text-label-tracking: -0.32px;
+
+  /* Nav alias (same as label) */
+  --text-nav-size: var(--text-label-size);
+  --text-nav-weight: var(--text-label-weight);
+  --text-nav-tracking: -0.08px;
+
+  /* Image caption — 14 Regular Italic / -0.28 */
+  --text-caption-size: 14px;
+  --text-caption-weight: var(--font-weight-regular);
+  --text-caption-style: italic;
+  --text-caption-line: 1.252;
+  --text-caption-tracking: -0.28px;
+
+  /* Chip / footnote — 14 Medium / -0.28 */
+  --text-footnote-size: 14px;
+  --text-footnote-weight: var(--font-weight-medium);
+  --text-footnote-tracking: -0.28px;
+
+  /* Phase tag — 12 Regular / -0.24 */
+  --text-tag-size: 12px;
+  --text-tag-weight: var(--font-weight-regular);
+  --text-tag-tracking: -0.24px;
+
+  /* Sticky note (legacy caption size kept for hero note) */
+  --text-note-size: 12px;
+  --text-note-weight: var(--font-weight-medium);
+  --text-note-line: 16px;
+  --text-note-tracking: -0.24px;
+
+  --max: 1440px;
+}
+
+/* ——— Text style utilities ——— */
+.text-hero {
+  font-family: var(--font-sans);
+  font-size: var(--text-hero-size);
+  font-weight: var(--text-hero-weight);
+  line-height: var(--text-hero-line);
+  letter-spacing: var(--text-hero-tracking);
+}
+
+.text-name {
+  font-family: var(--text-name-family);
+  font-weight: var(--text-name-weight);
+  letter-spacing: var(--text-name-tracking);
+  color: var(--text-accent);
+}
+
+.text-display {
+  font-family: var(--font-sans);
+  font-size: var(--text-display-size);
+  font-weight: var(--text-display-weight);
+  line-height: var(--text-display-line);
+  letter-spacing: var(--text-display-tracking);
+  color: var(--text-strong);
+}
+
+.text-title-lg {
+  font-family: var(--font-sans);
+  font-size: var(--text-title-lg-size);
+  font-weight: var(--text-title-lg-weight);
+  line-height: var(--text-title-lg-line);
+  letter-spacing: var(--text-title-lg-tracking);
+  color: var(--text-strong);
+}
+
+.text-title-md {
+  font-family: var(--font-sans);
+  font-size: var(--text-title-md-size);
+  font-weight: var(--text-title-md-weight);
+  line-height: var(--text-title-md-line);
+  letter-spacing: var(--text-title-md-tracking);
+  color: var(--text-strong);
+}
+
+.text-body-lg {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-lg-size);
+  font-weight: var(--text-body-lg-weight);
+  line-height: var(--text-body-lg-line);
+  letter-spacing: var(--text-body-lg-tracking);
+  color: var(--text-body);
+}
+
+.text-body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line);
+  letter-spacing: var(--text-body-tracking);
+  color: var(--text-body);
+}
+
+.text-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-label-size);
+  font-weight: var(--text-label-weight);
+  line-height: var(--text-label-line);
+  letter-spacing: var(--text-label-tracking);
+  color: var(--text-strong);
+}
+
+.text-nav {
+  font-family: var(--font-sans);
+  font-size: var(--text-nav-size);
+  font-weight: var(--text-nav-weight);
+  letter-spacing: var(--text-nav-tracking);
+  text-transform: capitalize;
+}
+
+.text-caption {
+  font-family: var(--font-sans);
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  font-style: var(--text-caption-style);
+  line-height: var(--text-caption-line);
+  letter-spacing: var(--text-caption-tracking);
+  color: var(--text-muted);
+}
+
+.text-footnote {
+  font-family: var(--font-sans);
+  font-size: var(--text-footnote-size);
+  font-weight: var(--text-footnote-weight);
+  letter-spacing: var(--text-footnote-tracking);
+  color: var(--text-strong);
+}

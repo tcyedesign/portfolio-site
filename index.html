@@ -3,21 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tc — Senior product designer. Welcome to my creative wonderland.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>Tc's design portfolio</title>
-    <style>
-        body {
-            font-family: "Google Sans Flex", sans-serif;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;1,6..144,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/tokens.css">
+    <link rel="stylesheet" href="css/styles.css?v=hero-stars-dog-rel">
+    <title>Tc — Work</title>
 </head>
-<body class="flex h-screen items-center justify-center bg-black text-zinc-100 antialiased">
-    <div class="flex flex-col items-center text-center text-[40px] font-medium tracking-tight">
-        <span aria-hidden="true">✨</span>
-        <p>Tc's design portfolio is coming soon</p>
+<body>
+    <div class="page">
+        <header class="site-header" data-site-header></header>
+
+        <div class="hero-band">
+        <section class="hero" aria-label="Introduction">
+            <img class="hero-deco hero-cloud" src="assets/hero/v2/cloud-left.svg" alt="" aria-hidden="true">
+            <img class="hero-deco hero-cloud-2" src="assets/hero/v2/cloud-right.svg" alt="" aria-hidden="true">
+            <img class="hero-deco hero-arrow-path" src="assets/hero/v2/arrow-path.svg" alt="" aria-hidden="true">
+            <img class="hero-deco hero-star-a" src="assets/hero/v2/star-filled.svg" alt="" aria-hidden="true">
+
+            <div class="hero-visual">
+                <!-- Dog-orbit stars (Figma Star 2/3/4); % of .hero-visual — not in dog-note-group -->
+                <img class="hero-deco hero-star-b" src="assets/hero/v2/star1.svg" alt="" aria-hidden="true">
+                <img class="hero-deco hero-star-c" src="assets/hero/v2/star-outline-b.svg" alt="" aria-hidden="true">
+                <img class="hero-deco hero-star-d" src="assets/hero/v2/star-outline-b.svg" alt="" aria-hidden="true">
+                <a
+                    class="dog-ig"
+                    href="https://www.instagram.com/noodle.the.aussie/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="My creative muse Noodle.the.aussie on Instagram"
+                >
+                    <img
+                        class="dog-ig-body"
+                        src="assets/hero/v2/dog-body.svg"
+                        width="404"
+                        height="380"
+                        alt="Illustration of Noodle the dog with an apple on their head"
+                        data-dog-inline
+                    >
+                    <!-- Scribble only (SVG text hidden); HTML notes below match Figma copy -->
+                    <div
+                        class="dog-ig-callout"
+                        data-callout-src="assets/hero/v2/dog-ig-callout.svg"
+                        aria-hidden="true"
+                    ></div>
+                    <div class="dog-ig-notes">
+                        <p class="dog-ig-notes-label">My creative muse</p>
+                        <span class="dog-ig-notes-handle">
+                            <span class="dog-ig-notes-handle-text">Noodle.the.aussie</span>
+                            <img src="assets/icons/instagram-sm.svg" width="16" height="16" alt="" aria-hidden="true">
+                        </span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="hero-copy">
+                <div class="hero-copy-text">
+                <h1 class="hero-title">
+                    Hi, I’m <span class="name-cycle" tabindex="0" aria-label="Tianchan, also known as Tc"><span class="accent name-chars"><span class="name-char">T</span><span class="name-char name-extra name-prefix" hidden>i</span><span class="name-char name-extra name-prefix" hidden>a</span><span class="name-char name-extra name-prefix" hidden>n</span><span class="name-char name-stem-c">c</span><span class="name-char name-extra name-suffix" hidden>h</span><span class="name-char name-extra name-suffix" hidden>a</span><span class="name-char name-extra name-suffix" hidden>n</span></span></span>.
+                </h1>
+                <p class="hero-desc">
+                    Product Designer with 7+ years of experience building consumer and enterprise applications. I'm passionate about bridging product and brand, crafting the visual details (like icons and illustrations) that make experiences delightful.
+                </p>
+                </div>
+                <div class="status-row">
+                    <span>Currently</span>
+                    <span class="chip">
+                        <img src="assets/hero/v2/tag-wand.svg" alt="">
+                        designing
+                    </span>
+                    <span class="chip">
+                        <img src="assets/hero/v2/tag-code.svg" alt="">
+                        vibe-coding
+                    </span>
+                    <span class="status-amp">&amp;</span>
+                    <span class="chip">
+                        <img src="assets/hero/v2/tag-dog.svg" alt="">
+                        playing
+                    </span>
+                    <span class="la">
+                        in LA
+                        <img class="la-palm" src="assets/icons/island.svg" width="20" height="20" alt="">
+                    </span>
+                </div>
+            </div>
+
+            <aside class="hero-note" aria-label="How this website was made">
+                <div class="hero-note-card">
+                    <p class="hero-note-intro">This website is designed and crafted with human care, developed with AI .</p>
+                    <hr class="hero-note-rule">
+                    <ul class="hero-note-list">
+                        <li>
+                            <img src="assets/hero/v2/note-arrow-sm.svg" alt="" width="12" height="12">
+                            <span>Designed in <a href="https://www.figma.com/" target="_blank" rel="noopener noreferrer">Figma</a></span>
+                        </li>
+                        <li>
+                            <img src="assets/hero/v2/note-arrow-sm.svg" alt="" width="12" height="12">
+                            <span>Built with <a href="https://cursor.com/" target="_blank" rel="noopener noreferrer">Cursor</a></span>
+                        </li>
+                        <li>
+                            <img src="assets/hero/v2/note-arrow-sm.svg" alt="" width="12" height="12">
+                            <span>Deployed with <a href="https://www.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare</a></span>
+                        </li>
+                    </ul>
+                    <img class="hero-note-tape" src="assets/hero/v2/tape.svg" alt="" aria-hidden="true">
+                </div>
+            </aside>
+        </section>
+        </div>
+
+        <section class="section section-product" id="work">
+            <img class="section-deco deco-arrow-2" src="assets/hero/v2/arrow-2.svg" width="76" height="97" alt="" aria-hidden="true">
+            <div class="section-header section-header-inline">
+                <img src="assets/icons/devices.svg" width="24" height="24" alt="">
+                <h2>Featured product work</h2>
+            </div>
+
+            <div class="project-block project-block-cf1">
+                <a class="project project-link" href="projects/cloudflare-one-client.html">
+                    <div class="project-image">
+                        <img class="project-deco deco-cloud-3" src="assets/hero/v2/cloud-3.svg" width="96" height="59" alt="" aria-hidden="true">
+                        <div class="project-cover-frame">
+                            <img class="project-cover" src="assets/projects/cover-cf1.png" alt="Cloudflare One Client project preview" width="960" height="600">
+                        </div>
+                    </div>
+                    <div class="project-meta">
+                        <h3>Cloudflare One Client: Redesigning Enterprise Security</h3>
+                        <p>Redesigning Cloudflare’s enterprise security application across desktop and mobile. Through rapid iterations driven by internal dogfooding and user surveys, I transformed an engineering-led MVP into an intuitive, scalable platform—reducing cognitive overload and establishing a modern design system.</p>
+                        <div class="tag-group">
+                            <span class="chip">Enterprise B2B</span>
+                            <span class="chip">Desktop &amp; Mobile</span>
+                            <span class="chip">Design system</span>
+                            <span class="chip">User Research</span>
+                            <span class="chip">AI Prototyping</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="project-block project-block-warp">
+                <a class="project project-link" href="projects/warp.html">
+                    <div class="project-image">
+                        <img class="project-deco project-star-4" src="assets/hero/v2/star2.svg" width="24" height="24" alt="" aria-hidden="true">
+                        <img class="project-deco project-star-3" src="assets/hero/v2/project-star.svg" width="58" height="58" alt="" aria-hidden="true">
+                        <div class="project-cover-frame">
+                            <img class="project-cover" src="assets/projects/cover-warp.png" alt="WARP project preview" width="960" height="600">
+                        </div>
+                    </div>
+                    <div class="project-meta">
+                        <h3>WARP: Consumer Privacy Overhaul</h3>
+                        <p>A complete 0-to-1 redesign and rebrand of Cloudflare’s consumer mobile app. Guided by research-backed iterations and user validation, I demystified complex network security jargon into human-centered language to protect privacy for everyday users worldwide.</p>
+                        <div class="tag-group">
+                            <span class="chip">Consumer B2C</span>
+                            <span class="chip">Mobile</span>
+                            <span class="chip">0-to-1 Redesign</span>
+                            <span class="chip">Rebrand &amp; UXUI</span>
+                            <span class="chip">User research</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <img class="section-deco deco-arrow-3" src="assets/hero/v2/arrow-3.svg" width="141" height="139" alt="" aria-hidden="true">
+        </section>
+
+        <section class="section" id="visual">
+            <div class="section-header section-header-inline">
+                <img src="assets/icons/disco-ball.svg" width="24" height="24" alt="">
+                <h2>Visual System &amp; Craft</h2>
+            </div>
+
+            <div class="craft-carousel" data-craft-carousel>
+                <div class="craft-viewport">
+                    <div class="craft-track">
+                        <a class="craft-card project-link" href="projects/global-icon-system.html">
+                            <div class="craft-card-media">
+                                <img src="assets/hero/v2/Cover_Icon.png" alt="Global Icon System preview" width="640" height="400">
+                            </div>
+                            <div class="craft-card-meta">
+                                <h3>Global Icon System</h3>
+                                <p>Built as a foundational ecosystem that continues to power Cloudflare’s global brand and product interfaces 6 years after inception.</p>
+                            </div>
+                        </a>
+                        <a class="craft-card project-link" href="projects/what-is-cloudflare.html">
+                            <div class="craft-card-media">
+                                <img src="assets/projects/cover-animation.png" alt="What is Cloudflare Animation preview" width="640" height="400">
+                            </div>
+                            <div class="craft-card-meta">
+                                <h3>What is Cloudflare Animation</h3>
+                                <p>Defining the visual direction and style frames for Cloudflare’s flagship brand video, bridging technical complexity into an accessible narrative for B2B and B2C audiences.</p>
+                            </div>
+                        </a>
+                        <a class="craft-card project-link" href="projects/b2b-illustration-system.html">
+                            <div class="craft-card-media">
+                                <img src="assets/hero/v2/Cover_Illustration.png" alt="B2B Illustration System preview" width="640" height="400">
+                            </div>
+                            <div class="craft-card-meta">
+                                <h3>B2B Illustration System</h3>
+                                <p>Explored and evolved Cloudflare’s enterprise illustration style. Built as a modular component library, designers can easily assemble reusable pieces into hero and spot artwork across digital and physical touchpoints.</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="craft-nav">
+                    <button class="craft-nav-btn" type="button" data-craft-prev aria-label="Previous craft projects">
+                        <img src="assets/hero/v2/craft-arrow-left.svg" alt="" width="16" height="16">
+                    </button>
+                    <button class="craft-nav-btn" type="button" data-craft-next aria-label="Next craft projects">
+                        <img src="assets/hero/v2/craft-arrow-right.svg" alt="" width="16" height="16">
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer" data-site-footer></footer>
     </div>
+
+    <script src="js/site-chrome.js" data-active="work" data-base=""></script>
+    <script src="js/hero-interactive.js?v=dog-ig-callout-2"></script>
 </body>
 </html>

@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="107" height="118" viewBox="0 0 107 118" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Mobile_Default">
+<path id="Traffic" d="M53.5658 107.407L53.5658 57.7283M53.5658 6.29157L53.5658 57.7283M53.5658 57.7283L53.5658 14.4554M93.2217 107.407L53.5658 14.4554L14.4438 107.407" stroke="#4D4D4D" stroke-width="1.5" stroke-dasharray="6 3"/>
+<rect id="Websites" x="25.9438" y="92.1567" width="23" height="23" rx="2" transform="rotate(90 25.9438 92.1567)" fill="#E6E6E6" stroke="#4D4D4D" stroke-width="1.5"/>
+<rect id="Websites_2" x="64.9438" y="92.1567" width="23" height="23" rx="2" transform="rotate(90 64.9438 92.1567)" fill="#E6E6E6" stroke="#4D4D4D" stroke-width="1.5"/>
+<rect id="Websites_3" x="103.944" y="92.1567" width="23" height="23" rx="2" transform="rotate(90 103.944 92.1567)" fill="#E6E6E6" stroke="#4D4D4D" stroke-width="1.5"/>
+<circle id="User" cx="53.3328" cy="15.615" r="13.5" fill="#FEDC00" stroke="#4D4D4D" stroke-width="1.5"/>
+</g>
+</svg>
