@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;1,6..144,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css">
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css?v=cf1-demo-gif-2">
     <title>Cloudflare One Client — Tc</title>
 </head>
 <body>
@@ -89,10 +89,7 @@ Cross-functional alignment</dd>
                     </article>
                     <div class="case-phase-arrow" aria-hidden="true">
                         <span class="case-phase-arrow-label">Testing</span>
-                        <svg class="case-phase-arrow-glyph" width="48" height="10" viewBox="0 0 48 10" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
-                            <path d="M0 5H42" stroke="currentColor" stroke-width="1"/>
-                            <path d="M39 1.5L46.5 5L39 8.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <img class="case-phase-arrow-glyph" src="../assets/projects/cf1/phase-arrow.svg" width="49" height="8" alt="">
                     </div>
                     <article class="case-phase" role="listitem">
                         <div class="case-phase-head">
@@ -107,10 +104,7 @@ Cross-functional alignment</dd>
                     </article>
                     <div class="case-phase-arrow" aria-hidden="true">
                         <span class="case-phase-arrow-label">Testing</span>
-                        <svg class="case-phase-arrow-glyph" width="48" height="10" viewBox="0 0 48 10" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
-                            <path d="M0 5H42" stroke="currentColor" stroke-width="1"/>
-                            <path d="M39 1.5L46.5 5L39 8.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <img class="case-phase-arrow-glyph" src="../assets/projects/cf1/phase-arrow.svg" width="49" height="8" alt="">
                     </div>
                     <article class="case-phase" role="listitem">
                         <div class="case-phase-head">
@@ -138,11 +132,13 @@ Cross-functional alignment</dd>
                             <div class="case-media">
                                 <img src="../assets/projects/cf1/home-updated.png" alt="Updated home screens for regular and advanced modes" loading="lazy" width="1920" height="1200">
                             </div>
+                            <figcaption class="case-caption">MVP_Home</figcaption>
                         </figure>
                         <figure class="case-figure case-compare-panel" id="cf1-home-legacy" role="tabpanel" aria-labelledby="cf1-tab-legacy" data-compare-panel="legacy" hidden>
                             <div class="case-media">
                                 <img src="../assets/projects/cf1/home-legacy.png" alt="Legacy home screens for non-technical and technical users" loading="lazy" width="1920" height="1200">
                             </div>
+                            <figcaption class="case-caption">Legacy_Home</figcaption>
                         </figure>
                     </div>
                 </div>
@@ -196,11 +192,26 @@ Cross-functional alignment</dd>
                     </h4>
                     <p>I eliminated the switcher entirely and merged both views into a single, clean home screen. I kept the core connection status front-and-center for everyone, while embedding three quick-action fields for technical users. To handle customization, we enabled IT admins to configure views directly from the dashboard. This required zero custom client UI, saving engineering time while giving users total clarity.</p>
                 </div>
-                <figure class="case-figure">
-                    <div class="case-media">
-                        <img src="../assets/projects/cf1/home-redesign.png" alt="Home information architecture" loading="lazy">
+                <div class="case-compare" data-case-compare>
+                    <div class="case-compare-tabs" role="tablist" aria-label="Updated and Legacy home information architecture">
+                        <button class="case-compare-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="cf1-friction-home-updated" id="cf1-friction-tab-updated" data-compare="updated">Updated</button>
+                        <button class="case-compare-tab" type="button" role="tab" aria-selected="false" aria-controls="cf1-friction-home-legacy" id="cf1-friction-tab-legacy" data-compare="legacy">Legacy</button>
                     </div>
-                </figure>
+                    <div class="case-compare-panels">
+                        <figure class="case-figure case-compare-panel is-active" id="cf1-friction-home-updated" role="tabpanel" aria-labelledby="cf1-friction-tab-updated" data-compare-panel="updated">
+                            <div class="case-media">
+                                <img src="../assets/projects/cf1/friction-home-updated.png" alt="Updated GA home screens for non-technical and technical users" loading="lazy" width="1920" height="1200">
+                            </div>
+                            <figcaption class="case-caption">GA Design</figcaption>
+                        </figure>
+                        <figure class="case-figure case-compare-panel" id="cf1-friction-home-legacy" role="tabpanel" aria-labelledby="cf1-friction-tab-legacy" data-compare-panel="legacy" hidden>
+                            <div class="case-media">
+                                <img src="../assets/projects/cf1/friction-home-legacy.png" alt="Legacy MVP home screens for non-technical and technical users" loading="lazy" width="1920" height="1200">
+                            </div>
+                            <figcaption class="case-caption">MVP Design</figcaption>
+                        </figure>
+                    </div>
+                </div>
             </section>
 
             <section class="case-section">
@@ -258,8 +269,9 @@ Cross-functional alignment</dd>
                 <p>Finally, we elevated the visual craft. The MVP relied on static placeholder graphics that didn&#x27;t reflect an enterprise security app.</p>
 <p>I reached out to our brand team to design on-brand visual asset. To ensure smooth implementation, I coordinated the motion handoff between our animator and frontend developers. This delivered a lightweight, responsive connection state that builds immediate trust with enterprise clients.</p>
                 <figure class="case-figure">
-                    <div class="case-media">
-                        <img src="../assets/projects/cf1/platform-b.png" alt="Final visual and animation" loading="lazy">
+                    <div class="case-media case-media--cf1-motion">
+                        <img class="case-media__bg" src="../assets/projects/cf1/platform-b.png" alt="" aria-hidden="true" loading="lazy">
+                        <img class="case-media__gif" src="../assets/projects/cf1/cf1-demo.gif?v=2" alt="Final visual and animation" width="600" height="600" loading="lazy">
                     </div>
                     <figcaption class="case-caption">Final visual and Animation</figcaption>
                 </figure>
@@ -288,12 +300,12 @@ Cross-functional alignment</dd>
                     <img src="../assets/hero/v2/flower.svg" alt="" width="41" height="40">
                 </div>
                 <p>That’s all for this one!</p>
-                <p>Up Next: <span class="case-next-title">WARP — Consumer Privacy Overhaul</span></p>
+                <p>Up Next: <span class="case-next-title">WARP — Consumer Privacy Overhaul.</span></p>
             </a>
         </article>
 
         <footer class="site-footer" data-site-footer></footer>
     </div>
-    <script src="../js/site-chrome.js" data-base="../"></script>
+    <script src="../js/site-chrome.js?v=home-hero-header-20260804" data-base="../"></script>
 </body>
 </html>

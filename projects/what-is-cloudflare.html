@@ -3,13 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="What is Cloudflare? — animation case study by Tc.">
+    <meta name="description" content="What is Cloudflare Animation — case study by Tc.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;1,6..144,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css">
-    <link rel="stylesheet" href="../css/styles.css">
-    <title>What is Cloudflare? — Tc</title>
+    <link rel="stylesheet" href="../css/styles.css?v=b2b-heroes-noise-note-1">
+    <title>What is Cloudflare Animation — Tc</title>
+    <style>
+      /* Figma Project 4 — Animation: square media frames (override shared 16px) */
+      body .project-page.case-study .case-media,
+      body .project-page.case-study .case-header .case-media,
+      body .project-page.case-study .case-media img {
+        border-radius: 0 !important;
+      }
+
+      body .project-page.case-study .case-header .case-media--video {
+        aspect-ratio: 16 / 9;
+      }
+
+      body .project-page.case-study .case-media--video iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+    </style>
 </head>
 <body>
     <div class="page">
@@ -18,28 +37,38 @@
         <article class="project-page case-study">
 
             <header class="case-header">
-                <h1>What is Cloudflare?</h1>
-                <p>What is Cloudflare? is a flagship video introducing the Cloudflare brand and service to introduce the brand to B2B and B2C audiences. It is the first video project strategized and created in-house. In collaboration with creative leadership, I defined the visual style and crafted the style frames and that set the visual foundation, partnering with an external agency to bring the animation to life.</p>
+                <h1>What is Cloudflare Animation</h1>
+                <p><a href="https://www.cloudflare.com/what-is-cloudflare/" target="_blank" rel="noopener noreferrer">What is Cloudflare?</a> is a flagship video introducing the Cloudflare brand and service to introduce the brand to B2B and B2C audiences. It is the first video project strategized and created in-house. In collaboration with creative leadership, I defined the visual style and crafted the style frames and that set the visual foundation, partnering with an external agency to bring the animation to life.</p>
                 <figure class="case-figure">
-                    <div class="case-media">
-                        <img src="../assets/projects/animation/cover.png" alt="What is Cloudflare video cover" loading="lazy">
+                    <div class="case-media case-media--video">
+                        <iframe
+                            src="https://www.youtube-nocookie.com/embed/XHvmX3FhTwU"
+                            title="What is Cloudflare Animation"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen
+                            loading="lazy"
+                        ></iframe>
                     </div>
-                    <figcaption class="case-caption">GA release</figcaption>
                 </figure>
             </header>
             <dl class="case-meta">
-<div>
+                <div>
+                    <dt>Timeline <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
+                    <dd>2022</dd>
+                </div>
+                <div>
+                    <dt>Scope <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
+                    <dd>Visual style for animation<br>
+Style frames</dd>
+                </div>
+                <div>
                     <dt>Team <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
                     <dd>Illustration: Tc Ye &amp; Sylvia Boomer Yang<br>
 Animation: Sylvia Boomer Yang<br>
 Creative Direction: HJ Kim<br>
 Content &amp; Copy: Martin Sanchez &amp; Rebecca Clayman</dd>
                 </div>
-<div>
-                    <dt>Timeline <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
-                    <dd>2022</dd>
-                </div>
-</dl>
+            </dl>
             <section class="case-section">
                 <h2>Style Frames</h2>
                 <p>Selected style frames Slyvia and I created for the animation.</p>
@@ -60,19 +89,19 @@ Content &amp; Copy: Martin Sanchez &amp; Rebecca Clayman</dd>
             </section>
 
 
-            <a class="case-next" href="warp.html">
+            <a class="case-next" href="b2b-illustration-system.html">
                 <div class="case-next-flowers" aria-hidden="true">
                     <img src="../assets/hero/v2/flower.svg" alt="" width="41" height="40">
                     <img src="../assets/hero/v2/flower.svg" alt="" width="41" height="40">
                     <img src="../assets/hero/v2/flower.svg" alt="" width="41" height="40">
                 </div>
                 <p>That’s all for this one!</p>
-                <p>Up Next: <span class="case-next-title">WARP — Consumer Privacy Overhaul</span></p>
+                <p>Up Next: <span class="case-next-title">B2B Illustration System.</span></p>
             </a>
         </article>
 
         <footer class="site-footer" data-site-footer></footer>
     </div>
-    <script src="../js/site-chrome.js" data-base="../"></script>
+    <script src="../js/site-chrome.js?v=home-hero-header-20260804" data-base="../"></script>
 </body>
 </html>

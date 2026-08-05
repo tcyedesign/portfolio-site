@@ -71,10 +71,10 @@
   --text-hero-line: 1.19;
   --text-hero-tracking: -1.28px;
 
-  /* Name accent (Tc) — Capriola SemiBold */
+  /* Name accent (Tc) — Capriola Semibold / -2% */
   --text-name-family: var(--font-display);
   --text-name-weight: var(--font-weight-semibold);
-  --text-name-tracking: -0.04em;
+  --text-name-tracking: -0.8px;
 
   /* Page title (project h1) — 40 Semibold / -0.8 / lh ~1.252 */
   --text-display-size: 40px;
@@ -134,11 +134,12 @@
   --text-tag-weight: var(--font-weight-regular);
   --text-tag-tracking: -0.24px;
 
-  /* Sticky note (legacy caption size kept for hero note) */
-  --text-note-size: 12px;
-  --text-note-weight: var(--font-weight-medium);
-  --text-note-line: 16px;
-  --text-note-tracking: -0.24px;
+  /* Figma text style “Note” — 14 Italic / -2% (~-0.28) / Black normal */
+  --text-note-size: 14px;
+  --text-note-weight: var(--font-weight-regular);
+  --text-note-style: italic;
+  --text-note-line: normal;
+  --text-note-tracking: -0.28px;
 
   --max: 1440px;
 }
@@ -237,4 +238,15 @@
   font-weight: var(--text-footnote-weight);
   letter-spacing: var(--text-footnote-tracking);
   color: var(--text-strong);
+}
+
+/* Figma “Note” — Google Sans Flex Italic 14 / Black normal (#4d4d4d) */
+.text-note {
+  font-family: var(--font-sans);
+  font-size: var(--text-note-size);
+  font-weight: var(--text-note-weight);
+  font-style: var(--text-note-style);
+  line-height: var(--text-note-line);
+  letter-spacing: var(--text-note-tracking);
+  color: var(--color-black-normal);
 }

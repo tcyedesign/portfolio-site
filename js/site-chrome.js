@@ -36,10 +36,69 @@
       </a>
       <nav class="nav" aria-label="Primary">
         <a class="${active === "work" ? "active" : ""}" href="${href("index.html")}">Work</a>
-        <a class="${active === "about" ? "active" : ""}" href="${href("about.html")}">About</a>
         <a class="${active === "play" ? "active" : ""}" href="${href("play.html")}">Play</a>
+        <a class="${active === "about" ? "active" : ""}" href="${href("about.html")}">About</a>
       </nav>
     `;
+  }
+
+  function initStickyHeader() {
+    const header = document.querySelector("[data-site-header]");
+    if (!header) return;
+
+    const heroBand = document.querySelector(".hero-band");
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const updateSurface = () => {
+      // Underline follows scroll-from-top on every page (not hero crossing).
+      header.classList.toggle("is-scrolled", window.scrollY > 0);
+
+      if (heroBand) {
+        // Home: cream + noise over hero; white once past the hero band.
+        const headerBottom = header.getBoundingClientRect().bottom;
+        const heroBottom = heroBand.getBoundingClientRect().bottom;
+        const pastHero = heroBottom <= headerBottom;
+        header.classList.toggle("is-past-hero", pastHero);
+        header.classList.toggle("is-home-hero", !pastHero);
+      } else {
+        // Non-home: always white (never peach/noise).
+        header.classList.remove("is-home-hero", "is-past-hero");
+      }
+    };
+
+    const updateVisibility = () => {
+      const y = window.scrollY;
+      const delta = y - lastY;
+      const nearTop = y <= 8;
+
+      if (nearTop) {
+        header.classList.remove("is-hidden");
+      } else if (delta > 4) {
+        // Scrolling down — hide
+        header.classList.add("is-hidden");
+      } else if (delta < -4) {
+        // Scrolling up — show
+        header.classList.remove("is-hidden");
+      }
+
+      lastY = y;
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        updateSurface();
+        updateVisibility();
+        ticking = false;
+      });
+    };
+
+    updateSurface();
+    updateVisibility();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", updateSurface);
   }
 
   function renderFooter() {
@@ -68,10 +127,10 @@
         </span>
       </div>
       <div class="footer-social">
-        <a href="https://www.linkedin.com" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.linkedin.com/in/tianchanye" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
           <img src="${asset("assets/icons/linkedin.svg")}" alt="">
         </a>
-        <a href="https://www.instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.instagram.com/noodle.the.aussie/" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
           <img src="${asset("assets/icons/instagram.svg")}" alt="">
         </a>
         <a href="mailto:tcyedesign@gmail.com" aria-label="Email">
@@ -93,6 +152,7 @@
   }
 
   renderHeader();
+  initStickyHeader();
   renderFooter();
 })();
 
@@ -150,45 +210,127 @@
     return { pill, tabs, sync, moveTo: (tab, instant) => moveTabPill(pill, tab, instant) };
   }
 
-  // Visual System & Craft carousel (2-up)
+  // Visual System & Craft carousel — endless DOM rotate on desktop; vertical stack on mobile
   document.querySelectorAll('[data-craft-carousel]').forEach((root) => {
+    const viewport = root.querySelector('.craft-viewport');
     const track = root.querySelector('.craft-track');
-    const cards = [...root.querySelectorAll('.craft-card')];
     const prev = root.querySelector('[data-craft-prev]');
     const next = root.querySelector('[data-craft-next]');
-    if (!track || cards.length === 0) return;
+    if (!viewport || !track) return;
 
-    const visible = () => (window.matchMedia('(max-width: 1100px)').matches ? 1 : 2);
-    let index = 0;
+    const mobileQuery =
+      window.matchMedia && window.matchMedia('(max-width: 1100px)');
 
-    function maxIndex() {
-      return Math.max(0, cards.length - visible());
+    let busy = false;
+    const durationMs = 350;
+    const reducedMotion =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function isMobileCraft() {
+      return Boolean(mobileQuery && mobileQuery.matches);
     }
 
-    function sync() {
-      index = Math.min(index, maxIndex());
-      const card = cards[0];
-      const gap = parseFloat(getComputedStyle(track).gap) || 0;
-      const step = card.getBoundingClientRect().width + gap;
-      track.style.transform = `translateX(${-index * step}px)`;
-      if (prev) prev.disabled = index <= 0;
-      if (next) next.disabled = index >= maxIndex();
+    function step() {
+      const first = track.querySelector('.craft-card');
+      if (!first) return 0;
+      const styles = getComputedStyle(track);
+      const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+      return first.getBoundingClientRect().width + gap;
     }
 
-    prev && prev.addEventListener('click', () => {
-      index = Math.max(0, index - 1);
-      sync();
-    });
-    next && next.addEventListener('click', () => {
-      index = Math.min(maxIndex(), index + 1);
-      sync();
-    });
-
-    window.addEventListener('resize', sync);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(sync);
+    function snapLeft() {
+      track.style.transition = 'none';
+      track.style.transform = 'translateX(0)';
+      void track.offsetWidth;
+      track.style.transition = '';
     }
-    sync();
+
+    function resetMobile() {
+      track.style.transition = 'none';
+      track.style.transform = '';
+      busy = false;
+    }
+
+    function afterSlide(callback) {
+      if (reducedMotion) {
+        callback();
+        return;
+      }
+      window.setTimeout(callback, durationMs + 40);
+    }
+
+    function goNext() {
+      if (isMobileCraft() || busy) return;
+      const first = track.querySelector('.craft-card');
+      if (!first || track.querySelectorAll('.craft-card').length < 2) return;
+      busy = true;
+      const distance = step();
+
+      if (reducedMotion || distance <= 0) {
+        track.appendChild(first);
+        snapLeft();
+        busy = false;
+        return;
+      }
+
+      track.style.transition = `transform ${durationMs}ms ease`;
+      track.style.transform = `translateX(${-distance}px)`;
+      afterSlide(() => {
+        track.appendChild(first);
+        snapLeft();
+        busy = false;
+      });
+    }
+
+    function goPrev() {
+      if (isMobileCraft() || busy) return;
+      const cards = track.querySelectorAll('.craft-card');
+      if (cards.length < 2) return;
+      busy = true;
+      const last = cards[cards.length - 1];
+      const distance = step();
+
+      if (reducedMotion || distance <= 0) {
+        track.insertBefore(last, track.firstChild);
+        snapLeft();
+        busy = false;
+        return;
+      }
+
+      track.insertBefore(last, track.firstChild);
+      track.style.transition = 'none';
+      track.style.transform = `translateX(${-distance}px)`;
+      void track.offsetWidth;
+      track.style.transition = `transform ${durationMs}ms ease`;
+      track.style.transform = 'translateX(0)';
+      afterSlide(() => {
+        snapLeft();
+        busy = false;
+      });
+    }
+
+    function syncMode() {
+      if (isMobileCraft()) {
+        resetMobile();
+        if (prev) prev.disabled = true;
+        if (next) next.disabled = true;
+        return;
+      }
+      if (prev) prev.disabled = false;
+      if (next) next.disabled = false;
+      snapLeft();
+    }
+
+    prev && prev.addEventListener('click', goPrev);
+    next && next.addEventListener('click', goNext);
+    if (mobileQuery) {
+      if (typeof mobileQuery.addEventListener === 'function') {
+        mobileQuery.addEventListener('change', syncMode);
+      } else if (typeof mobileQuery.addListener === 'function') {
+        mobileQuery.addListener(syncMode);
+      }
+    }
+    syncMode();
   });
 
   // Legacy Visual Section Tabs (if present)

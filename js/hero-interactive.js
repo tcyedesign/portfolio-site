@@ -188,7 +188,35 @@
     });
   }
 
+  /** Tag the dark nose pad + nostrils when the asset lacks `id="big black nose"`. */
+  function ensureNoseId(svg) {
+    if (svg.getElementById("big black nose")) return;
+
+    const pad = [...svg.querySelectorAll("rect")].find((el) => (
+      el.getAttribute("x") === "287.927" &&
+      el.getAttribute("y") === "214.724" &&
+      el.getAttribute("fill") === "#3A3A3A"
+    ));
+    if (!pad || !pad.parentNode) return;
+
+    const leftNostril = [...svg.querySelectorAll("circle")].find((el) => (
+      el.getAttribute("cx") === "251.92" && el.getAttribute("cy") === "233.98"
+    ));
+    const rightNostril = [...svg.querySelectorAll("circle")].find((el) => (
+      el.getAttribute("cx") === "273.686" && el.getAttribute("cy") === "233.98"
+    ));
+
+    const NS = "http://www.w3.org/2000/svg";
+    const group = document.createElementNS(NS, "g");
+    group.setAttribute("id", "big black nose");
+    pad.parentNode.insertBefore(group, pad);
+    group.appendChild(pad);
+    if (leftNostril) group.appendChild(leftNostril);
+    if (rightNostril) group.appendChild(rightNostril);
+  }
+
   function createNosePushState(svg) {
+    ensureNoseId(svg);
     const target = svg.getElementById("big black nose");
     if (!target) return null;
 
@@ -201,18 +229,23 @@
 
     const restCx = bbox.x + bbox.width / 2;
     const restCy = bbox.y + bbox.height / 2;
-    const hitRadius = Math.max(bbox.width, bbox.height) * 0.55;
+    // Generous soft radius so approaching from any side feels pushy.
+    const hitRadius = Math.max(bbox.width, bbox.height) * 0.75 + 10;
 
+    // Hit sits above sketch-stroke <use> stamps so pointer events still work;
+    // push itself is driven from page pointer (eyes-style) for reliability.
     const hit = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     hit.setAttribute("class", "nose-push-hit");
     hit.setAttribute("cx", String(restCx));
     hit.setAttribute("cy", String(restCy));
-    hit.setAttribute("r", String(hitRadius + 6));
+    hit.setAttribute("r", String(hitRadius));
     hit.setAttribute("fill", "transparent");
-    target.parentNode.insertBefore(hit, target.nextSibling);
+    hit.style.pointerEvents = "none";
+    target.parentNode.appendChild(hit);
 
     target.style.transformBox = "fill-box";
     target.style.transformOrigin = "center";
+    target.style.willChange = "transform";
 
     return {
       target,
@@ -220,17 +253,16 @@
       restCx,
       restCy,
       hitRadius,
-      maxPush: 2,
-      pushScale: 0.35,
+      maxPush: 1.3,
+      pushScale: 0.08,
       spring: 0.12,
-      damping: 0.82,
+      damping: 0.89,
       x: 0,
       y: 0,
       vx: 0,
       vy: 0,
       targetX: 0,
       targetY: 0,
-      hovering: false,
     };
   }
 
@@ -238,8 +270,8 @@
     const cursor = clientToSvg(svg, clientX, clientY);
     if (!cursor) return;
 
-    // Measure from rest center so the cursor shoves the nose away,
-    // instead of the nose tracking/following the cursor.
+    // Vector from cursor → rest center: approach from the right yields leftward
+    // displacement (and similarly for other sides).
     const dx = nose.restCx - cursor.x;
     const dy = nose.restCy - cursor.y;
     const dist = Math.hypot(dx, dy);
@@ -258,53 +290,42 @@
     nose.targetY = Math.max(-nose.maxPush, Math.min(nose.maxPush, awayY * penetration));
   }
 
-  function resetNosePushTarget(nose) {
-    nose.targetX = 0;
-    nose.targetY = 0;
-  }
-
   function applyNosePush(nose) {
     nose.target.style.transform = `translate(${nose.x.toFixed(2)}px, ${nose.y.toFixed(2)}px)`;
   }
 
-  function animateNosePush(nose) {
+  function snapNosePush(nose, svg) {
+    updateNosePushTarget(nose, svg, pointer.x, pointer.y);
+    nose.x = nose.targetX;
+    nose.y = nose.targetY;
+    nose.vx = 0;
+    nose.vy = 0;
+    applyNosePush(nose);
+  }
+
+  function animateNosePush(nose, svg) {
+    updateNosePushTarget(nose, svg, pointer.x, pointer.y);
     nose.vx = (nose.vx + (nose.targetX - nose.x) * nose.spring) * nose.damping;
     nose.vy = (nose.vy + (nose.targetY - nose.y) * nose.spring) * nose.damping;
     nose.x += nose.vx;
     nose.y += nose.vy;
+
+    // Settle when nearly home so we don't micro-jitter forever.
+    if (
+      Math.abs(nose.x) < 0.02 &&
+      Math.abs(nose.y) < 0.02 &&
+      Math.abs(nose.vx) < 0.02 &&
+      Math.abs(nose.vy) < 0.02 &&
+      nose.targetX === 0 &&
+      nose.targetY === 0
+    ) {
+      nose.x = 0;
+      nose.y = 0;
+      nose.vx = 0;
+      nose.vy = 0;
+    }
+
     applyNosePush(nose);
-  }
-
-  function bindNosePush(nose, svg, instant) {
-    nose.hit.addEventListener("pointerenter", (event) => {
-      nose.hovering = true;
-      updateNosePushTarget(nose, svg, event.clientX, event.clientY);
-      if (instant) {
-        nose.x = nose.targetX;
-        nose.y = nose.targetY;
-        applyNosePush(nose);
-      }
-    });
-
-    nose.hit.addEventListener("pointermove", (event) => {
-      if (!nose.hovering) return;
-      updateNosePushTarget(nose, svg, event.clientX, event.clientY);
-      if (instant) {
-        nose.x = nose.targetX;
-        nose.y = nose.targetY;
-        applyNosePush(nose);
-      }
-    }, { passive: true });
-
-    nose.hit.addEventListener("pointerleave", () => {
-      nose.hovering = false;
-      resetNosePushTarget(nose);
-      if (instant) {
-        nose.x = 0;
-        nose.y = 0;
-        applyNosePush(nose);
-      }
-    });
   }
 
   function animatePushable(item, svg) {
@@ -521,7 +542,7 @@
 
     updateEyebrows(eyebrows);
     pushables.forEach((item) => animatePushable(item, svg));
-    if (nose) animateNosePush(nose);
+    if (nose) animateNosePush(nose, svg);
 
     requestAnimationFrame(() => animateFrame(svg, eyes, eyebrows, pushables, nose));
   }
@@ -566,9 +587,9 @@
     const eyebrows = createEyebrowStates(dogSvg, eyes);
     const pushables = createPushables(dogSvg);
     const nose = createNosePushState(dogSvg);
+    const hasMotionTargets = eyes.length > 0 || !!nose || pushables.length > 0;
 
     pushables.forEach((item) => bindDraggable(item, dogSvg, reducedMotion));
-    if (nose) bindNosePush(nose, dogSvg, reducedMotion);
 
     // rAF-throttled pointer tracking (page-wide).
     let rafScheduled = false;
@@ -586,21 +607,26 @@
         pointerDirty = false;
         snapPupilsToCursor(dogSvg, eyes);
         updateEyebrows(eyebrows);
+        if (nose) snapNosePush(nose, dogSvg);
       });
     }, { passive: true });
 
     // Recalculate eye centers via live CTM after layout shifts.
     const onLayout = () => {
       pointerDirty = true;
-      if (reducedMotion) snapPupilsToCursor(dogSvg, eyes);
+      if (reducedMotion) {
+        snapPupilsToCursor(dogSvg, eyes);
+        if (nose) snapNosePush(nose, dogSvg);
+      }
     };
     window.addEventListener("resize", onLayout, { passive: true });
     window.addEventListener("scroll", onLayout, { passive: true });
 
-    if (!reducedMotion && eyes.length) {
+    if (!reducedMotion && hasMotionTargets) {
       requestAnimationFrame(() => animateFrame(dogSvg, eyes, eyebrows, pushables, nose));
-    } else if (eyes.length) {
-      snapPupilsToCursor(dogSvg, eyes);
+    } else {
+      if (eyes.length) snapPupilsToCursor(dogSvg, eyes);
+      if (nose) snapNosePush(nose, dogSvg);
     }
   }
 
@@ -638,73 +664,66 @@
     initDogInteractions(dogSvgExisting);
   }
 
-  const nameCycle = document.querySelector(".name-cycle");
-  if (nameCycle && !reducedMotion) {
-    const extras = [...nameCycle.querySelectorAll(".name-extra")];
-    const prefix = extras.filter((el) => el.classList.contains("name-prefix"));
-    const suffix = extras.filter((el) => el.classList.contains("name-suffix"));
-    const typeOrder = [...prefix, ...suffix];
-    const typeMs = 45;
-    const backspaceMs = 32;
-    const fadeMs = 90;
+  // Dog-orbit stars: one-shot twinkle on hover enter (re-triggers on next enter).
+  document.querySelectorAll(".hero-star-b, .hero-star-c, .hero-star-d").forEach((star) => {
+    star.addEventListener("mouseenter", () => {
+      star.classList.remove("is-twinkling");
+      // Restart CSS animation if already mid-twinkle.
+      void star.offsetWidth;
+      star.classList.add("is-twinkling");
+    });
+    star.addEventListener("animationend", () => {
+      star.classList.remove("is-twinkling");
+    });
+  });
 
-    let generation = 0;
-    let timers = [];
+  // Subtle scroll parallax for home-page clouds only (not stars / dog / note / flower / text).
+  // Uses the CSS `translate` property so it composes with cloud rotate (transform shorthand).
+  // Stars keep hover twinkle above; they do not receive scroll translate.
+  function initCloudParallax() {
+    if (reducedMotion) return;
 
-    function delay(ms) {
-      return new Promise((resolve) => {
-        const id = window.setTimeout(() => {
-          timers = timers.filter((timerId) => timerId !== id);
-          resolve();
-        }, ms);
-        timers.push(id);
+    // Speeds as × scrollY. Hero clouds drift gently; section cloud a touch faster.
+    const layers = [
+      { sel: ".hero-cloud", speed: 0.08 },
+      { sel: ".hero-cloud-2", speed: 0.14 },
+      { sel: ".deco-cloud-3", speed: 0.10 },
+    ]
+      .map(({ sel, speed }) => {
+        const el = document.querySelector(sel);
+        return el ? { el, speed } : null;
+      })
+      .filter(Boolean);
+
+    if (!layers.length) return;
+
+    let ticking = false;
+    let lastY = -1;
+
+    function applyParallax() {
+      ticking = false;
+      const y = Math.max(window.scrollY || window.pageYOffset || 0, 0);
+      if (y === lastY) return;
+      lastY = y;
+
+      layers.forEach(({ el, speed }) => {
+        const offset = y * speed;
+        el.style.translate = `0 ${offset.toFixed(2)}px`;
       });
     }
 
-    function nextFrame() {
-      return new Promise((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(resolve));
-      });
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(applyParallax);
     }
 
-    async function revealLetters() {
-      const gen = ++generation;
-
-      for (const el of typeOrder) {
-        if (gen !== generation || !el.hidden) continue;
-
-        el.hidden = false;
-        el.classList.remove("is-visible");
-        await nextFrame();
-        if (gen !== generation) return;
-
-        el.classList.add("is-visible");
-        await delay(Math.max(typeMs, fadeMs));
-        if (gen !== generation) return;
-      }
-    }
-
-    async function hideLetters() {
-      const gen = ++generation;
-      const visible = typeOrder.filter((el) => !el.hidden);
-
-      for (const el of [...visible].reverse()) {
-        if (gen !== generation) return;
-
-        el.classList.remove("is-visible");
-        await delay(fadeMs);
-        if (gen !== generation) return;
-
-        el.hidden = true;
-        await delay(backspaceMs);
-      }
-    }
-
-    nameCycle.addEventListener("mouseenter", revealLetters);
-    nameCycle.addEventListener("mouseleave", hideLetters);
-    nameCycle.addEventListener("focusin", revealLetters);
-    nameCycle.addEventListener("focusout", hideLetters);
+    applyParallax();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
   }
+
+  initCloudParallax();
 
   // Inline dog IG callout so scribble stroke-dash sequencing can run in CSS.
   // HTML `.dog-ig-notes` owns the copy; SVG text is unused / hidden.

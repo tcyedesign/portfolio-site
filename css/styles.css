@@ -4,11 +4,11 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
-  overflow-x: hidden;
   font-family: var(--font-sans);
   background:
     linear-gradient(90deg, rgba(255, 243, 236, 0.2), rgba(255, 243, 236, 0.2)),
@@ -34,17 +34,61 @@ a {
   margin: 0 auto;
 }
 
-/* Header — Figma Header fill: #FFF6EC @ 40%
-   Full-bleed breakout (same technique as `.hero-band`): background and
-   logo/nav sit near the viewport edges with a fixed 64px inset. */
+/* Header — Figma 647:3104: py 20 / px 64
+   Full-bleed breakout (same technique as `.hero-band`).
+   Non-home pages: always solid white + underline.
+   Home (over hero only): #FFFAF7 + noise tile. Past hero: white.
+   Underline: only when scrolled from top (scrollY > 0), site-wide.
+   Auto-hide: translateY(-100%) on scroll down; restore on scroll up. */
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  padding: 24px 64px;
-  background: rgba(255, 243, 236, 0.4);
+  padding: 20px 64px;
+  background-color: #ffffff;
+  background-image: none;
+  border-bottom: 1px solid transparent;
+  transform: translateY(0);
+  transition:
+    transform 0.28s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    background-image 0.2s ease;
+  will-change: transform;
+}
+
+/* Underline once the page has left the very top — matches .hero-band (#e6e6e6) */
+.site-header.is-scrolled {
+  border-bottom-color: var(--border);
+}
+
+/* Home default while header overlaps the hero band */
+.site-header.is-home-hero {
+  background-color: #fffaf7;
+  /* Figma 650:3991 NOISE — tile sampled from Figma screenshot (mono size 2, dens 25%, #383838@20%) */
+  background-image: url("../assets/hero/v2/hero-noise-figma.png");
+  background-repeat: repeat;
+  background-size: 512px 512px;
+}
+
+.site-header.is-hidden {
+  transform: translateY(-100%);
+}
+
+.site-header.is-past-hero {
+  background-color: #ffffff;
+  background-image: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header {
+    transition: none;
+  }
 }
 
 .logo {
@@ -110,12 +154,24 @@ a {
 .project-link {
   display: block;
   color: inherit;
+  -webkit-user-drag: none;
 }
 
 .project-link:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 6px;
   border-radius: 16px;
+}
+
+/* Title links keep underline-free look; body copy stays outside anchors for selection */
+.project-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.project-title-link:hover,
+.project-title-link:focus-visible {
+  color: inherit;
 }
 
 /* Hero */
@@ -125,10 +181,23 @@ a {
    auto margins) so its content and absolutely-positioned decorations are
    unaffected. */
 .hero-band {
+  position: relative;
+  z-index: 2;
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  background: rgba(255, 243, 236, 0.4);
+  /* #FFFAF7 + Figma screenshot–sampled noise tile (not procedural 25% static) */
+  background-color: #fffaf7;
+  background-image: url("../assets/hero/v2/hero-noise-figma.png");
+  background-repeat: repeat;
+  background-size: 512px 512px;
   border-bottom: 1px solid var(--border);
+  /* Arrow / flower straddle the bottom edge into Featured */
+  overflow: visible;
+}
+
+/* Noise is on the band background (Figma-sampled tile). Keep ::after free for stacking. */
+.hero-band::after {
+  content: none;
 }
 
 .hero {
@@ -143,6 +212,18 @@ a {
   margin: 0 auto;
   padding: 80px 240px 120px;
   overflow: visible;
+  /* Empty hero box / overflows don't steal clicks from Featured / Craft below */
+  pointer-events: none;
+}
+
+.hero > .hero-copy,
+.hero > .hero-visual,
+.hero > .hero-note {
+  pointer-events: auto;
+}
+
+.hero > .hero-deco {
+  pointer-events: none;
 }
 
 .hero-deco {
@@ -158,6 +239,59 @@ a {
 .hero-star-c,
 .hero-star-d {
   z-index: 6;
+  pointer-events: auto;
+  cursor: pointer;
+  transform-origin: center center;
+  transform: scale(1) rotate(0deg);
+  opacity: 1;
+  filter: brightness(1);
+}
+
+@keyframes hero-star-twinkle {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    filter: brightness(1);
+  }
+  30% {
+    transform: scale(1.32) rotate(14deg);
+    opacity: 1;
+    filter: brightness(1.55);
+  }
+  55% {
+    transform: scale(0.9) rotate(-8deg);
+    opacity: 0.82;
+    filter: brightness(1.15);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+@keyframes hero-star-twinkle-reduced {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.hero-star-b.is-twinkling,
+.hero-star-c.is-twinkling,
+.hero-star-d.is-twinkling {
+  animation: hero-star-twinkle 0.55s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-star-b.is-twinkling,
+  .hero-star-c.is-twinkling,
+  .hero-star-d.is-twinkling {
+    animation: hero-star-twinkle-reduced 0.2s ease-out both;
+  }
 }
 
 /* Figma hero (650:3991) absolute coords in 1440 frame — asset freeze */
@@ -181,6 +315,7 @@ a {
   top: -35px;
   width: 257px;
   height: 240px;
+  z-index: 4;
 }
 
 /* Outline star — right of copy / arrow end (Figma Star 1 @ 1203,145 / 48) */
@@ -226,9 +361,97 @@ a {
 }
 
 .hero-track,
-.hero-plane,
-.hero-flower {
+.hero-plane {
   display: none;
+}
+
+/*
+ * Flower — Figma 703:5704 in frame 650:3991 (1440).
+ * Absolute: left 1147.63 / top 553.96 / ~101×100.
+ * Frame includes 72px header (py 20 + 32 logo); flower is a sibling of
+ * the hero section and straddles its bottom border → in .hero-band:
+ * left 1167.63px (+20px), bottom 0, translateY(50%).
+ */
+.hero-band > .hero-flower {
+  position: absolute;
+  display: block;
+  left: 1167.63px;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  width: 100.88px;
+  height: 100px;
+  transform: translateY(50%);
+  z-index: 5;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.hero-band > .hero-flower .hero-flower-static,
+.hero-band > .hero-flower .hero-flower-bloom,
+.hero-band > .hero-flower .hero-flower-center,
+.hero-band > .hero-flower .hero-flower-line {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Petal shadows stay fixed under the bloom */
+.hero-band > .hero-flower .hero-flower-static {
+  z-index: 0;
+}
+
+/* Only white petals rotate — origin = yellow center (45.0282, 44.717) in 102 viewBox */
+.hero-band > .hero-flower .hero-flower-bloom {
+  z-index: 1;
+  transform: rotate(0deg);
+  transform-origin: 44.145% 43.84%;
+  transition: transform 0.6s ease-in-out;
+}
+
+/* Yellow center + white inner highlight stay fixed above petals */
+.hero-band > .hero-flower .hero-flower-center {
+  z-index: 2;
+}
+
+/* Lower-right line stays fixed above the center */
+.hero-band > .hero-flower .hero-flower-line {
+  z-index: 3;
+}
+
+.hero-band > .hero-flower:hover .hero-flower-bloom {
+  transform: rotate(360deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-band > .hero-flower .hero-flower-bloom {
+    transition: none;
+  }
+
+  .hero-band > .hero-flower:hover .hero-flower-bloom {
+    transform: rotate(0deg);
+  }
+}
+
+/*
+ * Arrow 2 — Figma ~76×97, centered on the hero → Featured border.
+ * Lives in .hero-band (not .section-product) so it stacks above the hero
+ * noise fill; ~30px sits on the hero, the rest hangs into Featured.
+ */
+.hero-band > .deco-arrow-2 {
+  position: absolute;
+  left: 50%;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  width: 76px;
+  height: 97px;
+  transform: translate(-50%, calc(100% - 30px));
+  z-index: 6;
+  pointer-events: none;
 }
 
 .hero-copy {
@@ -268,55 +491,8 @@ a {
   color: #ff5959;
 }
 
-.name-cycle {
-  display: inline;
-  white-space: nowrap;
-  cursor: default;
-  font-family: var(--text-name-family);
-  font-weight: var(--text-name-weight);
-  letter-spacing: var(--text-name-tracking);
-}
-
-.name-cycle:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
-  border-radius: 2px;
-}
-
-.name-chars {
-  display: inline;
-}
-
-.name-stem-c {
-  margin-left: -0.08em;
-}
-
-.name-period {
-  display: inline;
-}
-
-.name-extra {
-  display: inline;
-  opacity: 0;
-  transition: opacity 0.11s ease;
-}
-
-.name-extra.is-visible {
-  opacity: 1;
-}
-
-.name-extra[hidden] {
-  display: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .name-extra {
-    transition: none;
-  }
-
-  .name-extra[hidden] {
-    display: none;
-  }
+.hero-title .name-c {
+  margin-left: -1px;
 }
 
 .hero-desc {
@@ -487,117 +663,91 @@ a {
   max-width: none;
 }
 
-/* Sticky note — pinned to viewport left; default peeks tape + thin cream strip.
-   Tape sits near note right (Figma ~206); left -208 → tape at screen edge + tiny cream. */
+/* Sticky note — Figma Asset_Note (655:5817) full raster + transparent link hits.
+   Fixed hit target on the left edge; only the inner card translates (no flicker). */
 .hero-note {
   position: absolute;
-  /* Break out of centered .hero so peek stays on the screen's left edge */
-  left: calc(50% - 50vw - 208px);
+  left: calc(50% - 50vw);
   top: 417px;
-  width: 220px;
-  height: auto;
+  width: 252px; /* peek strip + full note (236) + hover offset */
+  height: 186px;
   z-index: 6;
   transform: none;
-  transition: left 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: auto;
-}
-
-.hero-note:hover,
-.hero-note:focus-within {
-  left: calc(50% - 50vw + 16px);
 }
 
 .hero-note-card {
   position: relative;
-  width: 100%;
+  width: 236px;
+  height: 186px;
   box-sizing: border-box;
-  padding: 24px;
-  border: 1px solid var(--color-black-normal);
-  border-radius: 10px;
-  background: #fff6dc;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Figma tape: 26×100 box at (206,21), asset 100×26 rotated 90° about center */
-.hero-note-tape {
-  position: absolute;
-  left: 219px;
-  top: 71px;
-  width: 100px;
-  height: 26px;
-  transform: translate(-50%, -50%) rotate(90deg);
-  transform-origin: center center;
-  pointer-events: none;
-}
-
-.hero-note-intro {
-  margin: 0;
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: -0.24px;
-  color: var(--text-strong);
-}
-
-.hero-note-rule {
-  display: block;
-  width: 100%;
-  height: 0;
-  margin: 0;
-  border: 0;
-  border-top: 1px solid rgba(77, 77, 77, 0.35);
-}
-
-.hero-note-list {
-  list-style: none;
-  margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  border: 0;
+  background: transparent;
+  /* Peek: show tape + right edge (~46px); rest off-screen to the left */
+  transform: translateX(-190px);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 
-.hero-note-list li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: -0.24px;
-  color: var(--text-strong);
+.hero-note:hover .hero-note-card,
+.hero-note:focus-within .hero-note-card {
+  transform: translateX(16px);
 }
 
-.hero-note-list img {
-  width: 12px;
-  height: 12px;
+.hero-note-asset {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 236px;
+  height: 186px;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+  display: block;
 }
 
-.hero-note-list a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+/* Transparent hit targets over underlined words baked into Asset_Note.png */
+.hero-note-link {
+  position: absolute;
+  z-index: 2;
+  color: transparent;
   border-radius: 3px;
-  padding: 1px 3px;
-  margin: -1px -3px;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  overflow: hidden;
+  text-decoration: none;
   transition: background-color 0.2s ease;
 }
 
-.hero-note-list a:hover,
-.hero-note-list a:focus-visible {
+.hero-note-link:hover,
+.hero-note-link:focus-visible {
   background-color: rgba(254, 220, 0, 0.45);
+  outline: none;
+}
+
+.hero-note-link-figma {
+  left: 112px;
+  top: 105px;
+  width: 40px;
+  height: 18px;
+}
+
+.hero-note-link-cursor {
+  left: 97px;
+  top: 126px;
+  width: 44px;
+  height: 18px;
+}
+
+.hero-note-link-cloudflare {
+  left: 125px;
+  top: 146px;
+  width: 66px;
+  height: 18px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-note {
+  .hero-note-card {
     transition: none;
-  }
-
-  .hero-note:hover,
-  .hero-note:focus-within {
-    left: calc(50% - 50vw + 16px);
   }
 }
 
@@ -760,8 +910,9 @@ a {
   transform-origin: center center;
 }
 
-.project-link:hover .project-cover,
-.project-link:focus-visible .project-cover {
+.project-cover-link:hover .project-cover,
+.project-cover-link:focus-visible .project-cover,
+.project:hover .project-cover {
   transform: scale(1.02);
 }
 
@@ -1004,6 +1155,29 @@ svg.dog-ig-body {
   padding: 120px 240px;
 }
 
+/* Home sections below hero: real HTML copy must be selectable */
+.section-product,
+#visual.section {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.section-product .section-header,
+.section-product .project-meta,
+#visual.section .section-header,
+#visual.section .craft-card-meta {
+  -webkit-user-select: text;
+  user-select: text;
+  position: relative;
+  z-index: 1;
+}
+
+.section-product .project-cover,
+#visual.section .craft-card-media img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
 .section-product .section-header {
   margin-bottom: 40px;
 }
@@ -1036,14 +1210,7 @@ svg.dog-ig-body {
   z-index: 4;
 }
 
-/* Figma Arrow 2 at x≈683 — center of 1440 frame (not content-box offset). */
-.deco-arrow-2 {
-  left: 50%;
-  top: -30px;
-  width: 76px;
-  height: 97px;
-  transform: translateX(-50%);
-}
+/* Arrow 2 placement: see `.hero-band > .deco-arrow-2` (hero-band child). */
 
 /* Figma Cloud 3 at (163,530); cover at (240,200) → left -77, top 330 on cover */
 .deco-cloud-3 {
@@ -1301,6 +1468,14 @@ svg.dog-ig-body {
   aspect-ratio: 460 / 420;
   border-radius: 16px;
   background: var(--chip);
+  overflow: hidden;
+}
+
+.play-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Case study / project detail */
@@ -1431,6 +1606,16 @@ svg.dog-ig-body {
   border-radius: 16px;
   overflow: hidden;
   background: transparent;
+  box-sizing: border-box;
+}
+
+/* Figma Black/border (#e6e6e6) 0.5 stroke — Icon System concepts frames */
+.project-page .case-media--outlined {
+  border: 0.5px solid var(--border);
+}
+
+.project-page .case-media--radius-12 {
+  border-radius: 12px;
 }
 
 /* WARP Error & Feedback (and similar) composites already paint a rounded
@@ -1448,37 +1633,40 @@ svg.dog-ig-body {
   max-width: 100%;
 }
 
+/* End card — Figma “Note” + Black subtle on every project page */
 .case-next {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 0;
   max-width: 960px;
   margin: 0 auto;
   padding: 80px 24px 120px;
   text-align: center;
-  color: var(--text-body);
-  transition: color 0.2s ease;
-}
-
-.case-next:hover {
-  color: var(--text-strong);
+  color: var(--color-black-subtle);
 }
 
 .case-next-flowers {
   display: flex;
   gap: 12px;
+  margin-bottom: 16px;
   font-size: 28px;
   line-height: 1;
 }
 
 .case-next p {
   margin: 0;
-  font-size: var(--text-body-size);
-  line-height: 1.2;
+  font-family: var(--font-sans);
+  font-size: var(--text-note-size);
+  font-weight: var(--text-note-weight);
+  font-style: var(--text-note-style);
+  line-height: var(--text-note-line);
+  letter-spacing: var(--text-note-tracking);
+  color: var(--color-black-subtle);
 }
 
 .case-next-title {
+  color: inherit;
   text-decoration: underline;
   text-underline-offset: 2px;
   border-radius: 3px;
@@ -1495,7 +1683,13 @@ svg.dog-ig-body {
 }
 
 /* Footer — full-bleed breakout (same technique as `.site-header` / `.hero-band`):
-   background and links sit near the viewport edges with a fixed 40px inset. */
+   background and links sit near the viewport edges with a fixed 40px inset.
+   Sole top rule: `.section` also draws border-bottom, so drop it on the
+   sibling immediately above the footer (page-width stub over full-bleed). */
+.section:has(+ .site-footer) {
+  border-bottom: none;
+}
+
 .site-footer {
   display: flex;
   align-items: center;
@@ -1506,6 +1700,7 @@ svg.dog-ig-body {
   padding: 24px 40px;
   background: color-mix(in srgb, var(--color-cream) 40%, transparent);
   border-top: 1px solid var(--border);
+  color: var(--color-black-subtle); /* Figma Black subtle #808080 */
 }
 
 .footer-left {
@@ -1513,7 +1708,7 @@ svg.dog-ig-body {
   flex-wrap: wrap;
   align-items: center;
   gap: 16px;
-  font-size: var(--text-body-size);
+  font-size: 14px; /* Figma Note/footer */
   letter-spacing: var(--text-body-tracking);
 }
 
@@ -1547,12 +1742,6 @@ svg.dog-ig-body {
 .footer-social img {
   width: 20px;
   height: 20px;
-  opacity: 0.85;
-  transition: opacity 0.2s ease;
-}
-
-.footer-social a:hover img {
-  opacity: 1;
 }
 
 @media (max-width: 1100px) {
@@ -1588,7 +1777,7 @@ svg.dog-ig-body {
     flex: 1 1 auto;
     max-width: none;
     padding-top: 0;
-    order: 1;
+    order: 2;
   }
 
   .hero-copy > .status-row {
@@ -1609,23 +1798,14 @@ svg.dog-ig-body {
     display: none;
   }
 
-  .craft-card {
-    flex: 0 0 min(640px, calc(100vw - 48px));
-    max-width: min(640px, calc(100vw - 48px));
-    width: min(640px, calc(100vw - 48px));
-  }
-
-  .craft-card-media {
-    width: 100%;
-    height: auto;
-  }
+  /* Visual System & Craft mobile stack — final overrides live after desktop craft block */
 
   .hero-visual {
     width: 240px;
     height: 275px;
     flex: none;
     margin: 0 auto;
-    order: 2;
+    order: 1;
   }
 
   .dog-ig {
@@ -1683,15 +1863,6 @@ svg.dog-ig-body {
     align-items: flex-start;
   }
 
-  .craft-track {
-    gap: 32px;
-  }
-
-  .craft-card {
-    flex: 0 0 min(640px, calc(100% - 0px));
-    max-width: min(640px, 100%);
-    width: min(640px, 100%);
-  }
 }
 
 @media (max-width: 700px) {
@@ -1706,7 +1877,7 @@ svg.dog-ig-body {
   }
 }
 
-/* Visual System & Craft — full-bleed right to viewport edge (Figma) */
+/* Visual System & Craft — full-bleed endless rotate; advanced card left-aligned */
 #visual.section {
   padding: 120px 0 120px 240px;
   overflow: visible;
@@ -1718,10 +1889,13 @@ svg.dog-ig-body {
   flex-direction: column;
   gap: 40px;
   width: 100%;
+  overflow: visible;
 }
 
+/* Visible overflow so sliding cards aren't clipped at the 240px content gutter —
+   html { overflow-x: hidden } still clips at the true viewport/screen edge. */
 .craft-viewport {
-  overflow: hidden;
+  overflow: visible;
   width: calc(100vw - 240px);
   max-width: none;
 }
@@ -1729,7 +1903,7 @@ svg.dog-ig-body {
 .craft-track {
   display: flex;
   width: max-content;
-  gap: 40px;
+  gap: 32px;
   transition: transform 0.35s ease;
   will-change: transform;
 }
@@ -1746,7 +1920,19 @@ svg.dog-ig-body {
   min-width: 0;
 }
 
+.craft-card-media-link {
+  display: block;
+  color: inherit;
+  border-radius: 10px;
+}
+
+.craft-card-media-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+
 .craft-card-media {
+  position: relative;
   width: 600px;
   max-width: 100%;
   height: 375px;
@@ -1757,11 +1943,31 @@ svg.dog-ig-body {
   aspect-ratio: 600 / 375;
 }
 
+/* Fixed outline above the zooming img — baked PNG edges clip under scale(1.02) */
+.craft-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--border);
+  pointer-events: none;
+  z-index: 1;
+}
+
 .craft-card-media img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border: 0;
+  border-radius: 0;
+  transition: transform 0.4s ease;
+  transform-origin: center center;
+}
+
+.craft-card-media-link:hover .craft-card-media img,
+.craft-card-media-link:focus-visible .craft-card-media img {
+  transform: scale(1.02);
 }
 
 .craft-card-meta {
@@ -1827,6 +2033,64 @@ svg.dog-ig-body {
 @media (prefers-reduced-motion: reduce) {
   .craft-track {
     transition: none;
+  }
+
+  .craft-card-media img {
+    transition: none;
+  }
+
+  .craft-card-media-link:hover .craft-card-media img,
+  .craft-card-media-link:focus-visible .craft-card-media img {
+    transform: none;
+  }
+}
+
+/* Mobile/tablet: stack craft like Featured — must come after desktop craft rules */
+@media (max-width: 1100px) {
+  #visual.section {
+    padding: 80px 24px;
+    overflow: visible;
+  }
+
+  .craft-carousel {
+    gap: 0;
+  }
+
+  .craft-viewport {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .craft-track {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    gap: 80px;
+    transform: none !important;
+    transition: none;
+    will-change: auto;
+  }
+
+  .craft-card {
+    flex: none;
+    max-width: 100%;
+    width: 100%;
+    gap: 40px;
+  }
+
+  .craft-card-media {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 960 / 600;
+    border-radius: 16px;
+  }
+
+  .craft-nav {
+    display: none;
   }
 }
 
@@ -1931,6 +2195,30 @@ svg.dog-ig-body {
     linear-gradient(135deg, color-mix(in srgb, var(--color-peach) 35%, transparent), var(--project-placeholder));
 }
 
+/* CF1 Visual Craft — gray tray with centered demo GIF */
+.project-page .case-media--cf1-motion {
+  position: relative;
+}
+
+.project-page .case-media--cf1-motion .case-media__bg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.project-page .case-media--cf1-motion .case-media__gif {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: min(560px, 72vw);
+  max-width: calc(100% - 48px);
+  object-fit: contain;
+  /* App window only — no black matte; gray tray shows through corners */
+  background: transparent;
+}
+
 .project-page .case-caption {
   margin: 0;
   font-family: var(--font-sans);
@@ -1960,6 +2248,12 @@ svg.dog-ig-body {
   max-width: 960px;
 }
 
+.project-page .case-header > p a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .project-page .case-header > p {
   margin: 0;
   max-width: 800px;
@@ -1977,6 +2271,23 @@ svg.dog-ig-body {
 
 .project-page .case-section + .case-section {
   margin-top: 0;
+}
+
+/* Figma section stacks with itemSpacing 40 (intro + image+note blocks) */
+.project-page .case-section--gap-40 {
+  gap: 40px;
+}
+
+.project-page .case-section-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.project-page .case-section-intro h2,
+.project-page .case-section-intro p {
+  margin: 0;
 }
 
 .project-page .case-subsection {
@@ -2033,7 +2344,7 @@ svg.dog-ig-body {
 .project-page .case-phases {
   display: grid;
   grid-template-columns: 1fr auto 1fr auto 1fr;
-  gap: 12px;
+  gap: 8px;
   align-items: stretch;
   width: 100%;
   max-width: 960px;
@@ -2044,10 +2355,9 @@ svg.dog-ig-body {
   flex-direction: column;
   gap: 16px;
   padding: 24px;
-  border: 0;
-  border-radius: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   background: var(--surface);
-  box-shadow: inset 0 0 0 1px var(--border);
   outline: none;
   min-width: 0;
 }
@@ -2055,17 +2365,17 @@ svg.dog-ig-body {
 .project-page .case-phase-head {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
 }
 
 .project-page .case-phase-head h3 {
   margin: 0;
-  font-size: var(--text-title-md-size);
-  font-weight: var(--text-title-md-weight);
-  line-height: var(--text-title-md-line);
-  letter-spacing: var(--text-title-md-tracking);
+  font-size: 20px;
+  font-weight: var(--font-weight-semibold);
+  line-height: normal;
+  letter-spacing: -0.4px;
   color: var(--text-strong);
 }
 
@@ -2073,7 +2383,7 @@ svg.dog-ig-body {
   margin: 0;
   font-size: var(--text-tag-size);
   font-weight: var(--text-tag-weight);
-  line-height: 1.25;
+  line-height: normal;
   letter-spacing: var(--text-tag-tracking);
   color: var(--text-muted);
 }
@@ -2084,26 +2394,27 @@ svg.dog-ig-body {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  font-size: var(--text-body-size);
+  gap: 4px;
+  font-size: var(--text-caption-size);
   font-weight: var(--text-body-weight);
-  line-height: var(--text-body-line);
-  letter-spacing: var(--text-body-tracking);
+  font-style: normal;
+  line-height: 1.45;
+  letter-spacing: -0.07px;
   color: var(--text-body);
 }
 
 .project-page .case-phase-list li {
   position: relative;
-  padding-left: 18px;
+  padding-left: 12px;
 }
 
 .project-page .case-phase-list li::before {
   content: "";
   position: absolute;
-  left: 1px;
-  top: 0.55em;
-  width: 7px;
-  height: 7px;
+  left: 0;
+  top: 0.65em;
+  width: 3px;
+  height: 3px;
   border-radius: 0;
   background: var(--accent);
   transform: translateY(-50%) rotate(45deg);
@@ -2115,26 +2426,26 @@ svg.dog-ig-body {
   align-items: center;
   justify-content: center;
   align-self: center;
-  gap: 4px;
-  min-width: 56px;
-  padding: 0 4px;
-  color: var(--text-strong);
+  gap: 8px;
+  min-width: 48px;
+  padding: 0;
+  color: var(--text-body);
   border: 0;
 }
 
 .project-page .case-phase-arrow-label {
   font-size: var(--text-tag-size);
   font-weight: var(--text-tag-weight);
-  line-height: 1.25;
+  line-height: normal;
   letter-spacing: var(--text-tag-tracking);
-  color: var(--text-strong);
+  color: var(--text-body);
   white-space: nowrap;
 }
 
 .project-page .case-phase-arrow-glyph {
   display: block;
   width: 48px;
-  height: 10px;
+  height: 8px;
   flex-shrink: 0;
 }
 
@@ -2214,6 +2525,7 @@ svg.dog-ig-body {
 }
 
 .project-page .case-compare-panels {
+  position: relative;
   width: 100%;
 }
 
@@ -2222,8 +2534,10 @@ svg.dog-ig-body {
   margin: 0;
 }
 
-.project-page .case-compare-panel[hidden] {
-  display: none;
+/* Beat .case-figure { display: flex } so inactive panels never stack */
+.project-page .case-figure.case-compare-panel[hidden],
+.project-page .case-compare-panel:not(.is-active) {
+  display: none !important;
 }
 
 .project-page .case-callouts {

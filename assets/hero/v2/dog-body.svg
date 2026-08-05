@@ -557,9 +557,11 @@
 <rect x="219.183" y="198.009" width="87.434" height="87.434" rx="43.717" fill="white"/>
 </g>
 <line x1="253.672" y1="266.593" x2="272.039" y2="266.593" stroke="#3A3A3A" stroke-width="5.53776" stroke-linecap="round"/>
+<g id="big black nose">
 <rect x="287.927" y="214.724" width="39.2354" height="50.2468" rx="8.66296" transform="rotate(90 287.927 214.724)" fill="#3A3A3A"/>
 <circle cx="251.92" cy="233.98" r="6.01817" fill="black" fill-opacity="0.6"/>
 <circle cx="273.686" cy="233.98" r="6.01817" fill="black" fill-opacity="0.6"/>
+</g>
 <use xlink:href="#stroke5_299_705" transform="translate(261.59 217.346) scale(0.00547945) rotate(-92.0696)"/>
 <use xlink:href="#stroke5_299_705" transform="translate(263.863 217.843) scale(0.00547945) rotate(157.112)"/>
 <use xlink:href="#stroke5_299_705" transform="translate(263.236 219.549) scale(0.00547945) rotate(-163.894)"/>
