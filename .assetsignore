@@ -1,0 +1,31 @@
+# Never upload to Cloudflare Workers static assets
+.git/
+.git/**
+.wrangler/
+.wrangler/**
+node_modules/
+node_modules/**
+
+# Local / QA / tooling
+.tmp/
+.proof/
+.figma-export/
+.DS_Store
+**/.DS_Store
+assets/.qa/
+assets/**/_noise_work/
+assets/hero/v2/_noise_work/
+
+# Source / non-web files
+**/*.mov
+callout-preview.html
+test.html
+push-to-github.sh
+.gitignore
+.assetsignore
+wrangler.jsonc
+package.json
+package-lock.json
+README.md
+README*
+*.md

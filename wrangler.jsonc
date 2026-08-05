@@ -6,6 +6,8 @@
     "enabled": true
   },
   "assets": {
+    // Site files at repo root. Exclude .git via committed .assetsignore
+    // (without it, Workers uploads .git packs and hits the 25 MiB limit).
     "directory": "."
   },
   "compatibility_flags": [

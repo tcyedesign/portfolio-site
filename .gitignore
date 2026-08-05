@@ -8,3 +8,13 @@
 !.dev.vars.example
 .env*
 !.env.example
+
+# local junk
+.DS_Store
+**/.DS_Store
+.tmp/
+.proof/
+assets/.qa/
+*.mov
+callout-preview.html
+test.html
