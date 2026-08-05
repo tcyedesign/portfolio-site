@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 404 380">
+<!-- Opaque whites mask baked WebP eyes; live pupils are solid black only. -->
+<circle id="dog-eye-white-right" cx="290.702" cy="181.164" r="9.19355" fill="#fff"/>
+<g id="dog-pupil-right-track">
+  <circle id="dog-pupil-right" cx="288.313" cy="178.197" r="5" fill="#000"/>
+</g>
+<circle id="dog-eye-white-left" cx="237.993" cy="181.165" r="9.19355" fill="#fff"/>
+<g id="dog-pupil-left-track">
+  <circle id="dog-pupil-left" cx="235.603" cy="178.197" r="5" fill="#000"/>
+</g>
+<g id="big black nose">
+<rect x="287.927" y="214.724" width="39.2354" height="50.2468" rx="8.66296" transform="rotate(90 287.927 214.724)" fill="#3A3A3A" />
+<circle cx="251.92" cy="233.98" r="6.01817" fill="black" fill-opacity="0.6" />
+<circle cx="273.686" cy="233.98" r="6.01817" fill="black" fill-opacity="0.6" />
+</g>
+</svg>

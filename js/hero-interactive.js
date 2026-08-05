@@ -3,12 +3,12 @@
   const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
   let pointerDirty = true;
 
-  // Inlined hero dog (.dog-ig-body) pupil / eye-white pairs.
-  // Each pupil is followed by Figma "sketch stroke" <use> stamps (#stroke3 / #stroke4)
-  // that form the brown outline ring — they must share the pupil's transform.
+  // Inlined hero dog overlay (.dog-ig-body) pupil / eye-white pairs.
+  // Each live pupil track includes its brown outline so the eye remains
+  // coherent while tracking the cursor over the static WebP body.
   const eyePairs = [
-    { ball: "dog-pupil-right", white: "dog-eye-white-right", stroke: "stroke3_299_705", spring: 0.16, damping: 0.72 },
-    { ball: "dog-pupil-left", white: "dog-eye-white-left", stroke: "stroke4_299_705", spring: 0.14, damping: 0.74 },
+    { ball: "dog-pupil-right", white: "dog-eye-white-right", spring: 0.16, damping: 0.72 },
+    { ball: "dog-pupil-left", white: "dog-eye-white-left", spring: 0.14, damping: 0.74 },
   ];
 
   const XLINK_NS = "http://www.w3.org/1999/xlink";
@@ -457,7 +457,7 @@
   }
 
   function createEyeStates(svg) {
-    return eyePairs.map(({ ball, white, stroke, spring, damping }) => {
+    return eyePairs.map(({ ball, white, spring, damping }) => {
       const eyeball = svg.getElementById(ball);
       const socket = svg.getElementById(white);
       if (!eyeball || !socket) return null;
@@ -470,8 +470,7 @@
       const maxMove = Math.max(0, socketR - ballR - 0.6);
       const restCx = Number(eyeball.getAttribute("cx"));
       const restCy = Number(eyeball.getAttribute("cy"));
-      // Move pupil + brown sketch ring together (same <g id="*-track">).
-      const track = groupPupilWithOutline(svg, eyeball, stroke);
+      const track = groupPupilWithOutline(svg, eyeball);
       if (!track) return null;
 
       return {
@@ -570,8 +569,9 @@
     if (!dogSvg) return;
     ensurePupilIds(dogSvg);
     dogSvg.classList.add("dog-ig-body");
-    dogSvg.setAttribute("role", "img");
-    if (!dogSvg.getAttribute("aria-label")) {
+    const isDecorative = dogSvg.getAttribute("aria-hidden") === "true";
+    if (!isDecorative) dogSvg.setAttribute("role", "img");
+    if (!isDecorative && !dogSvg.getAttribute("aria-label")) {
       dogSvg.setAttribute("aria-label", "Noodle the Aussie");
     }
     dogSvg.setAttribute("focusable", "false");
@@ -664,66 +664,127 @@
     initDogInteractions(dogSvgExisting);
   }
 
-  // Dog-orbit stars: one-shot twinkle on hover enter (re-triggers on next enter).
-  document.querySelectorAll(".hero-star-b, .hero-star-c, .hero-star-d").forEach((star) => {
-    star.addEventListener("mouseenter", () => {
-      star.classList.remove("is-twinkling");
-      // Restart CSS animation if already mid-twinkle.
-      void star.offsetWidth;
-      star.classList.add("is-twinkling");
-    });
-    star.addEventListener("animationend", () => {
-      star.classList.remove("is-twinkling");
-    });
-  });
-
-  // Subtle scroll parallax for home-page clouds only (not stars / dog / note / flower / text).
-  // Uses the CSS `translate` property so it composes with cloud rotate (transform shorthand).
-  // Stars keep hover twinkle above; they do not receive scroll translate.
-  function initCloudParallax() {
+  // Soft cursor float for clouds (+ scroll parallax) and stars.
+  // Uses CSS `translate` so it composes with any CSS `transform` (e.g. cloud rotate).
+  function initSoftFloatMotion() {
     if (reducedMotion) return;
 
-    // Speeds as × scrollY. Hero clouds drift gently; section cloud a touch faster.
     const layers = [
-      { sel: ".hero-cloud", speed: 0.08 },
-      { sel: ".hero-cloud-2", speed: 0.14 },
-      { sel: ".deco-cloud-3", speed: 0.10 },
+      // Clouds — barely drift
+      { sel: ".hero-cloud", speed: 0.08, maxPush: 1.6, pushScale: 0.022, hitPad: 28 },
+      { sel: ".hero-cloud-2", speed: 0.14, maxPush: 1.4, pushScale: 0.024, hitPad: 24 },
+      { sel: ".deco-cloud-3", speed: 0.1, maxPush: 1.2, pushScale: 0.022, hitPad: 22 },
+      // Stars — same float feel, slightly snugger hit (smaller art)
+      { sel: ".hero-star-a", speed: 0, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
+      { sel: ".hero-star-b", speed: 0, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
+      { sel: ".hero-star-c", speed: 0, maxPush: 1.2, pushScale: 0.022, hitPad: 18 },
+      { sel: ".hero-star-d", speed: 0, maxPush: 1.2, pushScale: 0.022, hitPad: 18 },
+      { sel: ".project-star-3", speed: 0, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
+      { sel: ".project-star-4", speed: 0, maxPush: 1.2, pushScale: 0.022, hitPad: 16 },
     ]
-      .map(({ sel, speed }) => {
+      .map(({ sel, speed, maxPush, pushScale, hitPad }) => {
         const el = document.querySelector(sel);
-        return el ? { el, speed } : null;
+        if (!el) return null;
+        return {
+          el,
+          speed,
+          maxPush,
+          pushScale,
+          hitPad,
+          spring: 0.02,
+          damping: 0.97,
+          parallaxY: 0,
+          x: 0,
+          y: 0,
+          vx: 0,
+          vy: 0,
+          targetX: 0,
+          targetY: 0,
+        };
       })
       .filter(Boolean);
 
     if (!layers.length) return;
 
-    let ticking = false;
-    let lastY = -1;
-
-    function applyParallax() {
-      ticking = false;
-      const y = Math.max(window.scrollY || window.pageYOffset || 0, 0);
-      if (y === lastY) return;
-      lastY = y;
-
-      layers.forEach(({ el, speed }) => {
-        const offset = y * speed;
-        el.style.translate = `0 ${offset.toFixed(2)}px`;
+    function syncParallax() {
+      const scrollY = Math.max(window.scrollY || window.pageYOffset || 0, 0);
+      layers.forEach((layer) => {
+        layer.parallaxY = scrollY * layer.speed;
       });
     }
 
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(applyParallax);
+    function updatePushTarget(layer) {
+      const rect = layer.el.getBoundingClientRect();
+      // Undo current push so the rest center stays anchored to layout + parallax.
+      const restCx = rect.left + rect.width / 2 - layer.x;
+      const restCy = rect.top + rect.height / 2 - layer.y;
+      const dx = restCx - pointer.x;
+      const dy = restCy - pointer.y;
+      const dist = Math.hypot(dx, dy);
+      const hitRadius = Math.max(rect.width, rect.height) * 0.75 + layer.hitPad;
+
+      if (dist >= hitRadius) {
+        layer.targetX = 0;
+        layer.targetY = 0;
+        return;
+      }
+
+      const awayX = dist < 0.001 ? 0 : dx / dist;
+      const awayY = dist < 0.001 ? -1 : dy / dist;
+      const penetration = (hitRadius - dist) * layer.pushScale;
+
+      layer.targetX = Math.max(-layer.maxPush, Math.min(layer.maxPush, awayX * penetration));
+      layer.targetY = Math.max(-layer.maxPush, Math.min(layer.maxPush, awayY * penetration));
     }
 
-    applyParallax();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+    function applyLayer(layer) {
+      layer.el.style.translate = `${layer.x.toFixed(2)}px ${(layer.parallaxY + layer.y).toFixed(2)}px`;
+    }
+
+    function animate() {
+      syncParallax();
+      layers.forEach((layer) => {
+        updatePushTarget(layer);
+        layer.vx = (layer.vx + (layer.targetX - layer.x) * layer.spring) * layer.damping;
+        layer.vy = (layer.vy + (layer.targetY - layer.y) * layer.spring) * layer.damping;
+        layer.x += layer.vx;
+        layer.y += layer.vy;
+
+        if (
+          Math.abs(layer.x) < 0.015 &&
+          Math.abs(layer.y) < 0.015 &&
+          Math.abs(layer.vx) < 0.015 &&
+          Math.abs(layer.vy) < 0.015 &&
+          layer.targetX === 0 &&
+          layer.targetY === 0
+        ) {
+          layer.x = 0;
+          layer.y = 0;
+          layer.vx = 0;
+          layer.vy = 0;
+        }
+
+        applyLayer(layer);
+      });
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener(
+      "pointermove",
+      (event) => {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+        pointerDirty = true;
+      },
+      { passive: true }
+    );
+
+    syncParallax();
+    layers.forEach(applyLayer);
+    requestAnimationFrame(animate);
   }
 
-  initCloudParallax();
+  initSoftFloatMotion();
 
   // Inline dog IG callout so scribble stroke-dash sequencing can run in CSS.
   // HTML `.dog-ig-notes` owns the copy; SVG text is unused / hidden.
