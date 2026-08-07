@@ -362,6 +362,33 @@ a {
 .hero-star-c,
 .hero-star-d {
   z-index: 6;
+  transform-origin: center;
+}
+
+@keyframes hero-star-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+  50% {
+    opacity: 0.2;
+    scale: 0.5;
+  }
+}
+
+.hero-star-b.is-twinkling,
+.hero-star-c.is-twinkling,
+.hero-star-d.is-twinkling {
+  animation: hero-star-twinkle 0.4s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-star-b.is-twinkling,
+  .hero-star-c.is-twinkling,
+  .hero-star-d.is-twinkling {
+    animation: none;
+  }
 }
 
 /* Figma hero (650:3991) absolute coords in 1440 frame — asset freeze */
@@ -401,9 +428,10 @@ a {
 
 /*
  * Dog-orbit stars — Figma § (647:3105) vs Asset_Dog origin (277.57, 80).
- * Positioned as % of .hero-visual (280×321) so they stay dog-relative when
- * the slot scales at narrower breakpoints. Sizes use width% + aspect-ratio
- * so squares stay square as the frame shrinks.
+ * Positioned as % of .hero-visual (308×353, was 280×321) so they stay
+ * dog-relative when the slot scales at narrower breakpoints. Sizes use
+ * width% + aspect-ratio so squares stay square as the frame shrinks.
+ * Denominators keep the original Figma design-space ratios.
  *
  * Star 2 yellow @ (235.73,173.32)/40 → (-41.84, 93.32)
  * Star 3 outline @ (340.07, 45.22)/20 → ( 62.50,-34.78)
@@ -940,9 +968,34 @@ a {
 .project {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 0;
   max-width: 960px;
   margin: 0 auto;
+}
+
+.project-block .project {
+  margin: 0;
+  gap: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: none;
+  transition: box-shadow 0.25s ease;
+}
+
+/* Figma Drop Shadow/400 — product card hover */
+.project-block .project:hover,
+.project-block .project:focus-within {
+  box-shadow:
+    0 4px 4px -4px rgba(12, 12, 13, 0.05),
+    0 16px 32px -4px rgba(12, 12, 13, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-block .project {
+    transition: none;
+  }
 }
 
 .section-product > .project + .project {
@@ -954,9 +1007,9 @@ a {
   width: 100%;
   max-width: 960px;
   aspect-ratio: 960 / 600;
-  border-radius: 16px;
-  overflow: visible;
-  background: transparent;
+  border-radius: 0;
+  overflow: hidden;
+  background: var(--color-black-background);
 }
 
 /* CF1 + WARP share one frame — never full-bleed / never taller than 960×600 */
@@ -968,22 +1021,14 @@ a {
   aspect-ratio: 960 / 600;
 }
 
-.project-block-cf1 .project-image {
-  background: #fff3ec;
-}
-
 .project-cover-frame {
   width: 100%;
   height: 100%;
-  border-radius: 16px;
+  border-radius: 0;
   overflow: hidden;
   border: 0;
   box-shadow: none;
   background: transparent;
-}
-
-.project-block-cf1 .project-cover-frame {
-  background: #fff3ec;
 }
 
 .project-cover-picture {
@@ -1000,7 +1045,7 @@ a {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: 0;
   border: 0;
   box-shadow: none;
   transition: transform 0.4s ease;
@@ -1009,11 +1054,12 @@ a {
 
 .project-cover-link:hover .project-cover,
 .project-cover-link:focus-visible .project-cover,
-.project:hover .project-cover {
-  transform: scale(1.02);
+.project:hover .project-cover,
+.project:focus-within .project-cover {
+  transform: scale(1.01);
 }
 
-.project-image > .project-deco {
+.project-block > .project-deco {
   position: absolute;
   display: block;
   max-width: none;
@@ -1042,21 +1088,21 @@ a {
   will-change: translate;
 }
 
-/* Dog+IG — Figma Asset_Dog 280×321; dog-body viewBox 404×380 aligned via −122/−42 */
+/* Dog+IG — Asset_Dog 308×353 (Figma 280×321 ×1.1); body 444×418 aligned via −134/−46 */
 .hero-visual {
   position: relative;
   z-index: 2;
-  flex: 0 0 280px;
-  width: 280px;
-  height: 321px;
+  flex: 0 0 308px;
+  width: 308px;
+  height: 353px;
   overflow: visible;
 }
 
 .dog-ig {
   position: relative;
   display: block;
-  width: 280px;
-  height: 321px;
+  width: 308px;
+  height: 353px;
   margin: 0;
   z-index: 5;
   overflow: visible;
@@ -1074,11 +1120,11 @@ a {
 .dog-ig-body,
 svg.dog-ig-body {
   position: absolute;
-  left: -122px;
-  top: -42px;
+  left: -134px;
+  top: -46px;
   display: block;
-  width: 404px;
-  height: 380px;
+  width: 444px;
+  height: 418px;
   max-width: none;
   overflow: visible;
 }
@@ -1092,13 +1138,13 @@ svg.dog-ig-body {
   pointer-events: none;
 }
 
-/* Scribble overlay — same 404×380 space as dog-body; SVG text unused */
+/* Scribble overlay — same 444×418 space as dog-body; SVG text unused */
 .dog-ig-callout {
   position: absolute;
-  left: -122px;
-  top: -42px;
-  width: 404px;
-  height: 380px;
+  left: -134px;
+  top: -46px;
+  width: 444px;
+  height: 418px;
   pointer-events: none;
   z-index: 2;
 }
@@ -1142,11 +1188,11 @@ svg.dog-ig-body {
   transition: stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.14s;
 }
 
-/* HTML notes — Figma IG Notes (152.23, 248.91) − dog (277.57, 80) → (−125, 169) */
+/* HTML notes — Figma IG Notes (−125, 169) ×1.1 → (−138, 186) */
 .dog-ig-notes {
   position: absolute;
-  left: -125px;
-  top: 169px;
+  left: -138px;
+  top: 186px;
   z-index: 6;
   display: flex;
   flex-direction: column;
@@ -1301,11 +1347,6 @@ svg.dog-ig-body {
   margin-top: 100px;
 }
 
-.project-block .project {
-  margin: 0;
-  gap: 40px;
-}
-
 .project-block .project + .project {
   margin-top: 0;
 }
@@ -1351,8 +1392,11 @@ svg.dog-ig-body {
 .project-meta {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  max-width: 800px;
+  gap: 24px;
+  padding: 40px;
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
   text-align: left;
 }
 
@@ -1363,11 +1407,19 @@ svg.dog-ig-body {
 }
 
 .project-meta .tag-group {
-  margin-top: 24px;
+  margin-top: 0;
+}
+
+.project-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 800px;
+  width: 100%;
 }
 
 .project-meta h3 {
-  margin: 0 0 20px;
+  margin: 0;
   font-size: 24px;
   font-weight: 600;
   letter-spacing: -0.48px;
@@ -1911,36 +1963,40 @@ svg.dog-ig-body {
   /* Visual System & Craft mobile stack — final overrides live after desktop craft block */
 
   .hero-visual {
-    width: 240px;
-    height: 275px;
+    width: 264px;
+    height: 303px;
     flex: none;
     margin: 0 auto;
     order: 1;
   }
 
   .dog-ig {
-    width: 240px;
-    height: 275px;
+    width: 264px;
+    height: 303px;
   }
 
   .dog-ig-body,
   svg.dog-ig-body,
   .dog-ig-callout {
-    left: -105px;
-    top: -36px;
-    width: 346px;
-    height: 326px;
+    left: -116px;
+    top: -40px;
+    width: 381px;
+    height: 359px;
   }
 
   .dog-ig-notes {
-    left: -107px;
-    top: 145px;
+    left: -118px;
+    top: 160px;
   }
 
   .section-product,
   #visual.section {
     padding-top: 80px;
     padding-bottom: 80px;
+  }
+
+  .section-product .project-meta {
+    padding: 24px;
   }
 
   .deco-arrow-2,
@@ -2048,12 +2104,18 @@ svg.dog-ig-body {
   --max frame. On viewports wider than --max, add the page’s side inset so the
   left card lines up with #visual .section-header (not the raw viewport edge).
   overflow:hidden crops the previous card at the screen edge.
+  Vertical padding (with matching negative margin) keeps Drop Shadow/400
+  from being clipped while preserving carousel spacing.
 */
 .craft-viewport {
   box-sizing: border-box;
   width: 100vw;
   max-width: none;
   margin-left: calc(50% - 50vw);
+  margin-top: -8px;
+  margin-bottom: -40px;
+  padding-top: 8px;
+  padding-bottom: 40px;
   padding-left: calc(240px + max(0px, (100vw - var(--max)) / 2));
   overflow: hidden;
 }
@@ -2077,16 +2139,30 @@ svg.dog-ig-body {
   width: 600px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 0;
+  min-width: 0;
   text-decoration: none;
   color: inherit;
-  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: none;
+  transition: box-shadow 0.25s ease;
+}
+
+/* Figma Drop Shadow/400 — craft card hover */
+.craft-card:hover,
+.craft-card:focus-within {
+  box-shadow:
+    0 4px 4px -4px rgba(12, 12, 13, 0.05),
+    0 16px 32px -4px rgba(12, 12, 13, 0.1);
 }
 
 .craft-card-media-link {
   display: block;
   color: inherit;
-  border-radius: 10px;
+  border-radius: 0;
 }
 
 .craft-card-media-link:focus-visible {
@@ -2099,22 +2175,11 @@ svg.dog-ig-body {
   width: 600px;
   max-width: 100%;
   height: 375px;
-  border-radius: 10px;
+  border-radius: 0;
   overflow: hidden;
   border: 0;
-  background: rgba(255, 243, 236, 0.4);
+  background: var(--color-black-background);
   aspect-ratio: 600 / 375;
-}
-
-/* Fixed outline above the zooming img — baked PNG edges clip under scale(1.02) */
-.craft-card-media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px var(--border);
-  pointer-events: none;
-  z-index: 1;
 }
 
 .craft-card-media img {
@@ -2134,15 +2199,21 @@ svg.dog-ig-body {
   height: 100%;
 }
 
+.craft-card:hover .craft-card-media img,
+.craft-card:focus-within .craft-card-media img,
 .craft-card-media-link:hover .craft-card-media img,
 .craft-card-media-link:focus-visible .craft-card-media img {
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 .craft-card-meta {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding: 40px;
+  box-sizing: border-box;
+  width: 100%;
+  background: var(--surface);
 }
 
 .craft-card-meta h3 {
@@ -2204,10 +2275,16 @@ svg.dog-ig-body {
     transition: none;
   }
 
+  .craft-card {
+    transition: none;
+  }
+
   .craft-card-media img {
     transition: none;
   }
 
+  .craft-card:hover .craft-card-media img,
+  .craft-card:focus-within .craft-card-media img,
   .craft-card-media-link:hover .craft-card-media img,
   .craft-card-media-link:focus-visible .craft-card-media img {
     transform: none;
@@ -2234,6 +2311,10 @@ svg.dog-ig-body {
     width: 100%;
     max-width: 100%;
     margin-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
     padding-left: 0;
     overflow: visible;
   }
@@ -2258,15 +2339,19 @@ svg.dog-ig-body {
     flex: none;
     max-width: 100%;
     width: 100%;
-    gap: 40px;
+    gap: 0;
   }
 
   .craft-card-media {
     width: 100%;
     max-width: 100%;
     height: auto;
-    aspect-ratio: 960 / 600;
-    border-radius: 16px;
+    aspect-ratio: 600 / 375;
+    border-radius: 0;
+  }
+
+  .craft-card-meta {
+    padding: 24px;
   }
 
   .craft-nav {

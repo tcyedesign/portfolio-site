@@ -814,6 +814,52 @@
 
   initSoftFloatMotion();
 
+  // Dog-orbit stars (b/c/d): each twinkles once every 5s; order randomized per cycle.
+  (function initDogStarTwinkle() {
+    if (reducedMotion) return;
+    const stars = [
+      ...document.querySelectorAll(".hero-star-b, .hero-star-c, .hero-star-d"),
+    ];
+    if (stars.length < 2) return;
+
+    function shuffle(list) {
+      const out = [...list];
+      for (let i = out.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [out[i], out[j]] = [out[j], out[i]];
+      }
+      return out;
+    }
+
+    function twinkle(star) {
+      star.classList.remove("is-twinkling");
+      void star.offsetWidth;
+      star.classList.add("is-twinkling");
+      const clear = () => star.classList.remove("is-twinkling");
+      star.addEventListener("animationend", clear, { once: true });
+    }
+
+    function cycle() {
+      const order = shuffle(stars);
+      // Random delays within the 5s window; keep ~0.3s+ gaps so twinkles don't stack.
+      const delays = [];
+      let t = Math.random() * 0.6;
+      order.forEach(() => {
+        delays.push(t);
+        t += 0.4 + Math.random() * 1.6;
+      });
+      // If we ran past ~4.5s, compress into the window while keeping relative order.
+      const maxDelay = Math.max(...delays);
+      const scale = maxDelay > 4.5 ? 4.5 / maxDelay : 1;
+      order.forEach((star, i) => {
+        setTimeout(() => twinkle(star), delays[i] * scale * 1000);
+      });
+      setTimeout(cycle, 5000);
+    }
+
+    setTimeout(cycle, Math.random() * 800);
+  })();
+
   // Inline dog IG callout so scribble stroke-dash sequencing can run in CSS.
   // HTML `.dog-ig-notes` owns the copy; SVG text is unused / hidden.
   const calloutMount = document.querySelector(".dog-ig-callout[data-callout-src]");
