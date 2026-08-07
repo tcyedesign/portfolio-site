@@ -488,3 +488,119 @@
       });
     });
   });
+
+  // About-page deco: scroll parallax (+ soft cursor float, same system as home clouds).
+  (function initAboutDecoMotion() {
+    const reducedMotion =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) return;
+    if (!document.body.classList.contains('about-page')) return;
+
+    const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+    const layers = [
+      { sel: '.about-deco-cloud-1', speed: 0.18, maxPush: 10, pushScale: 0.045, hitPad: 48 },
+      { sel: '.about-deco-cloud-2', speed: 0.28, maxPush: 10, pushScale: 0.045, hitPad: 44 },
+      { sel: '.about-deco-stars', speed: 0.22, maxPush: 10, pushScale: 0.045, hitPad: 40 },
+    ]
+      .map(({ sel, speed, maxPush, pushScale, hitPad }) => {
+        const el = document.querySelector(sel);
+        if (!el) return null;
+        return {
+          el,
+          speed,
+          maxPush,
+          pushScale,
+          hitPad,
+          spring: 0.02,
+          damping: 0.97,
+          parallaxY: 0,
+          x: 0,
+          y: 0,
+          vx: 0,
+          vy: 0,
+          targetX: 0,
+          targetY: 0,
+        };
+      })
+      .filter(Boolean);
+
+    if (!layers.length) return;
+
+    function syncParallax() {
+      const scrollY = Math.max(window.scrollY || window.pageYOffset || 0, 0);
+      layers.forEach((layer) => {
+        layer.parallaxY = scrollY * layer.speed;
+      });
+    }
+
+    function updatePushTarget(layer) {
+      const rect = layer.el.getBoundingClientRect();
+      // Undo current push + parallax so the rest center stays layout-anchored.
+      const restCx = rect.left + rect.width / 2 - layer.x;
+      const restCy = rect.top + rect.height / 2 - layer.y - layer.parallaxY;
+      const dx = restCx - pointer.x;
+      const dy = restCy - pointer.y;
+      const dist = Math.hypot(dx, dy);
+      const hitRadius = Math.max(rect.width, rect.height) * 0.75 + layer.hitPad;
+
+      if (dist >= hitRadius) {
+        layer.targetX = 0;
+        layer.targetY = 0;
+        return;
+      }
+
+      const awayX = dist < 0.001 ? 0 : dx / dist;
+      const awayY = dist < 0.001 ? -1 : dy / dist;
+      const penetration = (hitRadius - dist) * layer.pushScale;
+
+      layer.targetX = Math.max(-layer.maxPush, Math.min(layer.maxPush, awayX * penetration));
+      layer.targetY = Math.max(-layer.maxPush, Math.min(layer.maxPush, awayY * penetration));
+    }
+
+    function applyLayer(layer) {
+      layer.el.style.translate =
+        layer.x.toFixed(2) + 'px ' + (layer.parallaxY + layer.y).toFixed(2) + 'px';
+    }
+
+    function animate() {
+      syncParallax();
+      layers.forEach((layer) => {
+        updatePushTarget(layer);
+        layer.vx = (layer.vx + (layer.targetX - layer.x) * layer.spring) * layer.damping;
+        layer.vy = (layer.vy + (layer.targetY - layer.y) * layer.spring) * layer.damping;
+        layer.x += layer.vx;
+        layer.y += layer.vy;
+
+        if (
+          Math.abs(layer.x) < 0.015 &&
+          Math.abs(layer.y) < 0.015 &&
+          Math.abs(layer.vx) < 0.015 &&
+          Math.abs(layer.vy) < 0.015 &&
+          layer.targetX === 0 &&
+          layer.targetY === 0
+        ) {
+          layer.x = 0;
+          layer.y = 0;
+          layer.vx = 0;
+          layer.vy = 0;
+        }
+
+        applyLayer(layer);
+      });
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener(
+      'pointermove',
+      (event) => {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+      },
+      { passive: true }
+    );
+
+    syncParallax();
+    layers.forEach(applyLayer);
+    requestAnimationFrame(animate);
+  })();

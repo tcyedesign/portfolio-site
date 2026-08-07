@@ -220,6 +220,29 @@
     const target = svg.getElementById("big black nose");
     if (!target) return null;
 
+    // Cover the baked WebP nose so only this live pad shows when it moves.
+    if (!svg.getElementById("nose-webp-cover")) {
+      const pad = target.querySelector("rect");
+      if (pad && target.parentNode) {
+        const cover = pad.cloneNode(true);
+        cover.setAttribute("id", "nose-webp-cover");
+        cover.setAttribute("fill", "#F7F7F7");
+        cover.removeAttribute("fill-opacity");
+        // Slightly larger than the live pad so the WebP nose never peeks.
+        const w = parseFloat(cover.getAttribute("width") || "0");
+        const h = parseFloat(cover.getAttribute("height") || "0");
+        if (w && h) {
+          cover.setAttribute("width", String(w + 4));
+          cover.setAttribute("height", String(h + 4));
+          const x = parseFloat(cover.getAttribute("x") || "0");
+          const y = parseFloat(cover.getAttribute("y") || "0");
+          cover.setAttribute("x", String(x - 2));
+          cover.setAttribute("y", String(y - 2));
+        }
+        target.parentNode.insertBefore(cover, target);
+      }
+    }
+
     let bbox;
     try {
       bbox = target.getBBox();
@@ -674,13 +697,18 @@
       { sel: ".hero-cloud", speed: 0.08, maxPush: 1.6, pushScale: 0.022, hitPad: 28 },
       { sel: ".hero-cloud-2", speed: 0.14, maxPush: 1.4, pushScale: 0.024, hitPad: 24 },
       { sel: ".deco-cloud-3", speed: 0.1, maxPush: 1.2, pushScale: 0.022, hitPad: 22 },
-      // Stars — same float feel, slightly snugger hit (smaller art)
-      { sel: ".hero-star-a", speed: 0, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
-      { sel: ".hero-star-b", speed: 0, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
-      { sel: ".hero-star-c", speed: 0, maxPush: 1.2, pushScale: 0.022, hitPad: 18 },
-      { sel: ".hero-star-d", speed: 0, maxPush: 1.2, pushScale: 0.022, hitPad: 18 },
+      // Hero stars — float + scroll parallax
+      { sel: ".hero-star-a", speed: 0.07, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
+      { sel: ".hero-star-b", speed: 0.09, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
+      { sel: ".hero-star-c", speed: 0.11, maxPush: 1.2, pushScale: 0.022, hitPad: 18 },
+      { sel: ".hero-star-d", speed: 0.06, maxPush: 1.2, pushScale: 0.022, hitPad: 18 },
+      // Project stars — float only
       { sel: ".project-star-3", speed: 0, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
       { sel: ".project-star-4", speed: 0, maxPush: 1.2, pushScale: 0.022, hitPad: 16 },
+      // Arrow 1 (hero path) — float + parallax
+      { sel: ".hero-arrow-path", speed: 0.07, maxPush: 1.5, pushScale: 0.02, hitPad: 32 },
+      // Flower — soft float only (no scroll parallax)
+      { sel: ".hero-flower", speed: 0, maxPush: 1.5, pushScale: 0.022, hitPad: 26 },
     ]
       .map(({ sel, speed, maxPush, pushScale, hitPad }) => {
         const el = document.querySelector(sel);

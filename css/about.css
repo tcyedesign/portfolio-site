@@ -209,6 +209,7 @@
   pointer-events: none;
   user-select: none;
   max-width: none;
+  will-change: translate;
 }
 
 .about-page .about-deco-cloud-1 {
