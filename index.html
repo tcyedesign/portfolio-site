@@ -76,7 +76,7 @@
             <div class="hero-copy">
                 <div class="hero-copy-text">
                 <h1 class="hero-title">
-                    Hi, I’m <span class="accent">T<span class="name-c">c</span></span>.
+                    H<span class="hero-kern-i">i</span><span class="hero-kern-before-comma" aria-hidden="true"></span>, I’m <span class="accent">T<span class="name-c">c</span></span>.
                 </h1>
                 <p class="hero-desc">
                     Product Designer with 7+ years of experience building consumer and enterprise applications. I'm passionate about bridging product and brand, crafting the visual details (like icons and illustrations) that make experiences delightful.
@@ -106,25 +106,33 @@
 
             <aside class="hero-note" aria-label="How this website was made">
                 <div class="hero-note-card">
-                    <!-- Figma 655:5817 Asset_Note — full raster (paper, tape, type); 2×/3× for Retina -->
                     <img
                         class="hero-note-asset"
-                        src="assets/hero/v2/Asset_Note.png?v=figma-655-5817-hires"
-                        srcset="assets/hero/v2/Asset_Note@2x.png?v=figma-655-5817-hires 2x, assets/hero/v2/Asset_Note@3x.png?v=figma-655-5817-hires 3x"
+                        src="assets/hero/v2/Asset_Note_chrome.png?v=via-20260807"
                         width="236"
                         height="186"
                         alt=""
                         aria-hidden="true"
                         decoding="async"
                     >
-                    <p class="visually-hidden">
-                        This website is designed and crafted with human care, developed with AI.
-                        Designed in Figma. Built with Cursor. Deployed with Cloudflare.
-                    </p>
-                    <!-- Transparent hit targets over Figma-underlined words (measured from 655:5817) -->
-                    <a class="hero-note-link hero-note-link-figma" href="https://www.figma.com/" target="_blank" rel="noopener noreferrer">Figma</a>
-                    <a class="hero-note-link hero-note-link-cursor" href="https://cursor.com/" target="_blank" rel="noopener noreferrer">Cursor</a>
-                    <a class="hero-note-link hero-note-link-cloudflare" href="https://www.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare</a>
+                    <div class="hero-note-body">
+                        <p class="hero-note-intro">This website is designed and crafted with human care, developed with AI.</p>
+                        <img class="hero-note-divider" src="assets/hero/v2/note-line.svg" width="172" height="1" alt="" aria-hidden="true" decoding="async">
+                        <ul class="hero-note-list">
+                            <li>
+                                <img src="assets/hero/v2/note-arrow-sm.svg" width="12" height="12" alt="" aria-hidden="true" decoding="async">
+                                <span>Designed in <a class="hero-note-link" href="https://www.figma.com/design/" target="_blank" rel="noopener noreferrer">Figma</a></span>
+                            </li>
+                            <li>
+                                <img src="assets/hero/v2/note-arrow-sm.svg" width="12" height="12" alt="" aria-hidden="true" decoding="async">
+                                <span>Built with <a class="hero-note-link" href="https://cursor.com/home" target="_blank" rel="noopener noreferrer">Cursor</a></span>
+                            </li>
+                            <li>
+                                <img src="assets/hero/v2/note-arrow-sm.svg" width="12" height="12" alt="" aria-hidden="true" decoding="async">
+                                <span>Deployed via <a class="hero-note-link" href="https://www.cloudflare.com/products/workers/" target="_blank" rel="noopener noreferrer">Cloudflare</a></span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </aside>
         </section>
@@ -138,7 +146,7 @@
             </div>
             <!-- Figma Arrow 2 — centered, straddles hero → Featured; kept in .hero-band so it paints above the noise fill -->
             <img class="hero-deco deco-arrow-2" src="assets/hero/v2/arrow-2.svg" width="76" height="97" alt="" aria-hidden="true" decoding="async">
-            <p class="hero-credit">This website is designed in Figma, built with Cursor, and deployed with Cloudflare.</p>
+            <p class="hero-credit">This website is designed in <a class="hero-credit-link" href="https://www.figma.com/design/" target="_blank" rel="noopener noreferrer">Figma</a>, built with <a class="hero-credit-link" href="https://cursor.com/home" target="_blank" rel="noopener noreferrer">Cursor</a>, and deployed via <a class="hero-credit-link" href="https://www.cloudflare.com/products/workers/" target="_blank" rel="noopener noreferrer">Cloudflare</a>.</p>
         </div>
 
         <section class="section section-product" id="work">
@@ -170,7 +178,7 @@
                             <span class="chip">Desktop &amp; Mobile</span>
                             <span class="chip">Design system</span>
                             <span class="chip">User Research</span>
-                            <span class="chip">AI</span>
+                            <span class="chip">AI Workflow</span>
                         </div>
                         <div class="project-copy">
                             <h3><a class="project-title-link" href="projects/cloudflare-one-client.html">Cloudflare One Client: Redesigning Enterprise Security</a></h3>

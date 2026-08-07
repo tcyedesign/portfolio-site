@@ -313,7 +313,41 @@ a {
   line-height: 1.3;
   letter-spacing: 0;
   color: var(--color-black-subtle);
+  pointer-events: auto;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.hero-credit-link {
+  position: relative;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.hero-credit-link::before {
+  content: "";
+  position: absolute;
+  left: -0.08em;
+  right: -0.08em;
+  top: 0.05em;
+  bottom: 0;
+  border-radius: 2px;
+  background-color: rgba(254, 220, 0, 0.45);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity 0.2s ease;
   pointer-events: none;
+}
+
+.hero-credit-link:hover::before,
+.hero-credit-link:focus-visible::before {
+  opacity: 1;
+}
+
+.hero-credit-link:hover,
+.hero-credit-link:focus-visible {
+  outline: none;
 }
 
 .hero {
@@ -592,10 +626,18 @@ a {
 
 .hero-title .accent {
   color: #ff5959;
+  margin-left: 1px;
+}
+
+/* Explicit spacer — margin on inline glyphs is cancelled by title letter-spacing */
+.hero-title .hero-kern-before-comma {
+  display: inline-block;
+  width: 2px;
 }
 
 .hero-title .name-c {
-  margin-left: -1px;
+  margin-left: -2px;
+  margin-right: 1px;
 }
 
 .hero-desc {
@@ -766,8 +808,7 @@ a {
   max-width: none;
 }
 
-/* Sticky note — Figma Asset_Note (655:5817) full raster + transparent link hits.
-   Fixed hit target on the left edge; only the inner card translates (no flicker). */
+/* Sticky note — chrome raster + real HTML copy (slide-out on hover) */
 .hero-note {
   position: absolute;
   left: calc(50% - 50vw);
@@ -810,21 +851,82 @@ a {
   display: block;
 }
 
-/* Transparent hit targets over underlined words baked into Asset_Note.png */
-.hero-note-link {
+.hero-note-body {
   position: absolute;
-  z-index: 2;
-  color: transparent;
-  border-radius: 3px;
-  overflow: hidden;
-  text-decoration: none;
+  left: 16px;
+  top: 18px;
+  right: 52px;
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1;
+  pointer-events: auto;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.hero-note-intro {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--color-black-normal);
+}
+
+.hero-note-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  pointer-events: none;
+}
+
+.hero-note-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hero-note-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--color-black-normal);
+}
+
+.hero-note-list li img {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.hero-note-link {
+  position: relative;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .hero-note-link::before {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
+  left: -0.08em;
+  right: -0.08em;
+  top: 0.05em;
+  bottom: 0;
+  border-radius: 2px;
   background-color: rgba(254, 220, 0, 0.45);
   mix-blend-mode: multiply;
   opacity: 0;
@@ -840,27 +942,6 @@ a {
 .hero-note-link:hover,
 .hero-note-link:focus-visible {
   outline: none;
-}
-
-.hero-note-link-figma {
-  left: 112px;
-  top: 105px;
-  width: 40px;
-  height: 18px;
-}
-
-.hero-note-link-cursor {
-  left: 97px;
-  top: 126px;
-  width: 44px;
-  height: 18px;
-}
-
-.hero-note-link-cloudflare {
-  left: 125px;
-  top: 146px;
-  width: 66px;
-  height: 18px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -927,6 +1008,56 @@ a {
 .section-header img {
   width: 48px;
   height: 48px;
+}
+
+/* Play header flower — same petal spin as home .hero-flower */
+.play-flower {
+  position: relative;
+  width: 66px;
+  height: 64px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.play-flower-bloom,
+.play-flower-center {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Beat `.section-header img` (48×48) so layers fill the 66×64 slot */
+.section-header .play-flower img {
+  width: 100%;
+  height: 100%;
+}
+
+.play-flower-bloom {
+  z-index: 1;
+  transform: rotate(0deg);
+  transform-origin: 44.145% 43.84%;
+  transition: transform 0.6s ease-in-out;
+}
+
+.play-flower-center {
+  z-index: 2;
+}
+
+.play-flower:hover .play-flower-bloom {
+  transform: rotate(360deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play-flower-bloom {
+    transition: none;
+  }
+
+  .play-flower:hover .play-flower-bloom {
+    transform: rotate(0deg);
+  }
 }
 
 .section-header-inline img {
