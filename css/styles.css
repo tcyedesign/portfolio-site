@@ -5,6 +5,8 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  /* Overscroll / rubber-band below footer matches footer fill (not bare white). */
+  background-color: color-mix(in srgb, var(--color-cream) 40%, #fff);
 }
 
 body {
@@ -70,8 +72,8 @@ a {
 /* Home default while header overlaps the hero band */
 .site-header.is-home-hero {
   background-color: #fffaf7;
-  /* Figma 650:3991 NOISE — tile sampled from Figma screenshot (mono size 2, dens 25%, #383838@20%) */
-  background-image: url("../assets/hero/v2/hero-noise-figma.png");
+  /* Figma 650:3991 NOISE — screenshot-sampled tile (not procedural squares) */
+  background-image: url("../assets/hero/v2/hero-noise-figma.png?v=restore-figma-20260805");
   background-repeat: repeat;
   background-size: 512px 512px;
 }
@@ -167,6 +169,12 @@ a {
   }
 }
 
+.nav-cluster {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
 .nav {
   display: flex;
   align-items: center;
@@ -181,12 +189,45 @@ a {
 
 .nav a {
   opacity: 0.72;
-  transition: opacity 0.2s ease;
+  font-weight: inherit;
+  transition: opacity 0.2s ease, font-weight 0.2s ease;
 }
 
-.nav a:hover,
+.nav a:hover {
+  opacity: 1;
+}
+
 .nav a.active {
   opacity: 1;
+  font-weight: var(--font-weight-bold);
+}
+
+/* Desktop: text tabs. Mobile: Phosphor list icon opens overflow menu. */
+.nav-menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-strong);
+  flex-shrink: 0;
+}
+
+.nav-menu-toggle .nav-menu-icon {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+.nav-menu-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .mode-toggle {
@@ -242,9 +283,9 @@ a {
   z-index: 2;
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  /* #FFFAF7 + Figma screenshot–sampled noise tile (not procedural 25% static) */
+  /* #FFFAF7 + Figma screenshot–sampled noise tile */
   background-color: #fffaf7;
-  background-image: url("../assets/hero/v2/hero-noise-figma.png");
+  background-image: url("../assets/hero/v2/hero-noise-figma.png?v=restore-figma-20260805");
   background-repeat: repeat;
   background-size: 512px 512px;
   border-bottom: 1px solid var(--border);
@@ -252,7 +293,7 @@ a {
   overflow: visible;
 }
 
-/* Noise is on the band background (Figma-sampled tile). Keep ::after free for stacking. */
+/* Keep ::after free for stacking. */
 .hero-band::after {
   content: none;
 }
@@ -384,11 +425,13 @@ a {
  * Frame includes 72px header (py 20 + 32 logo); flower is a sibling of
  * the hero section and straddles its bottom border → in .hero-band:
  * left 1167.63px (+20px), bottom 0, translateY(50%).
+ * Anchor to the centered --max frame (same as right-side hero clouds) so
+ * it shifts right as the viewport grows past 1440.
  */
 .hero-band > .hero-flower {
   position: absolute;
   display: block;
-  left: 1167.63px;
+  left: calc(50% - (var(--max) / 2) + 1167.63px);
   top: auto;
   right: auto;
   bottom: 0;
@@ -728,12 +771,27 @@ a {
   border-radius: 3px;
   overflow: hidden;
   text-decoration: none;
-  transition: background-color 0.2s ease;
+}
+
+.hero-note-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: rgba(254, 220, 0, 0.45);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.hero-note-link:hover::before,
+.hero-note-link:focus-visible::before {
+  opacity: 1;
 }
 
 .hero-note-link:hover,
 .hero-note-link:focus-visible {
-  background-color: rgba(254, 220, 0, 0.45);
   outline: none;
 }
 
@@ -1730,7 +1788,8 @@ svg.dog-ig-body {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   padding: 24px 40px;
-  background: color-mix(in srgb, var(--color-cream) 40%, transparent);
+  /* Solid mix so mobile overscroll (html bg) matches the footer exactly */
+  background: color-mix(in srgb, var(--color-cream) 40%, #fff);
   border-top: 1px solid var(--border);
   color: var(--color-black-subtle); /* Figma Black subtle #808080 */
 }
@@ -1898,9 +1957,42 @@ svg.dog-ig-body {
 }
 
 @media (max-width: 700px) {
-  .nav {
-    gap: 20px;
-    font-size: 14px;
+  .nav-cluster {
+    position: relative;
+    margin-left: auto;
+  }
+
+  .nav-menu-toggle {
+    display: inline-flex;
+  }
+
+  .site-header .nav {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    left: auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    min-width: 156px;
+    padding: 16px 24px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--color-cream) 40%, #fff);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    z-index: 120;
+  }
+
+  .site-header.is-nav-open .nav {
+    display: flex;
+  }
+
+  .site-header .nav a {
+    display: block;
+    white-space: nowrap;
+    text-align: left;
+    padding: 0;
   }
 
   .status-row {
@@ -1918,6 +2010,8 @@ svg.dog-ig-body {
 #visual.section .section-header {
   padding-left: 240px;
   padding-right: 64px;
+  /* Icon + title: bottom-align (scoped; other inline headers stay centered) */
+  align-items: flex-end;
 }
 
 .craft-carousel {
@@ -1930,17 +2024,18 @@ svg.dog-ig-body {
 }
 
 /*
-  Full-viewport clip window (same breakout as header).
-  padding-left keeps the resting card at the 240px content line; overflow:hidden
-  crops the previous card as it exits through the left screen edge (instead of
-  vanishing at the content gutter).
+  Full-viewport clip window (same breakout as .hero-band).
+  Resting cards must share the .page content line: 240px inside the centered
+  --max frame. On viewports wider than --max, add the page’s side inset so the
+  left card lines up with #visual .section-header (not the raw viewport edge).
+  overflow:hidden crops the previous card at the screen edge.
 */
 .craft-viewport {
   box-sizing: border-box;
   width: 100vw;
   max-width: none;
   margin-left: calc(50% - 50vw);
-  padding-left: 240px;
+  padding-left: calc(240px + max(0px, (100vw - var(--max)) / 2));
   overflow: hidden;
 }
 
@@ -1952,6 +2047,7 @@ svg.dog-ig-body {
   will-change: transform;
 }
 
+/* Same inset as #visual .section-header (nav stays in .page; not full-bleed) */
 .craft-nav {
   padding-left: 240px;
 }
@@ -2213,7 +2309,7 @@ svg.dog-ig-body {
 
 .visual-tab:hover:not(.active) {
   color: var(--text-strong);
-  background: rgba(0, 0, 0, 0.04);
+  background: transparent;
 }
 
 .visual-tab.active {
@@ -2317,6 +2413,38 @@ svg.dog-ig-body {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.project-page .case-ext-link {
+  position: relative;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.project-page .case-ext-link::before {
+  content: "";
+  position: absolute;
+  left: -0.08em;
+  right: -0.08em;
+  top: 0.05em;
+  bottom: 0;
+  border-radius: 2px;
+  background-color: rgba(254, 220, 0, 0.45);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.project-page .case-ext-link:hover::before,
+.project-page .case-ext-link:focus-visible::before {
+  opacity: 1;
+}
+
+.project-page .case-ext-link:hover,
+.project-page .case-ext-link:focus-visible {
+  outline: none;
 }
 
 .project-page .case-header > p {
@@ -2574,7 +2702,7 @@ svg.dog-ig-body {
 
 .project-page .case-compare-tab:hover:not(.is-active) {
   color: var(--text-strong);
-  background: rgba(0, 0, 0, 0.04);
+  background: transparent;
 }
 
 .project-page .case-compare-tab.is-active {
@@ -2619,10 +2747,29 @@ svg.dog-ig-body {
   gap: 12px;
 }
 
-.project-page .case-next-flowers img {
+/* Petals + center only — no shadow (static) or lower-right line */
+.project-page .case-next-flower {
+  position: relative;
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
+}
+
+.project-page .case-next-flower-bloom,
+.project-page .case-next-flower-center {
+  position: absolute;
+  inset: 0;
   display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.project-page .case-next-flower-bloom {
+  z-index: 1;
+}
+
+.project-page .case-next-flower-center {
+  z-index: 2;
 }
 
 .project-page .case-insight-grid {

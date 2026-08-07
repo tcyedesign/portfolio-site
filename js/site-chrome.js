@@ -43,12 +43,71 @@
           </g>
         </svg>
       </a>
-      <nav class="nav" aria-label="Primary">
-        <a class="${active === "work" ? "active" : ""}" href="${href("index.html")}">Work</a>
-        <a class="${active === "play" ? "active" : ""}" href="${href("play.html")}">Play</a>
-        <a class="${active === "about" ? "active" : ""}" href="${href("about.html")}">About</a>
-      </nav>
+      <div class="nav-cluster">
+        <button
+          class="nav-menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-primary-nav"
+          aria-label="Open menu"
+        >
+          <svg class="nav-menu-icon" width="32" height="32" viewBox="0 0 256 256" fill="none" aria-hidden="true" focusable="false">
+            <path d="M224 128a8 8 0 0 1-8 8H40a8 8 0 0 1 0-16h176a8 8 0 0 1 8 8ZM40 72h176a8 8 0 0 0 0-16H40a8 8 0 0 0 0 16Zm176 112H40a8 8 0 0 0 0 16h176a8 8 0 0 0 0-16Z" fill="currentColor"/>
+          </svg>
+        </button>
+        <nav class="nav" id="site-primary-nav" aria-label="Primary">
+          <a class="${active === "work" ? "active" : ""}" href="${href("index.html")}">Work</a>
+          <a class="${active === "play" ? "active" : ""}" href="${href("play.html")}">Play</a>
+          <a class="${active === "about" ? "active" : ""}" href="${href("about.html")}">About</a>
+        </nav>
+      </div>
     `;
+
+    initMobileNav(header);
+  }
+
+  function initMobileNav(header) {
+    const toggle = header.querySelector(".nav-menu-toggle");
+    const nav = header.querySelector("#site-primary-nav");
+    if (!toggle || !nav) return;
+
+    const setOpen = (open) => {
+      header.classList.toggle("is-nav-open", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    };
+
+    toggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setOpen(!header.classList.contains("is-nav-open"));
+    });
+
+    nav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => setOpen(false));
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!header.classList.contains("is-nav-open")) return;
+      if (header.contains(event.target)) return;
+      setOpen(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setOpen(false);
+    });
+
+    const mobileNavQuery =
+      window.matchMedia && window.matchMedia("(max-width: 700px)");
+    if (mobileNavQuery) {
+      const onViewportChange = (event) => {
+        if (!event.matches) setOpen(false);
+      };
+      if (typeof mobileNavQuery.addEventListener === "function") {
+        mobileNavQuery.addEventListener("change", onViewportChange);
+      } else if (typeof mobileNavQuery.addListener === "function") {
+        mobileNavQuery.addListener(onViewportChange);
+      }
+    }
   }
 
   function initStickyHeader() {
