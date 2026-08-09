@@ -668,11 +668,15 @@ a {
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
-  align-content: flex-start;
+  /* Center tracks if any spare cross-size; avoid top-packed empty bottom */
+  align-content: center;
   gap: 8px;
   width: fit-content;
   max-width: 100%;
-  padding: 10px 16px;
+  height: auto;
+  min-height: 0;
+  /* Even padding (was 10px 16px — short vertical made wrap look top-heavy) */
+  padding: 12px;
   border-radius: 20px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   background: rgba(0, 0, 0, 0.02);
@@ -680,7 +684,8 @@ a {
   font-size: 14px;
   font-weight: var(--font-weight-regular);
   letter-spacing: -0.28px;
-  line-height: normal;
+  /* Hug 16px icons; normal LH inflated wrap rows (~18px) and spare bottom */
+  line-height: 1;
   color: var(--color-black-normal);
 }
 
@@ -694,10 +699,17 @@ a {
   .live-tag {
     display: grid;
     grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto;
+    grid-auto-rows: max-content;
     width: max-content;
     max-width: 100%;
+    height: max-content;
+    min-height: 0;
     justify-items: start;
     align-items: center;
+    align-content: center;
+    row-gap: 8px;
+    column-gap: 8px;
   }
 
   .live-tag > .live-tag-dot:nth-child(4) {
@@ -714,6 +726,7 @@ a {
   align-items: center;
   gap: 8px;
   white-space: nowrap;
+  line-height: 1;
 }
 
 .live-tag-item img {
@@ -2462,7 +2475,7 @@ svg.dog-ig-body {
   .live-tag {
     justify-content: flex-start;
     align-items: center;
-    align-content: flex-start;
+    align-content: center;
     text-align: left;
   }
 }
