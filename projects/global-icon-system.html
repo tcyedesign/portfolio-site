@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;0,6..144,700;1,6..144,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css?v=nav-active-bold-20260805">
-    <link rel="stylesheet" href="../css/styles.css?v=craft-nav-align-header-20260805">
+    <link rel="stylesheet" href="../css/styles.css?v=nav-title-pad-120-20260808">
     <title>Global Icon System — Tc</title>
 </head>
 <body>
@@ -23,10 +23,23 @@
 
             <header class="case-header">
                 <h1>Global Icon System</h1>
+                <div class="tag-group"><span class="chip">Iconography System</span><span class="chip">Centralized Figma Library</span></div>
                 <p>Building a Shared Source of Truth: I created a unified icon system to bring product and brand teams together under one shared visual language. Designed for everything from product dashboards and websites to marketing campaigns and physical spaces, this system has stood the test of time and is still actively used across Cloudflare today—6 years later.</p>
                 <figure class="case-figure">
                     <div class="case-media">
-                        <img src="../assets/projects/icon/cover.png" alt="Global Icon System cover" loading="lazy">
+                        <picture>
+                            <source
+                                media="(max-width: 700px)"
+                                type="image/webp"
+                                srcset="../assets/projects/cover-icon-square-400w.webp?v=no-outline-20260808 400w, ../assets/projects/cover-icon-square.webp?v=no-outline-20260808 800w"
+                                sizes="100vw"
+                            >
+                            <source
+                                media="(max-width: 700px)"
+                                srcset="../assets/projects/cover-icon-square.png?v=no-outline-20260808"
+                            >
+                            <img src="../assets/projects/icon/cover.png?v=no-outline-20260808" alt="Global Icon System cover" width="1920" height="1200" loading="lazy" decoding="async">
+                        </picture>
                     </div>
                 </figure>
             </header>
@@ -125,6 +138,6 @@ Guidelines and workshop</dd>
 
         <footer class="site-footer" data-site-footer></footer>
     </div>
-    <script src="../js/site-chrome.js?v=about-parallax-strong-20260807" data-base="../"></script>
+    <script src="../js/site-chrome.js?v=project-nav-wash-20260808" data-base="../"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;0,6..144,700;1,6..144,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css?v=nav-active-bold-20260805">
-    <link rel="stylesheet" href="../css/styles.css?v=craft-nav-align-header-20260805">
+    <link rel="stylesheet" href="../css/styles.css?v=nav-title-pad-120-20260808">
     <title>WARP — Tc</title>
 </head>
 <body>
@@ -23,13 +23,25 @@
 
             <header class="case-header">
                 <h1>WARP: Consumer Privacy Overhaul</h1>
-                <div class="tag-group"><span class="chip">Consumer B2C</span><span class="chip">Mobile</span><span class="chip">0-to-1 Redesign</span><span class="chip">Rebrand &amp; UXUI</span><span class="chip">User research</span></div>
+                <div class="tag-group"><span class="chip">Consumer Mobile</span><span class="chip">Research-Backed UX</span><span class="chip">0-to-1 Redesign &amp; Rebrand</span><span class="chip">Design system</span></div>
                 <p>WARP is the complete redesign of <a class="case-ext-link" href="https://one.one.one.one/" target="_blank" rel="noopener noreferrer">1.1.1.1</a>—Cloudflare’s flagship consumer mobile app, built to democratize internet privacy. </p>
 <p>At the time, the app was already operating at massive global scale with over 15 million installs and nearly 7 million Daily Active Users. But its user base was almost entirely technical—mostly software engineers and site owners. Cloudflare’s vision was much bigger: we wanted to protect privacy for everyday users, for free. </p>
 <p>Embedded in the small product team, I was fortunate to run a true &#x27;dream design process&#x27;. I worked alongside one PM and one Engineer to bridge that gap—transforming a bare-bones technical utility into an accessible, intuitive mobile experience for a broad global audience</p>
                 <figure class="case-figure">
                     <div class="case-media">
-                        <img src="../assets/projects/warp/cover.png" alt="WARP final design" loading="lazy">
+                        <picture>
+                            <source
+                                media="(max-width: 700px)"
+                                type="image/webp"
+                                srcset="../assets/projects/cover-warp-square-400w.webp?v=mobile-square-20260808 400w, ../assets/projects/cover-warp-square.webp?v=mobile-square-20260808 800w"
+                                sizes="100vw"
+                            >
+                            <source
+                                media="(max-width: 700px)"
+                                srcset="../assets/projects/cover-warp-square.png?v=mobile-square-20260808"
+                            >
+                            <img src="../assets/projects/warp/cover.png" alt="WARP final design" width="1920" height="1200" loading="lazy" decoding="async">
+                        </picture>
                     </div>
                     <figcaption class="case-caption">Final Design</figcaption>
                 </figure>
@@ -248,6 +260,6 @@ Visual &amp; UI design</dd>
 
         <footer class="site-footer" data-site-footer></footer>
     </div>
-    <script src="../js/site-chrome.js?v=about-parallax-strong-20260807" data-base="../"></script>
+    <script src="../js/site-chrome.js?v=project-nav-wash-20260808" data-base="../"></script>
 </body>
 </html>

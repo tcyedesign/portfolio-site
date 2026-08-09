@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;0,6..144,700;1,6..144,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css?v=nav-active-bold-20260805">
-    <link rel="stylesheet" href="../css/styles.css?v=craft-nav-align-header-20260805">
+    <link rel="stylesheet" href="../css/styles.css?v=nav-title-pad-120-20260808">
     <title>B2B Illustration System — Tc</title>
 </head>
 <body>
@@ -23,11 +23,24 @@
 
             <header class="case-header">
                 <h1>B2B Illustration System</h1>
+                <div class="tag-group"><span class="chip">Brand System</span><span class="chip">Enterprise Scale</span><span class="chip">Modular Systems</span></div>
                 <p>Partnered with the Creative Director to explore and evolve Cloudflare’s B2B illustration style—bringing depth, airiness, and sophistication into our visual language while keeping its simple geometric foundation.</p>
 <p>Designed to scale seamlessly from product dashboards and blog posts to digital campaigns and physical event spaces, the system is built on a library of reusable, modular components. This allows designers to easily assemble and custom-puzzle elements together to create dynamic hero illustration or lightweight spot artwork in minutes.</p>
                 <figure class="case-figure">
                     <div class="case-media">
-                        <img src="../assets/projects/illustration/cover.png?v=figma-310-941-tiles-20260804" alt="B2B Illustration System cover — six spot illustrations" width="1920" height="1200" loading="eager">
+                        <picture>
+                            <source
+                                media="(max-width: 700px)"
+                                type="image/webp"
+                                srcset="../assets/projects/cover-illustration-square-400w.webp?v=no-outline-20260808 400w, ../assets/projects/cover-illustration-square.webp?v=no-outline-20260808 800w"
+                                sizes="100vw"
+                            >
+                            <source
+                                media="(max-width: 700px)"
+                                srcset="../assets/projects/cover-illustration-square.png?v=no-outline-20260808"
+                            >
+                            <img src="../assets/projects/illustration/cover.png?v=figma-310-941-tiles-20260804" alt="B2B Illustration System cover — six spot illustrations" width="1920" height="1200" loading="eager" decoding="async">
+                        </picture>
                     </div>
                 </figure>
             </header>
@@ -119,6 +132,6 @@ Illustration workshops</dd>
 
         <footer class="site-footer" data-site-footer></footer>
     </div>
-    <script src="../js/site-chrome.js?v=about-parallax-strong-20260807" data-base="../"></script>
+    <script src="../js/site-chrome.js?v=project-nav-wash-20260808" data-base="../"></script>
 </body>
 </html>

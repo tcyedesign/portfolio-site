@@ -5,14 +5,15 @@
 
 .about-page .page {
   position: relative;
-  overflow: visible;
 }
 
 .about-page .about-section {
   position: relative;
   width: 100%;
-  padding: 160px 240px;
-  overflow: visible;
+  max-width: 100%;
+  padding: 120px 240px 160px;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .about-page .about-grid {
@@ -25,38 +26,61 @@
 }
 
 .about-page .about-col-bio {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 40px;
   width: 440px;
   flex-shrink: 0;
+  overflow: visible;
+  z-index: 0;
 }
 
 .about-page .about-photo {
   position: relative;
+  /* Figma 702:5098 Profile Photo — 440×400, radius 16. Shrinks if column is narrower. */
   width: 440px;
-  height: 400px;
   max-width: 100%;
+  aspect-ratio: 440 / 400;
+  height: auto;
+  /* Stars overhang the frame; clip the portrait on .about-photo-media only */
+  overflow: visible;
+  border: 0;
+  z-index: 0;
+}
+
+.about-page .about-photo-media {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
   border-radius: 16px;
   overflow: hidden;
   background: var(--color-white);
-  border: 0;
-  aspect-ratio: auto;
+  z-index: 0;
 }
 
-.about-page .about-photo img {
+/*
+ * Portrait asset is the Figma 702:5098 export (exact crop of IMG_0494 1:
+ * layer -35.65,-84.04 / 475.65×716.18 inside 440×400). Display 1:1 in frame.
+ */
+.about-page .about-photo-media img {
   position: absolute;
-  left: -35.65px;
-  top: -84.04px;
-  width: 475.65px;
-  height: 716.18px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
   max-width: none;
   pointer-events: none;
-  object-fit: fill;
-  object-position: bottom;
+  /* Asset is the 440×400 Figma export (2×); no re-crop / no stretch */
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .about-page .about-bio-block {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -140,6 +164,8 @@
 }
 
 .about-page .about-experiences {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -220,12 +246,18 @@
   z-index: 1;
 }
 
+/*
+ * Photo-relative (Figma About 199:1669):
+ * Photo at Section (240, 120); Star group at (599.011, 88)
+ * → +359.011x / -32y from photo top-left. % of 440×400 frame.
+ */
 .about-page .about-deco-stars {
-  left: 599.01px;
-  top: 88px;
-  width: 90.69px;
-  height: 82px;
-  z-index: 2;
+  left: calc(100% * 359.011 / 440);
+  top: calc(100% * -32 / 400);
+  width: calc(100% * 90.688 / 440);
+  height: auto;
+  aspect-ratio: 90.688 / 82;
+  z-index: 1;
 }
 
 .about-page .about-deco-cloud-2 {
@@ -236,9 +268,22 @@
   z-index: 1;
 }
 
-@media (max-width: 1100px) {
+/* Tablet: desktop about layout, tighter gutters (matches styles.css) */
+@media (min-width: 701px) and (max-width: 1100px) {
   .about-page .about-section {
-    padding: 96px 24px;
+    padding: 120px 64px 160px;
+  }
+
+  .about-page .about-col-bio {
+    width: min(440px, 46%);
+    flex-shrink: 1;
+  }
+}
+
+/* Phone ≤700px — matches styles.css mobile gate */
+@media (max-width: 700px) {
+  .about-page .about-section {
+    padding: 120px 24px 96px;
   }
 
   .about-page .about-grid {
@@ -252,26 +297,16 @@
     width: 100%;
   }
 
-  .about-page .about-photo {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 440 / 400;
-  }
-
-  .about-page .about-photo img {
-    left: -8.1%;
-    top: -21.01%;
-    width: 108.1%;
-    height: 179.05%;
-    transform: none;
-    object-fit: fill;
-  }
-
   .about-page .about-connect-note {
     white-space: normal;
   }
 
   .about-page .about-deco {
     display: none;
+  }
+
+  /* Same photo-relative % as desktop; clouds stay off */
+  .about-page .about-photo .about-deco-stars {
+    display: block;
   }
 }

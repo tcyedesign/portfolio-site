@@ -4,13 +4,19 @@
 
 html {
   scroll-behavior: smooth;
+  /* Prevent sideways rubber-band / white gutters on mobile (iOS needs this + body). */
   overflow-x: hidden;
+  max-width: 100%;
   /* Overscroll / rubber-band below footer matches footer fill (not bare white). */
   background-color: color-mix(in srgb, var(--color-cream) 40%, #fff);
 }
 
 body {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
   font-family: var(--font-sans);
   background:
     linear-gradient(90deg, rgba(255, 243, 236, 0.2), rgba(255, 243, 236, 0.2)),
@@ -34,6 +40,7 @@ a {
   width: 100%;
   max-width: var(--max);
   margin: 0 auto;
+  /* Do NOT set overflow-x here — it forces overflow-y to auto and breaks sticky header. */
 }
 
 /* Header — Figma 647:3104: py 20 / px 64
@@ -52,8 +59,13 @@ a {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   padding: 20px 64px;
-  background-color: #ffffff;
-  background-image: none;
+  /* Default = page body wash (Play / About / project pages). Home overrides below. */
+  background-color: #fff;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 243, 236, 0.2),
+    rgba(255, 243, 236, 0.2)
+  );
   border-bottom: 1px solid transparent;
   transform: translateY(0);
   transition:
@@ -71,30 +83,19 @@ a {
 
 /* Home default while header overlaps the hero band */
 .site-header.is-home-hero {
-  background-color: #fffaf7;
-  /* Figma 650:3991 NOISE — screenshot-sampled tile (not procedural squares) */
-  background-image: url("../assets/hero/v2/hero-noise-figma.png?v=restore-figma-20260805");
+  /* Figma 848:7376 Noise — #FFF9F5 + fractalNoise tile (rgba(56,56,56,0.2)) */
+  background-color: #fff9f5;
+  background-image: url("../assets/hero/v2/hero-noise.png?v=figma-848-7376-20260809");
   background-repeat: repeat;
-  background-size: 512px 512px;
+  background-size: 400px 400px;
 }
 
 .site-header.is-hidden {
   transform: translateY(-100%);
 }
 
-/* Match page body wash (white + 20% #FFF3EC) once past the home hero */
+/* Match page body wash once past the home hero (same as default non-home) */
 .site-header.is-past-hero {
-  background-color: #fff;
-  background-image: linear-gradient(
-    90deg,
-    rgba(255, 243, 236, 0.2),
-    rgba(255, 243, 236, 0.2)
-  );
-}
-
-/* About + Play: same page body wash */
-.about-page .site-header,
-.play-page .site-header {
   background-color: #fff;
   background-image: linear-gradient(
     90deg,
@@ -281,16 +282,18 @@ a {
 .hero-band {
   position: relative;
   z-index: 2;
+  /* 100vw breakout; overflow-x clip so flower/arrow overhang can't widen the page */
   width: 100vw;
+  max-width: 100vw;
   margin-left: calc(50% - 50vw);
-  /* #FFFAF7 + Figma screenshot–sampled noise tile */
-  background-color: #fffaf7;
-  background-image: url("../assets/hero/v2/hero-noise-figma.png?v=restore-figma-20260805");
+  /* Figma 848:7376 Noise — #FFF9F5 + fractalNoise tile (rgba(56,56,56,0.2)) */
+  background-color: #fff9f5;
+  background-image: url("../assets/hero/v2/hero-noise.png?v=figma-848-7376-20260809");
   background-repeat: repeat;
-  background-size: 512px 512px;
+  background-size: 400px 400px;
   border-bottom: 1px solid var(--border);
-  /* Arrow / flower straddle the bottom edge into Featured */
-  overflow: visible;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 /* Keep ::after free for stacking. */
@@ -302,7 +305,7 @@ a {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 20px;
+  bottom: 16px;
   z-index: 3;
   margin: 0;
   padding: 0 24px;
@@ -360,7 +363,7 @@ a {
   min-height: 0;
   max-width: var(--max);
   margin: 0 auto;
-  padding: 80px 240px 120px;
+  padding: 160px 240px 200px;
   overflow: visible;
   /* Empty hero box / overflows don't steal clicks from Featured / Craft below */
   pointer-events: none;
@@ -435,7 +438,9 @@ a {
 }
 
 .hero-cloud-2 {
-  left: 1354px;
+  /* Pin to right edge (Figma 1354/104 in 1440 → right: 1440-1354-104 = -18) */
+  left: auto;
+  right: -18px;
   top: 240px;
   width: 104px;
   height: 63px;
@@ -462,7 +467,7 @@ a {
 
 /*
  * Dog-orbit stars — Figma § (647:3105) vs Asset_Dog origin (277.57, 80).
- * Positioned as % of .hero-visual (308×353, was 280×321) so they stay
+ * Positioned as % of .hero-visual (339×388, was 308×353 / 280×321) so they stay
  * dog-relative when the slot scales at narrower breakpoints. Sizes use
  * width% + aspect-ratio so squares stay square as the frame shrinks.
  * Denominators keep the original Figma design-space ratios.
@@ -601,6 +606,9 @@ a {
   gap: 24px;
   padding-top: 60px;
   order: 2;
+  /* Size container so .live-tag can hug when it wraps */
+  container-type: inline-size;
+  container-name: hero-copy;
 }
 
 .hero-copy-text {
@@ -610,8 +618,11 @@ a {
   max-width: 520px;
 }
 
-.hero-copy > .status-row {
+.hero-copy > .live-tag {
   margin-top: 0;
+  align-self: flex-start;
+  width: fit-content;
+  max-width: 100%;
 }
 
 .hero-title {
@@ -651,19 +662,72 @@ a {
   color: var(--text-strong);
 }
 
-.status-row {
-  display: flex;
-  flex-wrap: nowrap;
+/* Figma Live Tag 848:5451 — LA · time · temp */
+.live-tag {
+  display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-start;
+  align-content: flex-start;
   gap: 8px;
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--text-strong);
-  letter-spacing: -0.32px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.02);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: -0.28px;
+  line-height: normal;
+  color: var(--color-black-normal);
 }
 
-.status-amp {
-  color: var(--text-strong);
+/*
+  Wrapped / two-row state: flex-wrap + fit-content expands to the available
+  width (full .hero-copy), which centers short rows in empty space. When the
+  copy column can't fit the single-line pill (~340px+), switch to a 2-row grid
+  that max-content-hugs LA · time, with weather on row 2.
+*/
+@container hero-copy (max-width: 380px) {
+  .live-tag {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    width: max-content;
+    max-width: 100%;
+    justify-items: start;
+    align-items: center;
+  }
+
+  .live-tag > .live-tag-dot:nth-child(4) {
+    display: none;
+  }
+
+  .live-tag > .live-tag-item:last-child {
+    grid-column: 1;
+  }
+}
+
+.live-tag-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.live-tag-item img {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.live-tag-dot {
+  width: 3px;
+  height: 3px;
+  flex-shrink: 0;
+  background: var(--color-black-normal);
 }
 
 .chip {
@@ -683,12 +747,9 @@ a {
   white-space: nowrap;
 }
 
-.project-meta .chip {
+.project-meta .chip,
+.craft-card-meta .chip {
   gap: 0;
-}
-
-.status-row .chip {
-  gap: 8px;
 }
 
 .chip-design {
@@ -706,28 +767,98 @@ a {
   border-color: rgba(255, 190, 53, 0.8);
 }
 
+/* CF1 “AI-Augmented Workflow” — red→pink + yellow tracers along gray border */
+@property --chip-ai-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.chip--ai {
+  position: relative;
+  isolation: isolate;
+  border-color: var(--border);
+  box-shadow: none;
+  /* Soft blush that pairs with --color-accent (#ff5959); no pink token in tokens.css */
+  --chip-ai-pink: #ff7a9c;
+  /* Lighter pink falloff for tracer 2 (distinct soft tip when both lobes show) */
+  --chip-ai-pink-soft: color-mix(in srgb, var(--chip-ai-pink) 40%, white);
+}
+
+.chip--ai::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  /* Dual soft lobes ~180° apart — red→pink then pink→soft pink, one shared rotation */
+  background: conic-gradient(
+    from var(--chip-ai-angle),
+    transparent 0deg,
+    transparent 112deg,
+    color-mix(in srgb, var(--color-accent) 0%, transparent) 128deg,
+    color-mix(in srgb, var(--color-accent) 45%, transparent) 142deg,
+    var(--color-accent) 154deg,
+    var(--chip-ai-pink) 166deg,
+    color-mix(in srgb, var(--chip-ai-pink) 35%, transparent) 174deg,
+    transparent 180deg,
+    transparent 292deg,
+    color-mix(in srgb, var(--chip-ai-pink) 0%, transparent) 308deg,
+    color-mix(in srgb, var(--chip-ai-pink) 45%, transparent) 322deg,
+    var(--chip-ai-pink) 334deg,
+    var(--chip-ai-pink-soft) 346deg,
+    color-mix(in srgb, var(--chip-ai-pink-soft) 35%, transparent) 354deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+  animation: chip-ai-trace 8s linear infinite;
+}
+
+@keyframes chip-ai-trace {
+  to {
+    --chip-ai-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip--ai::before {
+    animation: none;
+    /* Soft static red→pink + pink spots on opposite sides of the gray border */
+    background: conic-gradient(
+      from 210deg,
+      transparent 0deg,
+      transparent 112deg,
+      color-mix(in srgb, var(--color-accent) 0%, transparent) 128deg,
+      color-mix(in srgb, var(--color-accent) 45%, transparent) 142deg,
+      var(--color-accent) 154deg,
+      var(--chip-ai-pink) 166deg,
+      color-mix(in srgb, var(--chip-ai-pink) 35%, transparent) 174deg,
+      transparent 180deg,
+      transparent 292deg,
+      color-mix(in srgb, var(--chip-ai-pink) 0%, transparent) 308deg,
+      color-mix(in srgb, var(--chip-ai-pink) 45%, transparent) 322deg,
+      var(--chip-ai-pink) 334deg,
+      var(--chip-ai-pink-soft) 346deg,
+      color-mix(in srgb, var(--chip-ai-pink-soft) 35%, transparent) 354deg,
+      transparent 360deg
+    );
+  }
+}
+
 .chip img,
-.status-row > img,
-.inline-icon,
-.la img,
-.la-palm {
+.inline-icon {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-}
-
-.la {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.la-palm {
-  display: block;
-  /* Keep Phosphor island/palm black — never navy */
-  color: #333;
 }
 
 /* Hero devices */
@@ -808,28 +939,35 @@ a {
   max-width: none;
 }
 
-/* Sticky note — chrome raster + real HTML copy (slide-out on hover) */
+/* Sticky note — CSS card height hugs copy; scalable sketch frame + fixed tape.
+   Paper 220px wide; body padding 24px all sides. */
 .hero-note {
   position: absolute;
-  left: calc(50% - 50vw);
-  top: 417px;
-  width: 252px; /* peek strip + full note (236) + hover offset */
-  height: 186px;
+  left: calc(50% - 50vw - 20px);
+  top: auto;
+  bottom: 40px;
+  width: 252px; /* peek strip + paper (220) + tape overhang + hover offset */
+  height: auto;
   z-index: 6;
   transform: none;
+  overflow: visible;
   pointer-events: auto;
 }
 
 .hero-note-card {
   position: relative;
-  width: 236px;
-  height: 186px;
+  width: 220px;
+  height: auto;
   box-sizing: border-box;
   padding: 0;
   border: 0;
-  background: transparent;
+  border-radius: 10px;
+  background: #fff6dc;
+  /* Soft orange offset shadow (was baked into note-frame) */
+  box-shadow: 10px 10px 0 rgba(255, 135, 63, 0.1);
+  overflow: visible;
   /* Peek: show tape + right edge (~46px); rest off-screen to the left */
-  transform: translateX(-190px);
+  transform: translateX(-174px);
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
@@ -839,24 +977,39 @@ a {
   transform: translateX(16px);
 }
 
-.hero-note-asset {
+.hero-note-frame {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 236px;
-  height: 186px;
+  /* viewBox pads ~2px around paper so strokes aren’t clipped */
+  left: -2px;
+  top: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
   max-width: none;
   pointer-events: none;
   user-select: none;
   display: block;
+  overflow: visible;
+}
+
+.hero-note-tape {
+  position: absolute;
+  /* Horizontal tape SVG, rotated to hang on the right edge (half on / half off). */
+  left: 234px;
+  top: 20px;
+  width: 102.161px;
+  height: 28.43px;
+  max-width: none;
+  transform: rotate(90deg);
+  transform-origin: 0 0;
+  pointer-events: none;
+  user-select: none;
+  display: block;
+  z-index: 2;
 }
 
 .hero-note-body {
-  position: absolute;
-  left: 16px;
-  top: 18px;
-  right: 52px;
-  bottom: 16px;
+  position: relative;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1140,6 +1293,7 @@ a {
   aspect-ratio: 960 / 600;
   border-radius: 0;
   overflow: hidden;
+  border-bottom: 1px solid var(--border);
   background: var(--color-black-background);
 }
 
@@ -1219,26 +1373,30 @@ a {
   will-change: translate;
 }
 
-/* Dog+IG — Asset_Dog 308×353 (Figma 280×321 ×1.1); body 444×418 aligned via −134/−46 */
+/* Dog+IG — Asset_Dog 339×388 (308×353 ×1.1); body 488×460 aligned via −147/−51 */
 .hero-visual {
   position: relative;
   z-index: 2;
-  flex: 0 0 308px;
-  width: 308px;
-  height: 353px;
+  flex: 0 0 339px;
+  width: 339px;
+  height: 388px;
   overflow: visible;
 }
 
 .dog-ig {
   position: relative;
   display: block;
-  width: 308px;
-  height: 353px;
+  width: 339px;
+  height: 388px;
   margin: 0;
   z-index: 5;
   overflow: visible;
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
+  /* Own hit-testing: .hero is pointer-events:none; .hero-visual only
+     re-enables its 339×388 box — dog art overflows that box. */
+  pointer-events: auto;
   transition: transform 0.35s ease;
   transform-origin: center 40%;
 }
@@ -1251,11 +1409,11 @@ a {
 .dog-ig-body,
 svg.dog-ig-body {
   position: absolute;
-  left: -134px;
-  top: -46px;
+  left: -147px;
+  top: -51px;
   display: block;
-  width: 444px;
-  height: 418px;
+  width: 488px;
+  height: 460px;
   max-width: none;
   overflow: visible;
 }
@@ -1263,19 +1421,21 @@ svg.dog-ig-body {
 .dog-ig-base {
   /* Prefer smooth downscale of the Retina PNG over crunchy WebP edges */
   image-rendering: auto;
+  /* Overflowing art must re-enable hits itself (see .dog-ig note above). */
+  pointer-events: auto;
 }
 
 .dog-ig-overlay {
   pointer-events: none;
 }
 
-/* Scribble overlay — same 444×418 space as dog-body; SVG text unused */
+/* Scribble overlay — same 488×460 space as dog-body; SVG text unused */
 .dog-ig-callout {
   position: absolute;
-  left: -134px;
-  top: -46px;
-  width: 444px;
-  height: 418px;
+  left: -147px;
+  top: -51px;
+  width: 488px;
+  height: 460px;
   pointer-events: none;
   z-index: 2;
 }
@@ -1319,11 +1479,11 @@ svg.dog-ig-body {
   transition: stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.14s;
 }
 
-/* HTML notes — Figma IG Notes (−125, 169) ×1.1 → (−138, 186) */
+/* HTML notes — Figma IG Notes (−125, 169) ×1.21 → (−152, 205) */
 .dog-ig-notes {
   position: absolute;
-  left: -138px;
-  top: 186px;
+  left: -152px;
+  top: 205px;
   z-index: 6;
   display: flex;
   flex-direction: column;
@@ -1436,7 +1596,8 @@ svg.dog-ig-body {
 
 .section-product {
   position: relative;
-  overflow: visible;
+  overflow-x: clip;
+  overflow-y: visible;
   padding: 120px 240px;
 }
 
@@ -1634,7 +1795,7 @@ svg.dog-ig-body {
 
 /* About */
 .about-section {
-  padding: 160px 240px;
+  padding: 120px 240px 160px;
 }
 
 .about-grid {
@@ -1648,7 +1809,8 @@ svg.dog-ig-body {
 
 .about-photo {
   width: 100%;
-  aspect-ratio: 440 / 400;
+  /* Framing owned by about.css (fixed 440×440 square + cover). */
+  aspect-ratio: auto;
   border-radius: 16px;
   border: 1px solid var(--border);
   background: var(--chip);
@@ -1745,7 +1907,7 @@ svg.dog-ig-body {
 
 /* Play */
 .play-section {
-  padding: 160px 240px;
+  padding: 120px 240px 160px;
 }
 
 .play-grid {
@@ -1772,7 +1934,7 @@ svg.dog-ig-body {
 
 /* Case study / project detail */
 .case-study {
-  padding: 160px 240px 80px;
+  padding: 120px 240px 80px;
 }
 
 .case-header {
@@ -2037,7 +2199,31 @@ svg.dog-ig-body {
   height: 20px;
 }
 
-@media (max-width: 1100px) {
+/*
+  Tablet (701–1100): keep desktop layout/composition, but Figma’s 240px side
+  gutters leave ~288px of content on a 768 iPad. Tighten gutters only.
+*/
+@media (min-width: 701px) and (max-width: 1100px) {
+  .site-header {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .hero,
+  .section,
+  .about-section,
+  .play-section,
+  .case-study,
+  .site-footer {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+
+  /* Craft insets: see tablet block after desktop #visual rules (cascade). */
+}
+
+/* Phone ≤700px: stacked hero, hamburger nav, square covers, craft stack */
+@media (max-width: 700px) {
   .site-header,
   .hero,
   .section,
@@ -2050,9 +2236,14 @@ svg.dog-ig-body {
   }
 
   .about-grid,
-  .play-grid,
-  .case-meta {
+  .play-grid {
     grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .case-meta,
+  .project-page .case-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 40px;
   }
 
@@ -2062,7 +2253,9 @@ svg.dog-ig-body {
     min-height: auto;
     gap: 32px;
     padding-top: 64px;
-    padding-bottom: 96px;
+    padding-bottom: 136px;
+    /* Keep overflow visible so dog can reach the screen edge;
+       horizontal scroll is blocked by html/body + .hero-band clip. */
     overflow: visible;
   }
 
@@ -2073,7 +2266,7 @@ svg.dog-ig-body {
     order: 2;
   }
 
-  .hero-copy > .status-row {
+  .hero-copy > .live-tag {
     margin-top: 0;
   }
 
@@ -2086,48 +2279,106 @@ svg.dog-ig-body {
   .hero-devices,
   .hero-note,
   .hero-arrow-path,
-  .hero-star-a,
-  .hero-cloud-2 {
+  .hero-star-a {
     display: none;
+  }
+
+  /* Right cloud stays pinned via base `right: -18px`; slight overhang clips in .hero-band */
+
+  /* Desktop flower sits at ~1168px in the 1440 frame — pin to the right edge on phones */
+  .hero-band > .hero-flower {
+    left: auto;
+    right: 16px;
+    bottom: -40px; /* was bottom: 0 (+ translateY(50%)); shift 40px down */
   }
 
   /* Visual System & Craft mobile stack — final overrides live after desktop craft block */
 
   .hero-visual {
-    width: 264px;
-    height: 303px;
+    width: 290px;
+    height: 333px;
     flex: none;
     margin: 0 auto;
     order: 1;
   }
 
   .dog-ig {
-    width: 264px;
-    height: 303px;
+    width: 290px;
+    height: 333px;
   }
 
   .dog-ig-body,
   svg.dog-ig-body,
   .dog-ig-callout {
-    left: -116px;
-    top: -40px;
-    width: 381px;
-    height: 359px;
+    left: -128px;
+    top: -44px;
+    width: 419px;
+    height: 395px;
   }
 
+  /* Keep notes ≥8px from viewport left when centered 290px visual + clip would crop */
   .dog-ig-notes {
-    left: -118px;
-    top: 160px;
-  }
-
-  .section-product,
-  #visual.section {
-    padding-top: 80px;
-    padding-bottom: 80px;
+    left: max(-130px, calc(8px - (100vw - 290px) / 2));
+    top: 176px;
   }
 
   .section-product .project-meta {
     padding: 24px;
+  }
+
+  .section-product .project-meta h3 {
+    font-size: 20px;
+    letter-spacing: -0.4px;
+  }
+
+  .section-product .project-meta p {
+    font-size: 14px;
+  }
+
+  .section-product .project-meta .chip,
+  #visual.section .craft-card-meta .chip {
+    flex-shrink: 0;
+    font-size: 14px;
+    letter-spacing: -0.24px;
+  }
+
+  /* One-line chip row: clip at card content edge, swipe to reveal */
+  .section-product .project-meta .tag-group,
+  #visual.section .craft-card-meta .tag-group {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .section-product .project-meta .tag-group::-webkit-scrollbar,
+  #visual.section .craft-card-meta .tag-group::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Figma Mobile cover (827:4259) — square 1:1 frames on ≤700px */
+  .project-image,
+  .project-block-cf1 .project-image,
+  .project-block-warp .project-image {
+    aspect-ratio: 1;
+  }
+
+  .project-page .case-header .case-media:not(.case-media--video) {
+    aspect-ratio: 1;
+  }
+
+  .project-page .case-header .case-media picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .project-page .case-header .case-media picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .deco-arrow-2,
@@ -2139,6 +2390,13 @@ svg.dog-ig-body {
   .section {
     padding-top: 96px;
     padding-bottom: 96px;
+  }
+
+  /* After .section 96px — Featured + Craft headers: 80px above */
+  .section-product,
+  #visual.section {
+    padding-top: 80px;
+    padding-bottom: 80px;
   }
 
   .section-header {
@@ -2201,9 +2459,11 @@ svg.dog-ig-body {
     padding: 0;
   }
 
-  .status-row {
-    flex-wrap: wrap;
-    font-size: 14px;
+  .live-tag {
+    justify-content: flex-start;
+    align-items: center;
+    align-content: flex-start;
+    text-align: left;
   }
 }
 
@@ -2264,6 +2524,27 @@ svg.dog-ig-body {
   padding-left: 240px;
 }
 
+/*
+  Tablet gutters for craft MUST follow desktop #visual rules above.
+  Earlier tablet .section { 64px } does not win against #visual.section /
+  .section-header / .craft-viewport (higher specificity or later source order),
+  so Featured sat at 64px while Visual header + cards stayed at 240px.
+*/
+@media (min-width: 701px) and (max-width: 1100px) {
+  #visual.section .section-header {
+    padding-left: 64px;
+    padding-right: 40px;
+  }
+
+  .craft-viewport {
+    padding-left: calc(64px + max(0px, (100vw - var(--max)) / 2));
+  }
+
+  .craft-nav {
+    padding-left: 64px;
+  }
+}
+
 .craft-card {
   flex: 0 0 600px;
   max-width: 600px;
@@ -2309,6 +2590,7 @@ svg.dog-ig-body {
   border-radius: 0;
   overflow: hidden;
   border: 0;
+  border-bottom: 1px solid var(--border);
   background: var(--color-black-background);
   aspect-ratio: 600 / 375;
 }
@@ -2345,6 +2627,11 @@ svg.dog-ig-body {
   box-sizing: border-box;
   width: 100%;
   background: var(--surface);
+}
+
+/* Match Featured `.project-meta` tag→title (24px): meta gap stays 16 for title→body */
+.craft-card-meta .tag-group {
+  margin-bottom: 8px;
 }
 
 .craft-card-meta h3 {
@@ -2422,11 +2709,12 @@ svg.dog-ig-body {
   }
 }
 
-/* Mobile/tablet: stack craft like Featured — must come after desktop craft rules */
-@media (max-width: 1100px) {
+/* Mobile: stack craft like Featured — must come after desktop craft rules */
+@media (max-width: 700px) {
   #visual.section {
     padding: 80px 24px;
-    overflow: visible;
+    overflow-x: clip;
+    overflow-y: visible;
   }
 
   #visual.section .section-header {
@@ -2447,7 +2735,8 @@ svg.dog-ig-body {
     padding-top: 0;
     padding-bottom: 0;
     padding-left: 0;
-    overflow: visible;
+    overflow-x: clip;
+    overflow-y: visible;
   }
 
   .craft-nav {
@@ -2477,12 +2766,21 @@ svg.dog-ig-body {
     width: 100%;
     max-width: 100%;
     height: auto;
-    aspect-ratio: 600 / 375;
+    aspect-ratio: 1;
     border-radius: 0;
   }
 
   .craft-card-meta {
     padding: 24px;
+  }
+
+  #visual.section .craft-card-meta h3 {
+    font-size: 20px;
+    letter-spacing: -0.4px;
+  }
+
+  #visual.section .craft-card-meta p {
+    font-size: 14px;
   }
 
   .craft-nav {
@@ -2695,6 +2993,14 @@ svg.dog-ig-body {
 
 .project-page .case-meta {
   grid-template-columns: repeat(3, 1fr);
+}
+
+/* Must follow .project-page .case-meta (3-col) so mobile 2-col wins the cascade */
+@media (max-width: 700px) {
+  .case-meta,
+  .project-page .case-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .project-page .case-section + .case-section {
@@ -3186,7 +3492,7 @@ svg.dog-ig-body {
   color: var(--text-strong);
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 700px) {
   .project-page .case-phases {
     grid-template-columns: 1fr;
     gap: 16px;

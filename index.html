@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;0,6..144,700;1,6..144,400&family=Reddit+Mono:wght@400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/tokens.css?v=hero-credit-mono-20260807">
-    <link rel="stylesheet" href="css/styles.css?v=star-twinkle-04-20260807">
+    <link rel="stylesheet" href="css/styles.css?v=hero-credit-bottom-16-20260808">
     <title>Tc — Work</title>
 </head>
 <body>
@@ -21,16 +21,16 @@
 
         <div class="hero-band">
         <section class="hero" aria-label="Introduction">
-            <img class="hero-deco hero-cloud" src="assets/hero/v2/cloud-left.svg" alt="" aria-hidden="true">
-            <img class="hero-deco hero-cloud-2" src="assets/hero/v2/cloud-right.svg" alt="" aria-hidden="true">
-            <img class="hero-deco hero-arrow-path" src="assets/hero/v2/arrow-path.svg" alt="" aria-hidden="true">
-            <img class="hero-deco hero-star-a" src="assets/hero/v2/star-filled.svg" alt="" aria-hidden="true">
+            <img class="hero-deco hero-cloud" src="assets/hero/v2/cloud-left.svg?v=stroke-texture-2px-20260808" alt="" aria-hidden="true">
+            <img class="hero-deco hero-cloud-2" src="assets/hero/v2/cloud-right.svg?v=stroke-texture-2px-20260808" alt="" aria-hidden="true">
+            <img class="hero-deco hero-arrow-path" src="assets/hero/v2/arrow-path.svg?v=stroke-texture-2px-20260808" alt="" aria-hidden="true">
+            <img class="hero-deco hero-star-a" src="assets/hero/v2/star-filled.svg?v=stroke-texture-2px-20260808" alt="" aria-hidden="true">
 
             <div class="hero-visual">
                 <!-- Dog-orbit stars (Figma Star 2/3/4); % of .hero-visual — not in dog-note-group -->
-                <img class="hero-deco hero-star-b" src="assets/hero/v2/star1.svg" alt="" aria-hidden="true">
-                <img class="hero-deco hero-star-c" src="assets/hero/v2/star-outline-b.svg" alt="" aria-hidden="true">
-                <img class="hero-deco hero-star-d" src="assets/hero/v2/star-outline-b.svg" alt="" aria-hidden="true">
+                <img class="hero-deco hero-star-b" src="assets/hero/v2/star1.svg?v=stroke-texture-2px-20260808" alt="" aria-hidden="true">
+                <img class="hero-deco hero-star-c" src="assets/hero/v2/star-outline-b.svg?v=stroke-texture-2px-20260808" alt="" aria-hidden="true">
+                <img class="hero-deco hero-star-d" src="assets/hero/v2/star-outline-b.svg?v=stroke-texture-2px-20260808" alt="" aria-hidden="true">
                 <a
                     class="dog-ig"
                     href="https://www.instagram.com/noodle.the.aussie/"
@@ -40,8 +40,8 @@
                 >
                     <img
                         class="dog-ig-body dog-ig-base"
-                        src="assets/hero/v2/dog-body-base-2x.png?v=hires-dog-ss-20260805"
-                        srcset="assets/hero/v2/dog-body-base-2x.png?v=hires-dog-ss-20260805 2x, assets/hero/v2/dog-body-base-3x.png?v=hires-dog-ss-20260805 3x"
+                        src="assets/hero/v2/dog-body-base-2x.png?v=stroke-texture-2px-20260808"
+                        srcset="assets/hero/v2/dog-body-base-2x.png?v=stroke-texture-2px-20260808 2x, assets/hero/v2/dog-body-base-3x.png?v=stroke-texture-2px-20260808 3x"
                         width="404"
                         height="380"
                         alt="Illustration of Noodle the dog with an apple on their head"
@@ -82,24 +82,20 @@
                     Product Designer with 7+ years of experience building consumer and enterprise applications. I'm passionate about bridging product and brand, crafting the visual details (like icons and illustrations) that make experiences delightful.
                 </p>
                 </div>
-                <div class="status-row">
-                    <span>Currently</span>
-                    <span class="chip">
-                        <img src="assets/hero/v2/tag-wand.svg" alt="">
-                        designing
+                <div class="live-tag" role="status" aria-label="Los Angeles local time and weather">
+                    <span class="live-tag-item">
+                        <img src="assets/icons/live-tag-island.svg" width="16" height="16" alt="" aria-hidden="true">
+                        Los Angeles
                     </span>
-                    <span class="chip">
-                        <img src="assets/hero/v2/tag-code.svg" alt="">
-                        vibe-coding
+                    <span class="live-tag-dot" aria-hidden="true"></span>
+                    <span class="live-tag-item">
+                        <img src="assets/icons/live-tag-clock.svg" width="16" height="16" alt="" aria-hidden="true">
+                        <time data-la-clock datetime=""></time>
                     </span>
-                    <span class="status-amp">&amp;</span>
-                    <span class="chip">
-                        <img src="assets/hero/v2/tag-dog.svg" alt="">
-                        playing
-                    </span>
-                    <span class="la">
-                        in LA
-                        <img class="la-palm" src="assets/icons/island.svg" width="20" height="20" alt="">
+                    <span class="live-tag-dot" aria-hidden="true"></span>
+                    <span class="live-tag-item">
+                        <img src="assets/icons/live-tag-sun.svg" width="16" height="16" alt="" aria-hidden="true">
+                        <span data-la-temp>72°F</span>
                     </span>
                 </div>
             </div>
@@ -107,10 +103,19 @@
             <aside class="hero-note" aria-label="How this website was made">
                 <div class="hero-note-card">
                     <img
-                        class="hero-note-asset"
-                        src="assets/hero/v2/Asset_Note_chrome.png?v=via-20260807"
-                        width="236"
-                        height="186"
+                        class="hero-note-frame"
+                        src="assets/hero/v2/note-frame-scalable.svg?v=note-hug-notape-20260809"
+                        width="220"
+                        height="216"
+                        alt=""
+                        aria-hidden="true"
+                        decoding="async"
+                    >
+                    <img
+                        class="hero-note-tape"
+                        src="assets/hero/v2/note-tape.svg?v=note-hug-20260809"
+                        width="102"
+                        height="28"
                         alt=""
                         aria-hidden="true"
                         decoding="async"
@@ -142,10 +147,10 @@
                 <img class="hero-flower-static" src="assets/hero/v2/flower-static.svg?v=optimized-20260805" width="101" height="100" alt="" decoding="async">
                 <img class="hero-flower-bloom" src="assets/hero/v2/flower-bloom.webp?v=optimized-20260805" width="101" height="100" alt="" decoding="async">
                 <img class="hero-flower-center" src="assets/hero/v2/flower-center.svg?v=optimized-20260805" width="101" height="100" alt="" decoding="async">
-                <img class="hero-flower-line" src="assets/hero/v2/flower-line.svg?v=optimized-20260805" width="101" height="100" alt="" decoding="async">
+                <img class="hero-flower-line" src="assets/hero/v2/flower-line.svg?v=stroke-texture-2px-20260808" width="101" height="100" alt="" decoding="async">
             </div>
             <!-- Figma Arrow 2 — centered, straddles hero → Featured; kept in .hero-band so it paints above the noise fill -->
-            <img class="hero-deco deco-arrow-2" src="assets/hero/v2/arrow-2.svg" width="76" height="97" alt="" aria-hidden="true" decoding="async">
+            <img class="hero-deco deco-arrow-2" src="assets/hero/v2/arrow-2.svg?v=stroke-texture-2px-20260808" width="76" height="97" alt="" aria-hidden="true" decoding="async">
             <p class="hero-credit">This website is designed in <a class="hero-credit-link" href="https://www.figma.com/design/" target="_blank" rel="noopener noreferrer">Figma</a>, built with <a class="hero-credit-link" href="https://cursor.com/home" target="_blank" rel="noopener noreferrer">Cursor</a>, and deployed via <a class="hero-credit-link" href="https://www.cloudflare.com/products/workers/" target="_blank" rel="noopener noreferrer">Cloudflare</a>.</p>
         </div>
 
@@ -156,29 +161,39 @@
             </div>
 
             <div class="project-block project-block-cf1">
-                <img class="project-deco deco-cloud-3" src="assets/hero/v2/cloud-3-outline.svg?v=outline-20260805" width="96" height="59" alt="" aria-hidden="true" loading="lazy" decoding="async">
+                <img class="project-deco deco-cloud-3" src="assets/hero/v2/cloud-3-outline.svg?v=stroke-texture-2px-20260808" width="96" height="59" alt="" aria-hidden="true" loading="lazy" decoding="async">
                 <div class="project">
                     <a class="project-link project-cover-link" href="projects/cloudflare-one-client.html">
                         <div class="project-image">
                             <div class="project-cover-frame">
                                 <picture class="project-cover-picture">
                                     <source
+                                        media="(max-width: 700px)"
                                         type="image/webp"
-                                        srcset="assets/projects/cover-cf1-480w.webp?v=square-20260807 480w, assets/projects/cover-cf1-960w.webp?v=square-20260807 960w, assets/projects/cover-cf1-1920w.webp?v=square-20260807 1920w"
-                                        sizes="(max-width: 767px) 92vw, 960px"
+                                        srcset="assets/projects/cover-cf1-square-400w.webp?v=mobile-square-20260808 400w, assets/projects/cover-cf1-square.webp?v=mobile-square-20260808 800w"
+                                        sizes="92vw"
                                     >
-                                    <img class="project-cover" src="assets/projects/cover-cf1.png" alt="Cloudflare One Client project preview" width="960" height="600" loading="lazy" decoding="async">
+                                    <source
+                                        media="(max-width: 700px)"
+                                        srcset="assets/projects/cover-cf1-square.png?v=mobile-square-20260808"
+                                    >
+                                    <source
+                                        type="image/webp"
+                                        srcset="assets/projects/cover-cf1-480w.webp?v=no-outline-20260808 480w, assets/projects/cover-cf1-960w.webp?v=no-outline-20260808 960w, assets/projects/cover-cf1-1920w.webp?v=no-outline-20260808 1920w"
+                                        sizes="960px"
+                                    >
+                                    <img class="project-cover" src="assets/projects/cover-cf1.png?v=no-outline-20260808" alt="Cloudflare One Client project preview" width="960" height="600" loading="lazy" decoding="async">
                                 </picture>
                             </div>
                         </div>
                     </a>
                     <div class="project-meta">
                         <div class="tag-group">
-                            <span class="chip">Enterprise B2B</span>
-                            <span class="chip">Desktop &amp; Mobile</span>
-                            <span class="chip">Design system</span>
+                            <span class="chip">Enterprise Desktop &amp; Mobile</span>
+                            <span class="chip">MVP to GA</span>
+                            <span class="chip chip--ai">AI-Augmented Workflow</span>
+                            <span class="chip">Token Automation</span>
                             <span class="chip">User Research</span>
-                            <span class="chip">AI Workflow</span>
                         </div>
                         <div class="project-copy">
                             <h3><a class="project-title-link" href="projects/cloudflare-one-client.html">Cloudflare One Client: Redesigning Enterprise Security</a></h3>
@@ -189,17 +204,27 @@
             </div>
 
             <div class="project-block project-block-warp">
-                <img class="project-deco project-star-4" src="assets/hero/v2/star2.svg" width="24" height="24" alt="" aria-hidden="true" loading="lazy" decoding="async">
-                <img class="project-deco project-star-3" src="assets/hero/v2/project-star.svg" width="58" height="58" alt="" aria-hidden="true" loading="lazy" decoding="async">
+                <img class="project-deco project-star-4" src="assets/hero/v2/star2.svg?v=stroke-texture-2px-20260808" width="24" height="24" alt="" aria-hidden="true" loading="lazy" decoding="async">
+                <img class="project-deco project-star-3" src="assets/hero/v2/project-star.svg?v=stroke-texture-2px-20260808" width="58" height="58" alt="" aria-hidden="true" loading="lazy" decoding="async">
                 <div class="project">
                     <a class="project-link project-cover-link" href="projects/warp.html">
                         <div class="project-image">
                             <div class="project-cover-frame">
                                 <picture class="project-cover-picture">
                                     <source
+                                        media="(max-width: 700px)"
+                                        type="image/webp"
+                                        srcset="assets/projects/cover-warp-square-400w.webp?v=mobile-square-20260808 400w, assets/projects/cover-warp-square.webp?v=mobile-square-20260808 800w"
+                                        sizes="92vw"
+                                    >
+                                    <source
+                                        media="(max-width: 700px)"
+                                        srcset="assets/projects/cover-warp-square.png?v=mobile-square-20260808"
+                                    >
+                                    <source
                                         type="image/webp"
                                         srcset="assets/projects/cover-warp-480w.webp?v=square-20260807 480w, assets/projects/cover-warp-960w.webp?v=square-20260807 960w, assets/projects/cover-warp-1920w.webp?v=square-20260807 1920w"
-                                        sizes="(max-width: 767px) 92vw, 960px"
+                                        sizes="960px"
                                     >
                                     <img class="project-cover" src="assets/projects/cover-warp.png" alt="WARP project preview" width="960" height="600" loading="lazy" decoding="async">
                                 </picture>
@@ -208,11 +233,10 @@
                     </a>
                     <div class="project-meta">
                         <div class="tag-group">
-                            <span class="chip">Consumer B2C</span>
-                            <span class="chip">Mobile</span>
-                            <span class="chip">0-to-1 Redesign</span>
-                            <span class="chip">Rebrand &amp; UXUI</span>
-                            <span class="chip">User research</span>
+                            <span class="chip">Consumer Mobile</span>
+                            <span class="chip">Research-Backed UX</span>
+                            <span class="chip">0-to-1 Redesign &amp; Rebrand</span>
+                            <span class="chip">Design system</span>
                         </div>
                         <div class="project-copy">
                             <h3><a class="project-title-link" href="projects/warp.html">WARP: Consumer Privacy Overhaul</a></h3>
@@ -221,7 +245,7 @@
                     </div>
                 </div>
             </div>
-            <img class="section-deco deco-arrow-3" src="assets/hero/v2/arrow-3.svg" width="141" height="139" alt="" aria-hidden="true" loading="lazy" decoding="async">
+            <img class="section-deco deco-arrow-3" src="assets/hero/v2/arrow-3.svg?v=stroke-texture-2px-20260808" width="141" height="139" alt="" aria-hidden="true" loading="lazy" decoding="async">
         </section>
 
         <section class="section" id="visual">
@@ -238,15 +262,29 @@
                                 <div class="craft-card-media">
                                     <picture>
                                         <source
+                                            media="(max-width: 700px)"
+                                            type="image/webp"
+                                            srcset="assets/projects/cover-animation-square-400w.webp?v=mobile-square-20260808 400w, assets/projects/cover-animation-square.webp?v=mobile-square-20260808 800w"
+                                            sizes="92vw"
+                                        >
+                                        <source
+                                            media="(max-width: 700px)"
+                                            srcset="assets/projects/cover-animation-square.png?v=mobile-square-20260808"
+                                        >
+                                        <source
                                             type="image/webp"
                                             srcset="assets/projects/cover-animation-640w.webp?v=square-20260807 640w, assets/projects/cover-animation-1280w.webp?v=square-20260807 1280w, assets/projects/cover-animation-1920w.webp?v=square-20260807 1920w"
-                                            sizes="(max-width: 767px) 92vw, 600px"
+                                            sizes="600px"
                                         >
                                         <img src="assets/projects/cover-animation.png" alt="What is Cloudflare Animation preview" width="640" height="400" loading="eager" decoding="async">
                                     </picture>
                                 </div>
                             </a>
                             <div class="craft-card-meta">
+                                <div class="tag-group">
+                                    <span class="chip">Brand styleframes</span>
+                                    <span class="chip">Motion design</span>
+                                </div>
                                 <h3><a class="project-title-link" href="projects/what-is-cloudflare.html">What is Cloudflare Animation</a></h3>
                                 <p>Defining the visual direction and style frames for Cloudflare’s flagship brand video, bridging technical complexity into an accessible narrative for B2B and B2C audiences.</p>
                             </div>
@@ -256,15 +294,29 @@
                                 <div class="craft-card-media">
                                     <picture>
                                         <source
+                                            media="(max-width: 700px)"
                                             type="image/webp"
-                                            srcset="assets/hero/v2/Cover_Icon-640w.webp?v=hires-20260805 640w, assets/hero/v2/Cover_Icon-1200w.webp?v=hires-20260805 1200w"
-                                            sizes="(max-width: 767px) 92vw, 600px"
+                                            srcset="assets/projects/cover-icon-square-400w.webp?v=no-outline-20260808 400w, assets/projects/cover-icon-square.webp?v=no-outline-20260808 800w"
+                                            sizes="92vw"
                                         >
-                                        <img src="assets/hero/v2/Cover_Icon.png" alt="Global Icon System preview" width="640" height="400" loading="eager" decoding="async">
+                                        <source
+                                            media="(max-width: 700px)"
+                                            srcset="assets/projects/cover-icon-square.png?v=no-outline-20260808"
+                                        >
+                                        <source
+                                            type="image/webp"
+                                            srcset="assets/hero/v2/Cover_Icon-640w.webp?v=no-outline-20260808 640w, assets/hero/v2/Cover_Icon-1200w.webp?v=no-outline-20260808 1200w"
+                                            sizes="600px"
+                                        >
+                                        <img src="assets/hero/v2/Cover_Icon.png?v=no-outline-20260808" alt="Global Icon System preview" width="640" height="400" loading="eager" decoding="async">
                                     </picture>
                                 </div>
                             </a>
                             <div class="craft-card-meta">
+                                <div class="tag-group">
+                                    <span class="chip">Iconography System</span>
+                                    <span class="chip">Centralized Figma Library</span>
+                                </div>
                                 <h3><a class="project-title-link" href="projects/global-icon-system.html">Global Icon System</a></h3>
                                 <p>Built as a foundational ecosystem that continues to power Cloudflare’s global brand and product interfaces 6 years after inception.</p>
                             </div>
@@ -274,15 +326,30 @@
                                 <div class="craft-card-media">
                                     <picture>
                                         <source
+                                            media="(max-width: 700px)"
+                                            type="image/webp"
+                                            srcset="assets/projects/cover-illustration-square-400w.webp?v=no-outline-20260808 400w, assets/projects/cover-illustration-square.webp?v=no-outline-20260808 800w"
+                                            sizes="92vw"
+                                        >
+                                        <source
+                                            media="(max-width: 700px)"
+                                            srcset="assets/projects/cover-illustration-square.png?v=no-outline-20260808"
+                                        >
+                                        <source
                                             type="image/webp"
                                             srcset="assets/hero/v2/Cover_Illustration-640w.webp?v=hires-20260805 640w, assets/hero/v2/Cover_Illustration-960w.webp?v=hires-20260805 960w"
-                                            sizes="(max-width: 767px) 92vw, 600px"
+                                            sizes="600px"
                                         >
                                         <img src="assets/hero/v2/Cover_Illustration.png?v=figma-310-941-tiles-20260804" alt="B2B Illustration System preview" width="640" height="400" loading="eager" decoding="async">
                                     </picture>
                                 </div>
                             </a>
                             <div class="craft-card-meta">
+                                <div class="tag-group">
+                                    <span class="chip">Brand System</span>
+                                    <span class="chip">Enterprise Scale</span>
+                                    <span class="chip">Modular Systems</span>
+                                </div>
                                 <h3><a class="project-title-link" href="projects/b2b-illustration-system.html">B2B Illustration System</a></h3>
                                 <p>Explored and evolved Cloudflare’s enterprise illustration style. Built as a modular component library, designers can easily assemble reusable pieces into hero and spot artwork across digital and physical touchpoints.</p>
                             </div>
@@ -303,7 +370,7 @@
         <footer class="site-footer" data-site-footer></footer>
     </div>
 
-    <script src="js/site-chrome.js?v=about-parallax-strong-20260807" data-active="work" data-base=""></script>
+    <script src="js/site-chrome.js?v=project-nav-wash-20260808" data-active="work" data-base=""></script>
     <script src="js/hero-interactive.js?v=star-twinkle-02-20260807"></script>
 </body>
 </html>

@@ -11,18 +11,35 @@
     return base + path;
   }
 
+  /** Pacific 24h clock: `14:32:05 PDT` / `… PST` (hero live tag + footer). */
   function formatLATime(date) {
     try {
-      return new Intl.DateTimeFormat("en-US", {
+      const parts = new Intl.DateTimeFormat("en-US", {
         timeZone: "America/Los_Angeles",
-        hour: "numeric",
+        hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
-        hour12: true,
+        hour12: false,
         timeZoneName: "short",
-      }).format(date);
+      }).formatToParts(date);
+
+      const get = (type) => parts.find((p) => p.type === type)?.value ?? "";
+      let hour = get("hour");
+      if (hour === "24") hour = "00";
+      hour = hour.padStart(2, "0");
+
+      let zone = get("timeZoneName");
+      if (zone === "GMT-7" || zone === "UTC-7") zone = "PDT";
+      if (zone === "GMT-8" || zone === "UTC-8") zone = "PST";
+
+      return `${hour}:${get("minute")}:${get("second")} ${zone}`;
     } catch (_) {
-      return date.toLocaleTimeString();
+      return date.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      });
     }
   }
 
@@ -123,14 +140,14 @@
       header.classList.toggle("is-scrolled", window.scrollY > 0);
 
       if (heroBand) {
-        // Home: cream + noise over hero; white once past the hero band.
+        // Home: cream + noise over hero; page wash once past the hero band.
         const headerBottom = header.getBoundingClientRect().bottom;
         const heroBottom = heroBand.getBoundingClientRect().bottom;
         const pastHero = heroBottom <= headerBottom;
         header.classList.toggle("is-past-hero", pastHero);
         header.classList.toggle("is-home-hero", !pastHero);
       } else {
-        // Non-home: always white (never peach/noise).
+        // Non-home: default CSS page wash (no hero noise states).
         header.classList.remove("is-home-hero", "is-past-hero");
       }
     };
@@ -207,21 +224,66 @@
       </div>
     `;
 
-    const clock = footer.querySelector("[data-la-clock]");
-    if (!clock) return;
+  }
+
+  /** Keep every [data-la-clock] (footer + hero live tag) on one tick/format. */
+  function initLAClocks() {
+    const clocks = document.querySelectorAll("[data-la-clock]");
+    if (!clocks.length) return;
 
     const tick = () => {
       const now = new Date();
-      clock.textContent = formatLATime(now);
-      clock.setAttribute("datetime", now.toISOString());
+      const text = formatLATime(now);
+      const iso = now.toISOString();
+      clocks.forEach((clock) => {
+        clock.textContent = text;
+        clock.setAttribute("datetime", iso);
+      });
     };
     tick();
     setInterval(tick, 1000);
   }
 
+  /** Live °F for Los Angeles via Open-Meteo; keep Figma fallback on failure. */
+  function initLAWeather() {
+    const temps = document.querySelectorAll("[data-la-temp]");
+    if (!temps.length) return;
+
+    const FALLBACK = "72°F";
+    const setAll = (text) => {
+      temps.forEach((el) => {
+        el.textContent = text;
+      });
+    };
+
+    const url =
+      "https://api.open-meteo.com/v1/forecast" +
+      "?latitude=34.0522&longitude=-118.2437" +
+      "&current=temperature_2m&temperature_unit=fahrenheit" +
+      "&timezone=America%2FLos_Angeles";
+
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error("weather " + res.status);
+        return res.json();
+      })
+      .then((data) => {
+        const value = data?.current?.temperature_2m;
+        if (typeof value !== "number" || Number.isNaN(value)) {
+          throw new Error("weather missing");
+        }
+        setAll(`${Math.round(value)}°F`);
+      })
+      .catch(() => {
+        setAll(FALLBACK);
+      });
+  }
+
   renderHeader();
   initStickyHeader();
   renderFooter();
+  initLAClocks();
+  initLAWeather();
 })();
 
   // Sliding white pill for tab switchers
@@ -287,13 +349,16 @@
     if (!viewport || !track) return;
 
     const mobileQuery =
-      window.matchMedia && window.matchMedia('(max-width: 1100px)');
+      window.matchMedia && window.matchMedia('(max-width: 700px)');
 
     let busy = false;
     let index = 0;
     let setCount = 0;
     let cloned = false;
+    let wheelAccum = 0;
+    let wheelLockUntil = 0;
     const durationMs = 350;
+    const wheelThreshold = 40;
     const reducedMotion =
       window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -408,6 +473,8 @@
     }
 
     function syncMode() {
+      wheelAccum = 0;
+      wheelLockUntil = 0;
       if (isMobileCraft()) {
         removeClones();
         track.style.transition = 'none';
@@ -423,8 +490,44 @@
       applyIndex(false);
     }
 
+    function onWheel(event) {
+      // Mobile uses stacked layout — leave page scroll alone.
+      if (isMobileCraft()) return;
+
+      const absX = Math.abs(event.deltaX);
+      const absY = Math.abs(event.deltaY);
+
+      // Vertical (or non-horizontal) gestures: do not claim the event —
+      // let the browser scroll the page. Only dominant deltaX moves the row.
+      if (absX <= absY || absX < 1) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      ensureClones();
+      if (setCount < 2) return;
+
+      const now = performance.now();
+      if (busy || now < wheelLockUntil) return;
+
+      let amount = event.deltaX;
+      if (event.deltaMode === 1) amount *= 16;
+      else if (event.deltaMode === 2) amount *= Math.max(viewport.clientWidth, 1);
+
+      wheelAccum += amount;
+      if (Math.abs(wheelAccum) < wheelThreshold) return;
+
+      const goingNext = wheelAccum > 0;
+      wheelAccum = 0;
+      wheelLockUntil = now + (reducedMotion ? 80 : durationMs);
+
+      if (goingNext) goNext();
+      else goPrev();
+    }
+
     prev && prev.addEventListener('click', goPrev);
     next && next.addEventListener('click', goNext);
+    viewport.addEventListener('wheel', onWheel, { passive: false });
     if (mobileQuery) {
       if (typeof mobileQuery.addEventListener === 'function') {
         mobileQuery.addEventListener('change', syncMode);
@@ -501,9 +604,10 @@
     const layers = [
       { sel: '.about-deco-cloud-1', speed: 0.18, maxPush: 10, pushScale: 0.045, hitPad: 48 },
       { sel: '.about-deco-cloud-2', speed: 0.28, maxPush: 10, pushScale: 0.045, hitPad: 44 },
-      { sel: '.about-deco-stars', speed: 0.22, maxPush: 10, pushScale: 0.045, hitPad: 40 },
+      // Stars are photo-relative with overhang; tiny motion only (no drift onto bio/experience).
+      { sel: '.about-deco-stars', speed: 0.015, maxParallax: 2, maxPush: 2, pushScale: 0.01, hitPad: 16 },
     ]
-      .map(({ sel, speed, maxPush, pushScale, hitPad }) => {
+      .map(({ sel, speed, maxPush, pushScale, hitPad, maxParallax }) => {
         const el = document.querySelector(sel);
         if (!el) return null;
         return {
@@ -512,6 +616,7 @@
           maxPush,
           pushScale,
           hitPad,
+          maxParallax: maxParallax == null ? Infinity : maxParallax,
           spring: 0.02,
           damping: 0.97,
           parallaxY: 0,
@@ -530,7 +635,8 @@
     function syncParallax() {
       const scrollY = Math.max(window.scrollY || window.pageYOffset || 0, 0);
       layers.forEach((layer) => {
-        layer.parallaxY = scrollY * layer.speed;
+        const raw = scrollY * layer.speed;
+        layer.parallaxY = Math.max(-layer.maxParallax, Math.min(layer.maxParallax, raw));
       });
     }
 
