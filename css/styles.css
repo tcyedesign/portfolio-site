@@ -647,7 +647,7 @@ a {
 }
 
 .hero-title .name-c {
-  margin-left: -2px;
+  margin-left: -3px;
   margin-right: 1px;
 }
 
@@ -2355,7 +2355,17 @@ svg.dog-ig-body {
     letter-spacing: -0.24px;
   }
 
-  /* One-line chip row: clip at card content edge, swipe to reveal */
+  /* Let chip rows bleed past the card to the viewport edge (section clips). */
+  .section-product .project-block .project {
+    overflow: visible;
+  }
+
+  /*
+    One-line chip row (Featured + Craft on ≤700px):
+    - Default: left pad aligns with card copy; no right pad → chips crop at
+      the viewport right edge (break out past meta pad + card border + page gutter).
+    - .is-scrolling (JS): no left/right pad on the scroll track.
+  */
   .section-product .project-meta .tag-group,
   #visual.section .craft-card-meta .tag-group {
     flex-wrap: nowrap;
@@ -2364,6 +2374,17 @@ svg.dog-ig-body {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     scrollbar-width: none;
+    margin-left: -24px;
+    margin-right: calc(-24px - 1px - 24px);
+    padding-left: 24px;
+    padding-right: 0;
+    box-sizing: border-box;
+  }
+
+  .section-product .project-meta .tag-group.is-scrolling,
+  #visual.section .craft-card-meta .tag-group.is-scrolling {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .section-product .project-meta .tag-group::-webkit-scrollbar,
@@ -2748,7 +2769,8 @@ svg.dog-ig-body {
     padding-top: 0;
     padding-bottom: 0;
     padding-left: 0;
-    overflow-x: clip;
+    /* Allow Featured-style chip bleed; section still clips to the viewport */
+    overflow-x: visible;
     overflow-y: visible;
   }
 
@@ -2773,6 +2795,8 @@ svg.dog-ig-body {
     max-width: 100%;
     width: 100%;
     gap: 0;
+    /* Match Featured: chip row may bleed to the viewport edge */
+    overflow: visible;
   }
 
   .craft-card-media {

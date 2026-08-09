@@ -340,6 +340,50 @@
     return { pill, tabs, sync, moveTo: (tab, instant) => moveTabPill(pill, tab, instant) };
   }
 
+  // Mobile Featured/Craft chip rows: .is-scrolling clears side gutters while scrolled
+  (function initMobileTagGroupScroll() {
+    const mq =
+      window.matchMedia && window.matchMedia("(max-width: 700px)");
+    const selector =
+      ".section-product .project-meta .tag-group, #visual.section .craft-card-meta .tag-group";
+
+    function bind(el) {
+      if (el.dataset.tagScrollBound === "1") return;
+      el.dataset.tagScrollBound = "1";
+
+      let ticking = false;
+
+      const sync = () => {
+        const active = Boolean(mq && mq.matches) && el.scrollLeft > 0;
+        el.classList.toggle("is-scrolling", active);
+      };
+
+      el.addEventListener(
+        "scroll",
+        () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            sync();
+            ticking = false;
+          });
+        },
+        { passive: true }
+      );
+
+      if (mq) {
+        if (typeof mq.addEventListener === "function") {
+          mq.addEventListener("change", sync);
+        } else if (typeof mq.addListener === "function") {
+          mq.addListener(sync);
+        }
+      }
+      sync();
+    }
+
+    document.querySelectorAll(selector).forEach(bind);
+  })();
+
   // Visual System & Craft carousel — duplicated track for seamless left crop on desktop
   document.querySelectorAll('[data-craft-carousel]').forEach((root) => {
     const viewport = root.querySelector('.craft-viewport');
