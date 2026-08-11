@@ -154,15 +154,6 @@
   /* Figma Connect fill */
   background-color: #fff9f5;
   box-shadow: none;
-  transition: box-shadow 0.25s ease;
-}
-
-/* Figma Drop Shadow/400 — match project/craft card hover */
-.about-page .about-connect-card:hover,
-.about-page .about-connect-card:focus-within {
-  box-shadow:
-    0 4px 4px -4px rgba(12, 12, 13, 0.05),
-    0 16px 32px -4px rgba(12, 12, 13, 0.1);
 }
 
 .about-page .about-connect-apple-wrap {
@@ -244,10 +235,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .about-page .about-connect-card {
-    transition: none;
-  }
-
   .about-page .about-connect-btn-arrow {
     transition: none;
   }
