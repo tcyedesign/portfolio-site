@@ -4,8 +4,11 @@
 
 html {
   scroll-behavior: smooth;
-  /* Prevent sideways rubber-band / white gutters on mobile (iOS needs this + body). */
-  overflow-x: hidden;
+  /* Clip sideways overflow WITHOUT creating a scrollport.
+     `overflow-x: hidden` forces overflow-y to `auto`, which breaks
+     `position: sticky` on the site header (hide/show-on-scroll-up).
+     `clip` still blocks horizontal bleed but keeps sticky working. */
+  overflow-x: clip;
   max-width: 100%;
   /* Overscroll / rubber-band below footer matches footer fill (not bare white). */
   background-color: color-mix(in srgb, var(--color-cream) 40%, #fff);
@@ -15,7 +18,7 @@ body {
   margin: 0;
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
   overscroll-behavior-x: none;
   font-family: var(--font-sans);
   background:

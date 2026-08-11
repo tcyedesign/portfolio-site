@@ -3,7 +3,7 @@
   const FORM_ENDPOINT = "https://api.web3forms.com/submit";
   // Paste your Web3Forms access key here (or in about.html meta[name="web3forms-key"]).
   // Get one at https://web3forms.com using tcyedesign@gmail.com
-  const WEB3FORMS_ACCESS_KEY = "";
+  const WEB3FORMS_ACCESS_KEY = "3dcd7ca0-217a-487b-964f-9d3bfb6b0e5a";
 
   const modal = document.getElementById("about-contact-modal");
   const openBtn = document.querySelector("[data-about-contact-open]");

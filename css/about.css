@@ -13,7 +13,7 @@
   max-width: 100%;
   padding: 120px 240px 160px;
   /* Do not overflow-x clip here — left cloud sits at a slight negative left
-     (Figma overhang). html/body overflow-x:hidden still blocks page scroll. */
+     (Figma overhang). html/body overflow-x:clip still blocks page scroll. */
   overflow: visible;
 }
 
