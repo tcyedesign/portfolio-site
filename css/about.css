@@ -12,8 +12,9 @@
   width: 100%;
   max-width: 100%;
   padding: 120px 240px 160px;
-  overflow-x: clip;
-  overflow-y: visible;
+  /* Do not overflow-x clip here — left cloud sits at a slight negative left
+     (Figma overhang). html/body overflow-x:hidden still blocks page scroll. */
+  overflow: visible;
 }
 
 .about-page .about-grid {
@@ -132,35 +133,303 @@
   }
 }
 
+/*
+ * Connect card — Figma 702:5387
+ * Apple (60 frame) + copy column (body GSF Light 14 + GSF Medium CTA).
+ * Capriola on Google Fonts is Regular-only; fake 300 looked thick — use real GSF 300.
+ */
 .about-page .about-connect {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
+  position: relative;
   width: 100%;
+}
+
+.about-page .about-connect-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  /* Figma Connect fill */
+  background-color: #fff9f5;
+  box-shadow: none;
+  transition: box-shadow 0.25s ease;
+}
+
+/* Figma Drop Shadow/400 — match project/craft card hover */
+.about-page .about-connect-card:hover,
+.about-page .about-connect-card:focus-within {
+  box-shadow:
+    0 4px 4px -4px rgba(12, 12, 13, 0.05),
+    0 16px 32px -4px rgba(12, 12, 13, 0.1);
+}
+
+.about-page .about-connect-apple-wrap {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
 }
 
 .about-page .about-connect-apple {
   display: block;
-  width: 44px;
-  height: 54px;
-  flex-shrink: 0;
+  width: 45.63px;
+  height: 56px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.about-page .about-connect-copy {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
 }
 
 .about-page .about-connect-note {
-  display: flex;
-  flex-direction: column;
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-size: 14px;
-  font-weight: 400;
+  font-weight: var(--font-weight-light);
   line-height: normal;
   letter-spacing: -0.28px;
   color: var(--text-body);
-  white-space: nowrap;
+  overflow-wrap: break-word;
 }
 
-.about-page .about-connect-note span {
+.about-page .about-connect-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  line-height: normal;
+  letter-spacing: -0.28px;
+  color: var(--text-strong);
+  cursor: pointer;
+}
+
+.about-page .about-connect-btn:hover {
+  color: var(--text-strong);
+}
+
+.about-page .about-connect-btn:focus-visible {
+  outline: 2px solid var(--color-outline);
+  outline-offset: 2px;
+}
+
+.about-page .about-connect-btn-arrow {
   display: block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transform: translateX(0);
+  transition: transform 0.2s ease;
+}
+
+.about-page .about-connect-card:hover .about-connect-btn-arrow,
+.about-page .about-connect-card:focus-within .about-connect-btn-arrow {
+  transform: translateX(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-page .about-connect-card {
+    transition: none;
+  }
+
+  .about-page .about-connect-btn-arrow {
+    transition: none;
+  }
+}
+
+/* Contact message modal */
+.about-contact-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.about-contact-modal[hidden] {
+  display: none;
+}
+
+.about-contact-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-black-strong) 36%, transparent);
+  border: 0;
+  cursor: pointer;
+}
+
+.about-contact-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 400px);
+  max-height: min(100%, 640px);
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow:
+    0 1px 4px rgba(12, 12, 13, 0.05),
+    0 12px 32px rgba(12, 12, 13, 0.12);
+}
+
+.about-contact-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.about-contact-modal__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.4px;
+  color: var(--text-strong);
+}
+
+.about-contact-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  margin: -6px -6px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-body);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.about-contact-modal__close:hover {
+  background: var(--chip);
+  color: var(--text-strong);
+}
+
+.about-contact-modal__close:focus-visible {
+  outline: 2px solid var(--color-outline);
+  outline-offset: 2px;
+}
+
+.about-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about-contact-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about-contact-field label {
+  font-family: var(--font-sans);
+  font-size: var(--text-footnote-size);
+  font-weight: var(--text-footnote-weight);
+  letter-spacing: var(--text-footnote-tracking);
+  color: var(--text-strong);
+}
+
+.about-contact-field input,
+.about-contact-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line);
+  letter-spacing: var(--text-body-tracking);
+  color: var(--text-strong);
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.about-contact-field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.about-contact-field input::placeholder,
+.about-contact-field textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.about-contact-field input:hover,
+.about-contact-field textarea:hover {
+  border-color: color-mix(in srgb, var(--color-outline) 55%, var(--border));
+}
+
+.about-contact-field input:focus,
+.about-contact-field textarea:focus {
+  outline: none;
+  border-color: var(--color-outline);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-peach) 55%, transparent);
+}
+
+.about-contact-field input:invalid:not(:placeholder-shown),
+.about-contact-field textarea:invalid:not(:placeholder-shown) {
+  border-color: var(--color-accent);
+}
+
+.about-contact-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  margin-top: 4px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 100px;
+  background: var(--color-black-strong);
+  font-family: var(--font-sans);
+  font-size: var(--text-label-size);
+  font-weight: var(--text-label-weight);
+  line-height: var(--text-label-line);
+  letter-spacing: var(--text-label-tracking);
+  color: var(--color-white);
+  cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.about-contact-submit:hover {
+  background: var(--color-charcoal);
+}
+
+.about-contact-submit:focus-visible {
+  outline: 2px solid var(--color-outline);
+  outline-offset: 2px;
 }
 
 .about-page .about-experiences {
@@ -238,11 +507,17 @@
   will-change: translate;
 }
 
+/*
+ * Figma About cloud ~(-26, 201) in the 1440 frame. Sit at left: 0 so the full
+ * outline stays in the page box (section used to overflow-x:clip + negative
+ * left, which cut the leftmost lobe). SVG viewBox is padded for stroke texture
+ * that <img> would otherwise clip; size scaled to keep art ~same as before.
+ */
 .about-page .about-deco-cloud-1 {
-  left: -26.33px;
+  left: 0;
   top: 201.32px;
-  width: 147.75px;
-  height: 90px;
+  width: 159.6px;
+  height: 97.84px;
   z-index: 1;
 }
 
@@ -297,8 +572,15 @@
     width: 100%;
   }
 
-  .about-page .about-connect-note {
-    white-space: normal;
+  .about-contact-modal {
+    padding: 16px;
+    align-items: flex-end;
+  }
+
+  .about-contact-modal__panel {
+    width: 100%;
+    max-height: min(92vh, 640px);
+    border-radius: 16px 16px 12px 12px;
   }
 
   .about-page .about-deco {

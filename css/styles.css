@@ -606,9 +606,6 @@ a {
   gap: 24px;
   padding-top: 60px;
   order: 2;
-  /* Size container so .live-tag can hug when it wraps */
-  container-type: inline-size;
-  container-name: hero-copy;
 }
 
 .hero-copy-text {
@@ -622,7 +619,7 @@ a {
   margin-top: 0;
   align-self: flex-start;
   width: fit-content;
-  max-width: 100%;
+  max-width: none;
 }
 
 .hero-title {
@@ -662,21 +659,18 @@ a {
   color: var(--text-strong);
 }
 
-/* Figma Live Tag 848:5451 — LA · time · temp */
+/* Figma Live Tag 848:5451 — LA · time · temp — always one horizontal row */
 .live-tag {
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: flex-start;
-  /* Center tracks if any spare cross-size; avoid top-packed empty bottom */
-  align-content: center;
   gap: 8px;
   width: fit-content;
-  max-width: 100%;
+  max-width: none;
   height: auto;
   min-height: 0;
-  /* Even padding (was 10px 16px — short vertical made wrap look top-heavy) */
-  padding: 12px;
+  padding: 10px 12px;
   border-radius: 20px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   background: rgba(0, 0, 0, 0.02);
@@ -684,46 +678,16 @@ a {
   font-size: 14px;
   font-weight: var(--font-weight-regular);
   letter-spacing: -0.28px;
-  /* Hug 16px icons; normal LH inflated wrap rows (~18px) and spare bottom */
   line-height: 1;
+  white-space: nowrap;
   color: var(--color-black-normal);
-}
-
-/*
-  Wrapped / two-row state: flex-wrap + fit-content expands to the available
-  width (full .hero-copy), which centers short rows in empty space. When the
-  copy column can't fit the single-line pill (~340px+), switch to a 2-row grid
-  that max-content-hugs LA · time, with weather on row 2.
-*/
-@container hero-copy (max-width: 380px) {
-  .live-tag {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    grid-template-rows: auto auto;
-    grid-auto-rows: max-content;
-    width: max-content;
-    max-width: 100%;
-    height: max-content;
-    min-height: 0;
-    justify-items: start;
-    align-items: center;
-    align-content: center;
-    row-gap: 8px;
-    column-gap: 8px;
-  }
-
-  .live-tag > .live-tag-dot:nth-child(4) {
-    display: none;
-  }
-
-  .live-tag > .live-tag-item:last-child {
-    grid-column: 1;
-  }
 }
 
 .live-tag-item {
   display: inline-flex;
+  flex-wrap: nowrap;
   align-items: center;
+  flex-shrink: 0;
   gap: 8px;
   white-space: nowrap;
   line-height: 1;
@@ -792,6 +756,8 @@ a {
   isolation: isolate;
   border-color: var(--border);
   box-shadow: none;
+  /* Soft blush fill — #FFA2DB at 6% */
+  background: rgba(255, 162, 219, 0.06);
   /* Soft blush that pairs with --color-accent (#ff5959); no pink token in tokens.css */
   --chip-ai-pink: #ff7a9c;
   /* Lighter pink falloff for tracer 2 (distinct soft tip when both lobes show) */
@@ -956,7 +922,8 @@ a {
    Paper 220px wide; body padding 24px all sides. */
 .hero-note {
   position: absolute;
-  left: calc(50% - 50vw - 20px);
+  /* Viewport left edge; hover translateX(16px) → 16px inset when slid out */
+  left: calc(50% - 50vw);
   top: auto;
   bottom: 40px;
   width: 252px; /* peek strip + paper (220) + tape overhang + hover offset */
@@ -1404,18 +1371,16 @@ a {
   margin: 0;
   z-index: 5;
   overflow: visible;
-  text-decoration: none;
   color: inherit;
-  cursor: pointer;
-  /* Own hit-testing: .hero is pointer-events:none; .hero-visual only
-     re-enables its 339×388 box — dog art overflows that box. */
+  /* Hover hit box — dog is not a link. Overflowing dog art opts into
+     hover via .dog-ig-base; only .dog-ig-notes is the IG <a>. */
   pointer-events: auto;
   transition: transform 0.35s ease;
   transform-origin: center 40%;
 }
 
 .dog-ig:hover,
-.dog-ig:focus-visible {
+.dog-ig:focus-within {
   transform: scale(1.01) rotate(0.5deg);
 }
 
@@ -1429,12 +1394,15 @@ svg.dog-ig-body {
   height: 460px;
   max-width: none;
   overflow: visible;
+  /* Not a link — hits only drive .dog-ig:hover (scribble / notes). */
+  pointer-events: none;
 }
 
 .dog-ig-base {
   /* Prefer smooth downscale of the Retina PNG over crunchy WebP edges */
   image-rendering: auto;
-  /* Overflowing art must re-enable hits itself (see .dog-ig note above). */
+  /* Overflowing art must receive hover itself (.dog-ig box is smaller).
+     Clicks do nothing: parent is a div; only .dog-ig-notes is the IG <a>. */
   pointer-events: auto;
 }
 
@@ -1480,19 +1448,17 @@ svg.dog-ig-body {
 }
 
 .dog-ig:hover .dog-ig-scribble-arm--tip,
-.dog-ig:focus-visible .dog-ig-scribble-arm--tip,
 .dog-ig:focus-within .dog-ig-scribble-arm--tip {
   stroke-dashoffset: 0;
 }
 
 .dog-ig:hover .dog-ig-scribble-arm--main,
-.dog-ig:focus-visible .dog-ig-scribble-arm--main,
 .dog-ig:focus-within .dog-ig-scribble-arm--main {
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.14s;
 }
 
-/* HTML notes — Figma IG Notes (−125, 169) ×1.21 → (−152, 205) */
+/* HTML notes — sole IG link (Figma IG Notes (−125, 169) ×1.21 → (−152, 205)) */
 .dog-ig-notes {
   position: absolute;
   left: -152px;
@@ -1504,19 +1470,20 @@ svg.dog-ig-body {
   gap: 2px;
   padding: 4px;
   margin: 0;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  /* opacity only (no visibility:hidden) so the link stays keyboard-focusable */
   opacity: 0;
-  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.22s ease, visibility 0.22s ease;
+  transition: opacity 0.22s ease;
 }
 
 .dog-ig:hover .dog-ig-notes,
-.dog-ig:focus-visible .dog-ig-notes,
 .dog-ig:focus-within .dog-ig-notes {
   opacity: 1;
-  visibility: visible;
   pointer-events: auto;
-  transition: opacity 0.28s ease 0.62s, visibility 0s linear 0.62s;
+  transition: opacity 0.28s ease 0.62s;
 }
 
 .dog-ig-notes-label {
@@ -1554,8 +1521,8 @@ svg.dog-ig-body {
   transition: background-color 0.2s ease;
 }
 
-.dog-ig-notes-handle:hover .dog-ig-notes-handle-text,
-.dog-ig-notes-handle:focus-visible .dog-ig-notes-handle-text {
+.dog-ig-notes:hover .dog-ig-notes-handle-text,
+.dog-ig-notes:focus-visible .dog-ig-notes-handle-text {
   background-color: rgba(254, 220, 0, 0.45);
 }
 
@@ -1572,7 +1539,7 @@ svg.dog-ig-body {
   }
 
   .dog-ig:hover,
-  .dog-ig:focus-visible {
+  .dog-ig:focus-within {
     transform: none;
   }
 
@@ -1583,10 +1550,8 @@ svg.dog-ig-body {
   }
 
   .dog-ig:hover .dog-ig-scribble-arm--tip,
-  .dog-ig:focus-visible .dog-ig-scribble-arm--tip,
   .dog-ig:focus-within .dog-ig-scribble-arm--tip,
   .dog-ig:hover .dog-ig-scribble-arm--main,
-  .dog-ig:focus-visible .dog-ig-scribble-arm--main,
   .dog-ig:focus-within .dog-ig-scribble-arm--main {
     stroke-dashoffset: 0;
     transition: none;
@@ -1597,7 +1562,6 @@ svg.dog-ig-body {
   }
 
   .dog-ig:hover .dog-ig-notes,
-  .dog-ig:focus-visible .dog-ig-notes,
   .dog-ig:focus-within .dog-ig-notes {
     transition: none;
   }
@@ -2237,8 +2201,13 @@ svg.dog-ig-body {
 
 /* Phone ≤700px: stacked hero, hamburger nav, square covers, craft stack */
 @media (max-width: 700px) {
+  /* Hero + header keep 24px; under-hero page gutters are 24px */
   .site-header,
-  .hero,
+  .hero {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
   .section,
   .about-section,
   .play-section,
@@ -2355,15 +2324,11 @@ svg.dog-ig-body {
     letter-spacing: -0.24px;
   }
 
-  /* Let chip rows bleed past the card to the viewport edge (section clips). */
-  .section-product .project-block .project {
-    overflow: visible;
-  }
-
   /*
     One-line chip row (Featured + Craft on ≤700px):
-    - Default: left pad aligns with card copy; no right pad → chips crop at
-      the viewport right edge (break out past meta pad + card border + page gutter).
+    - Cancel meta side padding only so the scroll track spans the card width.
+    - Default: left pad aligns with card copy; no right pad → chips crop flush
+      at the card’s right edge (card overflow:hidden clips; no viewport bleed).
     - .is-scrolling (JS): no left/right pad on the scroll track.
   */
   .section-product .project-meta .tag-group,
@@ -2375,7 +2340,7 @@ svg.dog-ig-body {
     overscroll-behavior-x: contain;
     scrollbar-width: none;
     margin-left: -24px;
-    margin-right: calc(-24px - 1px - 24px);
+    margin-right: -24px;
     padding-left: 24px;
     padding-right: 0;
     box-sizing: border-box;
@@ -2426,15 +2391,15 @@ svg.dog-ig-body {
     padding-bottom: 96px;
   }
 
-  /* After .section 96px — Featured + Craft headers: 80px above */
+  /* After .section 96px — Featured + Craft headers: 40px above / below */
   .section-product,
   #visual.section {
-    padding-top: 80px;
+    padding-top: 40px;
     padding-bottom: 80px;
   }
 
   .section-header {
-    margin-bottom: 64px;
+    margin-bottom: 40px;
   }
 
   .project + .project {
@@ -2496,8 +2461,21 @@ svg.dog-ig-body {
   .live-tag {
     justify-content: flex-start;
     align-items: center;
-    align-content: center;
     text-align: left;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    max-width: none;
+  }
+
+  /* Text-only live tag on phones — icons are desktop ornament */
+  .live-tag-item {
+    gap: 0;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .live-tag-item img {
+    display: none;
   }
 }
 
@@ -2746,7 +2724,7 @@ svg.dog-ig-body {
 /* Mobile: stack craft like Featured — must come after desktop craft rules */
 @media (max-width: 700px) {
   #visual.section {
-    padding: 80px 24px;
+    padding: 40px 24px 80px;
     overflow-x: clip;
     overflow-y: visible;
   }
@@ -2769,9 +2747,6 @@ svg.dog-ig-body {
     padding-top: 0;
     padding-bottom: 0;
     padding-left: 0;
-    /* Allow Featured-style chip bleed; section still clips to the viewport */
-    overflow-x: visible;
-    overflow-y: visible;
   }
 
   .craft-nav {
@@ -2795,8 +2770,6 @@ svg.dog-ig-body {
     max-width: 100%;
     width: 100%;
     gap: 0;
-    /* Match Featured: chip row may bleed to the viewport edge */
-    overflow: visible;
   }
 
   .craft-card-media {
@@ -2804,7 +2777,6 @@ svg.dog-ig-body {
     max-width: 100%;
     height: auto;
     aspect-ratio: 1;
-    border-radius: 0;
   }
 
   .craft-card-meta {

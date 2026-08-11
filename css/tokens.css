@@ -60,6 +60,7 @@
   --font-sans: "Google Sans Flex", sans-serif;
   --font-display: "Capriola", sans-serif;
   --font-mono: "Reddit Mono", monospace;
+  --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
