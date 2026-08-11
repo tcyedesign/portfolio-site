@@ -121,6 +121,139 @@
     }
   }
 
+  function payloadFields(name, email, message) {
+    return {
+      name,
+      email,
+      message,
+      _replyto: email,
+      _subject: `Portfolio message from ${name}`,
+      _template: "table",
+      _captcha: "false",
+    };
+  }
+
+  function isTruthySuccess(flag) {
+    return flag === true || flag === "true";
+  }
+
+  function isFalsySuccess(flag) {
+    return flag === false || flag === "false";
+  }
+
+  function extractMessage(data) {
+    if (!data) return "";
+    if (typeof data.message === "string") return data.message.trim();
+    if (typeof data.error === "string") return data.error.trim();
+    return "";
+  }
+
+  function isActivationResponse(data, message) {
+    const text = `${extractMessage(data)} ${message || ""}`.toLowerCase();
+    return (
+      text.includes("activation") ||
+      text.includes("activate form") ||
+      text.includes("confirm your email") ||
+      text.includes("check your email")
+    );
+  }
+
+  async function parseResponse(response) {
+    const raw = await response.text();
+    let data = null;
+    if (raw) {
+      try {
+        data = JSON.parse(raw);
+      } catch {
+        data = null;
+      }
+    }
+    return { data, raw };
+  }
+
+  function interpretSubmitResult(response, data, raw) {
+    const message = extractMessage(data) || (raw || "").trim();
+
+    if (isActivationResponse(data, message)) {
+      return { kind: "activation", message };
+    }
+
+    if (isTruthySuccess(data?.success)) {
+      return { kind: "success", message };
+    }
+
+    // FormSubmit sometimes omits success on HTTP 200 after send.
+    if (response.ok && data && !isFalsySuccess(data.success) && !data.error) {
+      return { kind: "success", message };
+    }
+
+    if (response.ok && !data && !raw) {
+      return { kind: "success", message: "" };
+    }
+
+    return {
+      kind: "error",
+      message: message || "Unable to send message.",
+    };
+  }
+
+  async function postJson(fields) {
+    const response = await fetch(FORM_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(fields),
+    });
+    const parsed = await parseResponse(response);
+    return { response, ...parsed };
+  }
+
+  async function postFormData(fields) {
+    const body = new FormData();
+    Object.entries(fields).forEach(([key, value]) => {
+      body.append(key, value);
+    });
+    const response = await fetch(FORM_ENDPOINT, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+      body,
+    });
+    const parsed = await parseResponse(response);
+    return { response, ...parsed };
+  }
+
+  async function submitToFormSubmit(fields) {
+    let result = await postJson(fields);
+    let interpreted = interpretSubmitResult(result.response, result.data, result.raw);
+
+    if (interpreted.kind === "error") {
+      try {
+        result = await postFormData(fields);
+        interpreted = interpretSubmitResult(result.response, result.data, result.raw);
+      } catch {
+        // Keep the original JSON interpretation if FormData also fails hard.
+      }
+    }
+
+    return interpreted;
+  }
+
+  function showMailtoError(name, email, message) {
+    const fallback = mailtoFallback(name, email, message);
+    setSending(false);
+    if (!statusEl) return;
+    statusEl.hidden = false;
+    statusEl.dataset.state = "error";
+    statusEl.setAttribute("role", "alert");
+    statusEl.innerHTML =
+      `Couldn’t send automatically. ` +
+      `<a href="${fallback}">Open your email app instead</a>, or try again.`;
+  }
+
   openBtn.addEventListener("click", openModal);
 
   closeControls.forEach((el) => {
@@ -195,56 +328,27 @@
     setSending(true);
 
     try {
-      const response = await fetch(FORM_ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          message,
-          _replyto: email,
-          _subject: `Portfolio message from ${name}`,
-          _template: "table",
-          _captcha: "false",
-        }),
-      });
+      const result = await submitToFormSubmit(payloadFields(name, email, message));
 
-      let data = null;
-      try {
-        data = await response.json();
-      } catch {
-        data = null;
-      }
-
-      const successFlag = data?.success;
-      const ok =
-        response.ok &&
-        (successFlag === true ||
-          successFlag === "true" ||
-          successFlag === undefined);
-
-      if (!ok) {
-        throw new Error(
-          (data && (data.message || data.error)) || "Unable to send message."
+      if (result.kind === "activation") {
+        form.reset();
+        showSuccessView(
+          "One more step: check the inbox for tcyedesign@gmail.com and click FormSubmit’s “Activate Form” link. After that, messages will send normally."
         );
+        return;
       }
 
-      form.reset();
-      showSuccessView("Thanks! Your message was sent. I’ll get back to you soon.");
-    } catch {
-      const fallback = mailtoFallback(name, email, message);
-      setSending(false);
-      if (statusEl) {
-        statusEl.hidden = false;
-        statusEl.dataset.state = "error";
-        statusEl.setAttribute("role", "alert");
-        statusEl.innerHTML =
-          `Couldn’t send automatically. ` +
-          `<a href="${fallback}">Open your email app instead</a>, or try again.`;
+      if (result.kind === "success") {
+        form.reset();
+        showSuccessView(
+          "Thanks! Your message was sent. I’ll get back to you soon."
+        );
+        return;
       }
+
+      throw new Error(result.message || "Unable to send message.");
+    } catch {
+      showMailtoError(name, email, message);
     }
   });
 })();
