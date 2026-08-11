@@ -1,6 +1,10 @@
 (function () {
   const CONTACT_EMAIL = "tcyedesign@gmail.com";
-  const FORM_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
+  const FORM_ENDPOINT = "https://api.web3forms.com/submit";
+  // Paste your Web3Forms access key here (or in about.html meta[name="web3forms-key"]).
+  // Get one at https://web3forms.com using tcyedesign@gmail.com
+  const WEB3FORMS_ACCESS_KEY = "";
+
   const modal = document.getElementById("about-contact-modal");
   const openBtn = document.querySelector("[data-about-contact-open]");
   const form = document.querySelector("[data-about-contact-form]");
@@ -23,6 +27,19 @@
   let open = false;
   let sending = false;
 
+  function getAccessKey() {
+    const fromConstant = (WEB3FORMS_ACCESS_KEY || "").trim();
+    if (fromConstant && !/^YOUR_ACCESS_KEY/i.test(fromConstant)) {
+      return fromConstant;
+    }
+    const meta = document.querySelector('meta[name="web3forms-key"]');
+    const fromMeta = (meta?.getAttribute("content") || "").trim();
+    if (fromMeta && !/^YOUR_ACCESS_KEY/i.test(fromMeta)) {
+      return fromMeta;
+    }
+    return "";
+  }
+
   function getFocusable() {
     return Array.from(
       panel.querySelectorAll(
@@ -36,10 +53,10 @@
     document.body.style.overflow = inert ? "hidden" : "";
   }
 
-  function setStatus(type, message) {
+  function setStatus(type, messageHtmlOrText, { html = false } = {}) {
     if (!statusEl) return;
 
-    if (!type || !message) {
+    if (!type || !messageHtmlOrText) {
       statusEl.hidden = true;
       statusEl.textContent = "";
       statusEl.removeAttribute("data-state");
@@ -49,8 +66,12 @@
 
     statusEl.hidden = false;
     statusEl.dataset.state = type;
-    statusEl.textContent = message;
     statusEl.setAttribute("role", type === "error" ? "alert" : "status");
+    if (html) {
+      statusEl.innerHTML = messageHtmlOrText;
+    } else {
+      statusEl.textContent = messageHtmlOrText;
+    }
   }
 
   function setSending(isSending) {
@@ -91,6 +112,27 @@
     return `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
   }
 
+  function showMailtoError(name, email, message, lead) {
+    const fallback = mailtoFallback(name, email, message);
+    setSending(false);
+    setStatus(
+      "error",
+      `${lead || "Couldn’t send automatically."} ` +
+        `<a href="${fallback}">Open your email app instead</a>, or try again.`,
+      { html: true }
+    );
+  }
+
+  function showSetupNeeded() {
+    setSending(false);
+    setStatus(
+      "error",
+      "Contact form needs a one-time setup (Web3Forms access key). " +
+        `<a href="mailto:${CONTACT_EMAIL}">Email me directly</a> for now.`,
+      { html: true }
+    );
+  }
+
   function resetModalState() {
     form.reset();
     showFormView();
@@ -105,6 +147,9 @@
     setPageInert(true);
     window.requestAnimationFrame(() => {
       (nameInput || getFocusable()[0] || panel).focus();
+      if (!getAccessKey()) {
+        showSetupNeeded();
+      }
     });
   }
 
@@ -119,139 +164,6 @@
     } else {
       openBtn.focus();
     }
-  }
-
-  function payloadFields(name, email, message) {
-    return {
-      name,
-      email,
-      message,
-      _replyto: email,
-      _subject: `Portfolio message from ${name}`,
-      _template: "table",
-      _captcha: "false",
-    };
-  }
-
-  function isTruthySuccess(flag) {
-    return flag === true || flag === "true";
-  }
-
-  function isFalsySuccess(flag) {
-    return flag === false || flag === "false";
-  }
-
-  function extractMessage(data) {
-    if (!data) return "";
-    if (typeof data.message === "string") return data.message.trim();
-    if (typeof data.error === "string") return data.error.trim();
-    return "";
-  }
-
-  function isActivationResponse(data, message) {
-    const text = `${extractMessage(data)} ${message || ""}`.toLowerCase();
-    return (
-      text.includes("activation") ||
-      text.includes("activate form") ||
-      text.includes("confirm your email") ||
-      text.includes("check your email")
-    );
-  }
-
-  async function parseResponse(response) {
-    const raw = await response.text();
-    let data = null;
-    if (raw) {
-      try {
-        data = JSON.parse(raw);
-      } catch {
-        data = null;
-      }
-    }
-    return { data, raw };
-  }
-
-  function interpretSubmitResult(response, data, raw) {
-    const message = extractMessage(data) || (raw || "").trim();
-
-    if (isActivationResponse(data, message)) {
-      return { kind: "activation", message };
-    }
-
-    if (isTruthySuccess(data?.success)) {
-      return { kind: "success", message };
-    }
-
-    // FormSubmit sometimes omits success on HTTP 200 after send.
-    if (response.ok && data && !isFalsySuccess(data.success) && !data.error) {
-      return { kind: "success", message };
-    }
-
-    if (response.ok && !data && !raw) {
-      return { kind: "success", message: "" };
-    }
-
-    return {
-      kind: "error",
-      message: message || "Unable to send message.",
-    };
-  }
-
-  async function postJson(fields) {
-    const response = await fetch(FORM_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(fields),
-    });
-    const parsed = await parseResponse(response);
-    return { response, ...parsed };
-  }
-
-  async function postFormData(fields) {
-    const body = new FormData();
-    Object.entries(fields).forEach(([key, value]) => {
-      body.append(key, value);
-    });
-    const response = await fetch(FORM_ENDPOINT, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-      },
-      body,
-    });
-    const parsed = await parseResponse(response);
-    return { response, ...parsed };
-  }
-
-  async function submitToFormSubmit(fields) {
-    let result = await postJson(fields);
-    let interpreted = interpretSubmitResult(result.response, result.data, result.raw);
-
-    if (interpreted.kind === "error") {
-      try {
-        result = await postFormData(fields);
-        interpreted = interpretSubmitResult(result.response, result.data, result.raw);
-      } catch {
-        // Keep the original JSON interpretation if FormData also fails hard.
-      }
-    }
-
-    return interpreted;
-  }
-
-  function showMailtoError(name, email, message) {
-    const fallback = mailtoFallback(name, email, message);
-    setSending(false);
-    if (!statusEl) return;
-    statusEl.hidden = false;
-    statusEl.dataset.state = "error";
-    statusEl.setAttribute("role", "alert");
-    statusEl.innerHTML =
-      `Couldn’t send automatically. ` +
-      `<a href="${fallback}">Open your email app instead</a>, or try again.`;
   }
 
   openBtn.addEventListener("click", openModal);
@@ -302,6 +214,7 @@
     const email = (emailInput?.value || "").trim();
     const message = (messageInput?.value || "").trim();
     const honey = (honeyInput?.value || "").trim();
+    const accessKey = getAccessKey();
 
     if (honey) {
       showSuccessView("Thanks — your message is on its way.");
@@ -324,29 +237,51 @@
       return;
     }
 
+    if (!accessKey) {
+      showSetupNeeded();
+      return;
+    }
+
     setStatus(null);
     setSending(true);
 
     try {
-      const result = await submitToFormSubmit(payloadFields(name, email, message));
+      const response = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name,
+          email,
+          message,
+          subject: `Portfolio message from ${name}`,
+          from_name: "Portfolio contact",
+          botcheck: false,
+        }),
+      });
 
-      if (result.kind === "activation") {
-        form.reset();
-        showSuccessView(
-          "One more step: check the inbox for tcyedesign@gmail.com and click FormSubmit’s “Activate Form” link. After that, messages will send normally."
-        );
-        return;
+      let data = null;
+      try {
+        data = await response.json();
+      } catch {
+        data = null;
       }
 
-      if (result.kind === "success") {
-        form.reset();
-        showSuccessView(
-          "Thanks! Your message was sent. I’ll get back to you soon."
+      const ok =
+        response.ok &&
+        (data?.success === true || data?.success === "true");
+
+      if (!ok) {
+        throw new Error(
+          (data && (data.message || data.error)) || "Unable to send message."
         );
-        return;
       }
 
-      throw new Error(result.message || "Unable to send message.");
+      form.reset();
+      showSuccessView("Thanks! Your message was sent. I’ll get back to you soon.");
     } catch {
       showMailtoError(name, email, message);
     }
