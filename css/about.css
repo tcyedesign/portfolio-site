@@ -343,6 +343,67 @@
   gap: 16px;
 }
 
+.about-contact-form [data-about-contact-fields] {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about-contact-gotcha {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.about-contact-status {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-footnote-size);
+  font-weight: var(--text-footnote-weight);
+  line-height: 1.4;
+  letter-spacing: var(--text-footnote-tracking);
+  color: var(--text-body);
+}
+
+.about-contact-status[data-state="error"] {
+  color: var(--color-accent);
+}
+
+.about-contact-status[data-state="success"] {
+  color: var(--text-strong);
+}
+
+.about-contact-status a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.about-contact-success {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about-contact-success[hidden] {
+  display: none;
+}
+
+.about-contact-success__copy {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line);
+  letter-spacing: var(--text-body-tracking);
+  color: var(--text-body);
+}
+
 .about-contact-field {
   display: flex;
   flex-direction: column;
@@ -423,8 +484,13 @@
   transition: background 0.2s ease, opacity 0.2s ease;
 }
 
-.about-contact-submit:hover {
+.about-contact-submit:hover:not(:disabled) {
   background: var(--color-charcoal);
+}
+
+.about-contact-submit:disabled {
+  opacity: 0.72;
+  cursor: wait;
 }
 
 .about-contact-submit:focus-visible {

@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,300;0,6..144,400;0,6..144,500;0,6..144,600;0,6..144,700;1,6..144,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/tokens.css?v=gsf-light-300-20260810">
     <link rel="stylesheet" href="css/styles.css?v=chip-ai-fill-ffa2db-20260810">
-    <link rel="stylesheet" href="css/about.css?v=about-connect-hover-20260810">
+    <link rel="stylesheet" href="css/about.css?v=about-contact-formsubmit-20260810">
     <title>Tc — About</title>
 </head>
 <body class="about-page">
@@ -123,47 +123,69 @@
                 </button>
             </div>
             <form class="about-contact-form" data-about-contact-form novalidate>
-                <div class="about-contact-field">
-                    <label for="about-contact-name">Name</label>
+                <div data-about-contact-fields>
+                    <div class="about-contact-field">
+                        <label for="about-contact-name">Name</label>
+                        <input
+                            id="about-contact-name"
+                            name="name"
+                            type="text"
+                            autocomplete="name"
+                            required
+                            maxlength="120"
+                            placeholder="Your name"
+                        >
+                    </div>
+                    <div class="about-contact-field">
+                        <label for="about-contact-email">Email</label>
+                        <input
+                            id="about-contact-email"
+                            name="email"
+                            type="email"
+                            autocomplete="email"
+                            required
+                            maxlength="160"
+                            placeholder="you@example.com"
+                        >
+                    </div>
+                    <div class="about-contact-field">
+                        <label for="about-contact-message">Message</label>
+                        <textarea
+                            id="about-contact-message"
+                            name="message"
+                            rows="4"
+                            required
+                            maxlength="2000"
+                            placeholder="What would you like to say?"
+                        ></textarea>
+                    </div>
                     <input
-                        id="about-contact-name"
-                        name="name"
+                        id="about-contact-gotcha"
+                        class="about-contact-gotcha"
                         type="text"
-                        autocomplete="name"
-                        required
-                        maxlength="120"
-                        placeholder="Your name"
+                        name="_gotcha"
+                        tabindex="-1"
+                        autocomplete="off"
+                        aria-hidden="true"
                     >
+                    <p class="about-contact-status" data-about-contact-status hidden></p>
+                    <button type="submit" class="about-contact-submit" data-about-contact-submit>
+                        Send message
+                    </button>
                 </div>
-                <div class="about-contact-field">
-                    <label for="about-contact-email">Email</label>
-                    <input
-                        id="about-contact-email"
-                        name="email"
-                        type="email"
-                        autocomplete="email"
-                        required
-                        maxlength="160"
-                        placeholder="you@example.com"
-                    >
+                <div class="about-contact-success" data-about-contact-success hidden tabindex="-1">
+                    <p class="about-contact-success__copy" data-about-contact-success-copy>
+                        Thanks! Your message was sent. I’ll get back to you soon.
+                    </p>
+                    <button type="button" class="about-contact-submit" data-about-contact-close>
+                        Close
+                    </button>
                 </div>
-                <div class="about-contact-field">
-                    <label for="about-contact-message">Message</label>
-                    <textarea
-                        id="about-contact-message"
-                        name="message"
-                        rows="4"
-                        required
-                        maxlength="2000"
-                        placeholder="What would you like to say?"
-                    ></textarea>
-                </div>
-                <button type="submit" class="about-contact-submit">Send message</button>
             </form>
         </div>
     </div>
 
     <script src="js/site-chrome.js?v=stars-photo-overhang-20260808" data-active="about" data-base=""></script>
-    <script src="js/about-contact.js?v=about-contact-modal-20260810"></script>
+    <script src="js/about-contact.js?v=about-contact-formsubmit-20260810"></script>
 </body>
 </html>
