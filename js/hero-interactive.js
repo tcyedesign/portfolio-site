@@ -693,10 +693,10 @@
     if (reducedMotion) return;
 
     const layers = [
-      // Clouds — barely drift
-      { sel: ".hero-cloud", speed: 0.08, maxPush: 1.6, pushScale: 0.022, hitPad: 28 },
-      { sel: ".hero-cloud-2", speed: 0.14, maxPush: 1.4, pushScale: 0.024, hitPad: 24 },
-      { sel: ".deco-cloud-3", speed: 0.1, maxPush: 1.2, pushScale: 0.022, hitPad: 22 },
+      // Clouds — barely drift + idle loop
+      { sel: ".hero-cloud", speed: 0.08, maxPush: 1.6, pushScale: 0.022, hitPad: 28, idleAmp: 6.56, idleMs: 8200, idlePhase: 0.2 },
+      { sel: ".hero-cloud-2", speed: 0.14, maxPush: 1.4, pushScale: 0.024, hitPad: 24, idleAmp: 5.74, idleMs: 9600, idlePhase: 1.7 },
+      { sel: ".deco-cloud-3", speed: 0.1, maxPush: 1.2, pushScale: 0.022, hitPad: 22, idleAmp: 5.33, idleMs: 8800, idlePhase: 3.1 },
       // Hero stars — float + scroll parallax
       { sel: ".hero-star-a", speed: 0.07, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
       { sel: ".hero-star-b", speed: 0.09, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
@@ -710,7 +710,7 @@
       // Flower — soft float only (no scroll parallax)
       { sel: ".hero-flower", speed: 0, maxPush: 1.5, pushScale: 0.022, hitPad: 26 },
     ]
-      .map(({ sel, speed, maxPush, pushScale, hitPad }) => {
+      .map(({ sel, speed, maxPush, pushScale, hitPad, idleAmp = 0, idleMs = 8000, idlePhase = 0 }) => {
         const el = document.querySelector(sel);
         if (!el) return null;
         return {
@@ -719,6 +719,9 @@
           maxPush,
           pushScale,
           hitPad,
+          idleAmp,
+          idleMs,
+          idlePhase,
           spring: 0.02,
           damping: 0.97,
           parallaxY: 0,
@@ -765,11 +768,18 @@
       layer.targetY = Math.max(-layer.maxPush, Math.min(layer.maxPush, awayY * penetration));
     }
 
-    function applyLayer(layer) {
-      layer.el.style.translate = `${layer.x.toFixed(2)}px ${(layer.parallaxY + layer.y).toFixed(2)}px`;
+    function applyLayer(layer, now) {
+      let idleX = 0;
+      let idleY = 0;
+      if (layer.idleAmp) {
+        const t = (now / layer.idleMs) * Math.PI * 2 + layer.idlePhase;
+        idleX = Math.sin(t) * layer.idleAmp;
+        idleY = Math.cos(t * 0.72) * layer.idleAmp * 0.7;
+      }
+      layer.el.style.translate = `${(layer.x + idleX).toFixed(2)}px ${(layer.parallaxY + layer.y + idleY).toFixed(2)}px`;
     }
 
-    function animate() {
+    function animate(now) {
       syncParallax();
       layers.forEach((layer) => {
         updatePushTarget(layer);
@@ -792,7 +802,7 @@
           layer.vy = 0;
         }
 
-        applyLayer(layer);
+        applyLayer(layer, now);
       });
       requestAnimationFrame(animate);
     }
@@ -808,7 +818,7 @@
     );
 
     syncParallax();
-    layers.forEach(applyLayer);
+    layers.forEach((layer) => applyLayer(layer, performance.now()));
     requestAnimationFrame(animate);
   }
 
