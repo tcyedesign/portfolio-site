@@ -2918,8 +2918,9 @@ svg.dog-ig-body {
   top: 50%;
   transform: translate(-50%, -50%);
   width: auto;
-  height: min(560px, 72vw);
-  max-width: calc(100% - 48px);
+  height: auto;
+  max-width: 42%;
+  max-height: 72%;
   object-fit: contain;
   /* App window only — no black matte; gray tray shows through corners */
   background: transparent;
@@ -3017,6 +3018,17 @@ svg.dog-ig-body {
 
 .project-page .case-section + .case-section {
   margin-top: 0;
+}
+
+/* Figma 975:7730 — parent stack 80px between title and grouped blocks */
+.project-page .case-section--grouped {
+  gap: 80px;
+}
+
+.project-page .case-section--grouped > .case-section--gap-40 {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 /* Figma section stacks with itemSpacing 40 (intro + image+note blocks) */
