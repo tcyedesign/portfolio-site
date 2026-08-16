@@ -201,9 +201,124 @@ a {
   opacity: 1;
 }
 
-.nav a.active {
+.nav-item--work {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-work-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-item--work:hover .nav-work-trigger,
+.nav-item--work:focus-within .nav-work-trigger {
   opacity: 1;
-  font-weight: var(--font-weight-bold);
+}
+
+.nav-work-trigger::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-top: -2px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.nav-item--work:hover .nav-work-trigger::after,
+.nav-item--work:focus-within .nav-work-trigger::after {
+  margin-top: 2px;
+  transform: rotate(225deg);
+}
+
+/* Invisible hover bridge (padding-top) so the gap doesn't close the menu. */
+.nav-work-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 130;
+  padding-top: 12px;
+  width: max-content;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  text-transform: none;
+}
+
+.nav-item--work:hover .nav-work-menu,
+.nav-item--work:focus-within .nav-work-menu {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nav-work-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  width: max-content;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow:
+    0 4px 4px -4px rgba(12, 12, 13, 0.05),
+    0 16px 32px -4px rgba(12, 12, 13, 0.1);
+}
+
+.nav-work-menu a {
+  display: block;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: -0.28px;
+  line-height: 1.3;
+  color: var(--text-strong);
+  opacity: 1;
+  text-transform: none;
+  white-space: nowrap;
+  background: transparent;
+  transition: background-color 0.15s ease;
+}
+
+.nav-work-menu a:hover,
+.nav-work-menu a:focus-visible,
+.nav-work-menu a:active {
+  opacity: 1;
+  background: #f7f7f7;
+}
+
+.nav-work-label {
+  margin: 6px 12px 8px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: -0.12px;
+  line-height: 1.3;
+  color: var(--text-muted);
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.nav-work-sep {
+  height: 1px;
+  margin: 6px 12px;
+  background: var(--border);
+}
+
+@media (max-width: 700px) {
+  .nav-work-trigger::after,
+  .nav-work-menu {
+    display: none;
+  }
 }
 
 /* Desktop: text tabs. Mobile: Phosphor list icon opens overflow menu. */
@@ -2440,12 +2555,12 @@ svg.dog-ig-body {
     left: auto;
     flex-direction: column;
     align-items: stretch;
-    gap: 16px;
+    gap: 2px;
     min-width: 156px;
-    padding: 16px 24px;
+    padding: 8px;
     border: 1px solid var(--border);
     border-radius: 12px;
-    background: color-mix(in srgb, var(--color-cream) 40%, #fff);
+    background: #fff;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     z-index: 120;
   }
@@ -2456,9 +2571,31 @@ svg.dog-ig-body {
 
   .site-header .nav a {
     display: block;
+    box-sizing: border-box;
     white-space: nowrap;
     text-align: left;
-    padding: 0;
+    margin: 0;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+  }
+
+  .site-header .nav a:hover,
+  .site-header .nav a:focus-visible,
+  .site-header .nav a:active {
+    opacity: 1;
+    background: #f7f7f7;
+  }
+
+  .site-header .nav-item--work {
+    display: block;
+    width: 100%;
+  }
+
+  .site-header .nav-work-trigger {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .live-tag {

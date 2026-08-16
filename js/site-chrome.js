@@ -73,7 +73,23 @@
           </svg>
         </button>
         <nav class="nav" id="site-primary-nav" aria-label="Primary">
-          <a class="${active === "work" ? "active" : ""}" href="${href("index.html")}">Work</a>
+          <div class="nav-item nav-item--work">
+            <a class="nav-work-trigger${active === "work" ? " active" : ""}" href="${href("index.html")}" aria-haspopup="true" aria-expanded="false" aria-controls="nav-work-menu">Work</a>
+            <div class="nav-work-menu" id="nav-work-menu" role="menu">
+              <div class="nav-work-panel">
+                <a role="menuitem" href="${href("index.html")}">All Projects</a>
+                <div class="nav-work-sep" role="separator"></div>
+                <p class="nav-work-label">Selected product work</p>
+                <a role="menuitem" href="${href("projects/cloudflare-one-client.html")}">Cloudflare One Client</a>
+                <a role="menuitem" href="${href("projects/warp.html")}">WARP</a>
+                <div class="nav-work-sep" role="separator"></div>
+                <p class="nav-work-label">Visual System &amp; Craft</p>
+                <a role="menuitem" href="${href("projects/what-is-cloudflare.html")}">What is Cloudflare Animation</a>
+                <a role="menuitem" href="${href("projects/global-icon-system.html")}">Global Icon System</a>
+                <a role="menuitem" href="${href("projects/b2b-illustration-system.html")}">B2B Illustration System</a>
+              </div>
+            </div>
+          </div>
           <a class="${active === "play" ? "active" : ""}" href="${href("play.html")}">Play</a>
           <a class="${active === "about" ? "active" : ""}" href="${href("about.html")}">About</a>
         </nav>
