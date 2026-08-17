@@ -278,7 +278,7 @@ a {
   border-radius: 10px;
   font-family: var(--font-sans);
   font-size: 14px;
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-medium);
   letter-spacing: -0.28px;
   line-height: 1.3;
   color: var(--text-strong);
@@ -300,7 +300,7 @@ a {
   margin: 6px 12px 8px;
   font-family: var(--font-sans);
   font-size: 11px;
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-medium);
   letter-spacing: -0.12px;
   line-height: 1.3;
   color: var(--text-muted);
@@ -2038,6 +2038,7 @@ svg.dog-ig-body {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  scroll-margin-top: 96px;
 }
 
 .case-header h1 {
@@ -2105,6 +2106,82 @@ svg.dog-ig-body {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  scroll-margin-top: 96px;
+}
+
+/* ChatGPT-style section ticks — desktop case studies only */
+.case-progress {
+  position: fixed;
+  top: 50%;
+  left: calc(100vw - 64px);
+  right: auto;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  width: 12px;
+  margin: 0;
+  overflow: visible;
+  transform: translate(-100%, -50%);
+  pointer-events: none;
+}
+
+.case-progress-tick {
+  position: relative;
+  display: block;
+  width: 12px;
+  height: 2px;
+  padding: 4px 0;
+  box-sizing: content-box;
+  border: 0;
+  background: #c8c8c8;
+  background-clip: content-box;
+  border-radius: 99px;
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.case-progress-tick:hover,
+.case-progress-tick:focus-visible {
+  background-color: var(--text-muted);
+}
+
+.case-progress-tick.is-active {
+  background-color: var(--text-strong);
+}
+
+.case-progress-label {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: -0.12px;
+  line-height: 1.2;
+  color: var(--text-muted);
+  text-transform: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.case-progress-tick:hover .case-progress-label,
+.case-progress-tick:focus-visible .case-progress-label {
+  opacity: 1;
+}
+
+@media (max-width: 700px) {
+  .case-progress {
+    display: none;
+  }
 }
 
 .case-section h2 {
