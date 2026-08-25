@@ -11,6 +11,11 @@
     return base + path;
   }
 
+  const analyticsScript = document.createElement("script");
+  analyticsScript.src = asset("js/analytics.js?v=ga4-analytics-20260825");
+  analyticsScript.defer = true;
+  document.head.appendChild(analyticsScript);
+
   /** Pacific 24h clock: `14:32:05 PDT` / `… PST` (hero live tag + footer). */
   function formatLATime(date) {
     try {
