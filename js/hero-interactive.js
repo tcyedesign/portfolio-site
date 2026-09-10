@@ -480,6 +480,7 @@
   }
 
   function createEyeStates(svg) {
+    const NS = "http://www.w3.org/2000/svg";
     return eyePairs.map(({ ball, white, spring, damping }) => {
       const eyeball = svg.getElementById(ball);
       const socket = svg.getElementById(white);
@@ -496,8 +497,24 @@
       const track = groupPupilWithOutline(svg, eyeball);
       if (!track) return null;
 
+      // Permanent white disc under the live eye so blink squash doesn't
+      // reveal the baked WebP pupils underneath.
+      const coverId = `${white}-cover`;
+      let cover = svg.getElementById(coverId);
+      if (!cover) {
+        cover = document.createElementNS(NS, "circle");
+        cover.setAttribute("id", coverId);
+        cover.setAttribute("cx", String(socketCx));
+        cover.setAttribute("cy", String(socketCy));
+        cover.setAttribute("r", String(socketR));
+        cover.setAttribute("fill", "#fff");
+        cover.setAttribute("aria-hidden", "true");
+        socket.parentNode.insertBefore(cover, socket);
+      }
+
       return {
         eyeball,
+        socket,
         track,
         socketCx,
         socketCy,
@@ -510,14 +527,27 @@
         y: restCy,
         vx: 0,
         vy: 0,
+        blinkScaleY: 1,
       };
     }).filter(Boolean);
+  }
+
+  function blinkTransform(eye) {
+    const sy = eye.blinkScaleY;
+    if (sy >= 0.999) return "";
+    const { socketCx: cx, socketCy: cy } = eye;
+    return `translate(${cx} ${cy}) scale(1 ${sy.toFixed(4)}) translate(${-cx} ${-cy})`;
   }
 
   function applyPupilTransform(eye) {
     const tx = eye.x - eye.restCx;
     const ty = eye.y - eye.restCy;
-    eye.track.setAttribute("transform", `translate(${tx.toFixed(3)} ${ty.toFixed(3)})`);
+    const blink = blinkTransform(eye);
+    const move = `translate(${tx.toFixed(3)} ${ty.toFixed(3)})`;
+    eye.track.setAttribute("transform", blink ? `${blink} ${move}` : move);
+    if (eye.socket) {
+      eye.socket.setAttribute("transform", blink || "");
+    }
   }
 
   function pupilTarget(eye, cursor) {
@@ -547,7 +577,81 @@
     });
   }
 
-  function animateFrame(svg, eyes, eyebrows, pushables, nose) {
+  /** Closed-amount 0→1→0 over a blink; returns eye scaleY. */
+  function blinkScaleFromProgress(t) {
+    // Quick close, brief hold, quick open.
+    let closed;
+    if (t < 0.38) closed = t / 0.38;
+    else if (t < 0.52) closed = 1;
+    else closed = 1 - (t - 0.52) / 0.48;
+    closed = Math.max(0, Math.min(1, closed));
+    // Ease in/out so it doesn't feel robotic.
+    const eased = closed * closed * (3 - 2 * closed);
+    return 1 - eased * 0.94;
+  }
+
+  function createBlinkController(eyes) {
+    const state = {
+      phase: "idle", // idle | blink | pause
+      startedAt: 0,
+      duration: 150,
+      nextAt: performance.now() + 1800 + Math.random() * 2200,
+      doubleLeft: 0,
+    };
+
+    function scheduleNext(now, soon) {
+      if (soon) {
+        state.nextAt = now + 220 + Math.random() * 120;
+        return;
+      }
+      // Idle 2.8–6.5s between blinks.
+      state.nextAt = now + 2800 + Math.random() * 3700;
+    }
+
+    function startBlink(now) {
+      state.phase = "blink";
+      state.startedAt = now;
+      state.duration = 130 + Math.random() * 50;
+      // ~22% chance of a double-blink follow-up.
+      if (state.doubleLeft <= 0 && Math.random() < 0.22) {
+        state.doubleLeft = 1;
+      }
+    }
+
+    function update(now) {
+      if (state.phase === "idle") {
+        if (now >= state.nextAt) startBlink(now);
+      }
+
+      if (state.phase === "blink") {
+        const t = (now - state.startedAt) / state.duration;
+        const scaleY = t >= 1 ? 1 : blinkScaleFromProgress(t);
+        eyes.forEach((eye) => {
+          eye.blinkScaleY = scaleY;
+        });
+        if (t >= 1) {
+          eyes.forEach((eye) => {
+            eye.blinkScaleY = 1;
+          });
+          if (state.doubleLeft > 0) {
+            state.doubleLeft -= 1;
+            scheduleNext(now, true);
+            state.phase = "idle";
+          } else {
+            scheduleNext(now, false);
+            state.phase = "idle";
+          }
+        }
+      }
+    }
+
+    return { update };
+  }
+
+  function animateFrame(svg, eyes, eyebrows, pushables, nose, blink) {
+    const now = performance.now();
+    if (blink) blink.update(now);
+
     const cursor = clientToSvg(svg, pointer.x, pointer.y);
     if (cursor) {
       eyes.forEach((eye) => {
@@ -560,13 +664,15 @@
 
         applyPupilTransform(eye);
       });
+    } else if (blink) {
+      eyes.forEach((eye) => applyPupilTransform(eye));
     }
 
     updateEyebrows(eyebrows);
     pushables.forEach((item) => animatePushable(item, svg));
     if (nose) animateNosePush(nose, svg);
 
-    requestAnimationFrame(() => animateFrame(svg, eyes, eyebrows, pushables, nose));
+    requestAnimationFrame(() => animateFrame(svg, eyes, eyebrows, pushables, nose, blink));
   }
 
   // Hero dog: fetch SVG from <img data-dog-inline> and replace with inline <svg>
@@ -610,6 +716,7 @@
     const eyebrows = createEyebrowStates(dogSvg, eyes);
     const pushables = createPushables(dogSvg);
     const nose = createNosePushState(dogSvg);
+    const blink = (!reducedMotion && eyes.length) ? createBlinkController(eyes) : null;
     const hasMotionTargets = eyes.length > 0 || !!nose || pushables.length > 0;
 
     pushables.forEach((item) => bindDraggable(item, dogSvg, reducedMotion));
@@ -646,7 +753,7 @@
     window.addEventListener("scroll", onLayout, { passive: true });
 
     if (!reducedMotion && hasMotionTargets) {
-      requestAnimationFrame(() => animateFrame(dogSvg, eyes, eyebrows, pushables, nose));
+      requestAnimationFrame(() => animateFrame(dogSvg, eyes, eyebrows, pushables, nose, blink));
     } else {
       if (eyes.length) snapPupilsToCursor(dogSvg, eyes);
       if (nose) snapNosePush(nose, dogSvg);

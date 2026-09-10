@@ -721,7 +721,7 @@ a {
   max-width: 600px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 40px;
   padding-top: 60px;
   order: 2;
 }
@@ -729,8 +729,15 @@ a {
 .hero-copy-text {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 520px;
+  gap: 20px;
+  max-width: 600px;
+}
+
+.hero-copy-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
 }
 
 .hero-copy > .live-tag {
@@ -740,44 +747,163 @@ a {
   max-width: none;
 }
 
+/* Figma 1052:3359 — Reddit Mono 16 Medium */
+.hero-tag {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  line-height: normal;
+  letter-spacing: -0.32px;
+  color: var(--text-body);
+}
+
+/* Figma 1052:3360 — Google Sans Flex 32 Medium */
 .hero-title {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 600;
-  line-height: normal;
-  letter-spacing: -0.8px;
+  font-family: var(--font-sans);
+  font-size: 32px;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+  letter-spacing: -0.16px;
   color: var(--text-strong);
 }
 
-.hero-title .accent {
-  color: #ff5959;
-  margin-left: 1px;
+/* Figma 1052:3483 + 1061:3737 — Reddit Mono 13 meta · hover tips */
+.hero-meta {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: var(--font-weight-regular);
+  line-height: normal;
+  letter-spacing: -0.26px;
+  color: var(--text-body);
 }
 
-/* Explicit spacer — margin on inline glyphs is cancelled by title letter-spacing */
-.hero-title .hero-kern-before-comma {
+.hero-meta-dot {
   display: inline-block;
   width: 2px;
+  height: 2px;
+  margin-top: 2px;
+  border-radius: 0;
+  background: var(--text-body);
+  flex-shrink: 0;
 }
 
-.hero-title .name-c {
-  margin-left: -3px;
-  margin-right: 1px;
+.hero-meta-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
-.hero-desc {
-  margin: 0;
-  max-width: 520px;
-  font-family: var(--font-sans);
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 28px;
-  letter-spacing: -0.36px;
+.hero-meta-term {
+  cursor: default;
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+  white-space: nowrap;
+}
+
+.hero-meta-term:focus-visible {
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-black-normal) 35%, transparent);
+}
+
+.hero-meta-item:hover .hero-meta-term,
+.hero-meta-item:focus-within .hero-meta-term {
   color: var(--text-strong);
+  text-decoration: none;
+  /* Match meta-hover-line stroke-dasharray="4 2" */
+  background-image: linear-gradient(
+    to right,
+    var(--color-black-normal) 0 4px,
+    transparent 4px 6px
+  );
+  background-size: 6px 1px;
+  background-repeat: repeat-x;
+  background-position: 0 calc(100% - 1px);
 }
 
-/* Figma Live Tag 848:5451 — LA · time · temp — always one horizontal row */
+/* Figma Hover 1–3 — dashed L + tip under the active term */
+.hero-meta-tip {
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.hero-meta-item:hover .hero-meta-tip,
+.hero-meta-item:focus-within .hero-meta-tip {
+  opacity: 1;
+}
+
+.hero-meta-tip-line {
+  display: block;
+  width: 9px;
+  height: 17px;
+  margin-left: -0.5px;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.hero-meta-tip-line img {
+  display: block;
+  width: 9px;
+  height: 17px;
+}
+
+.hero-meta-tip-text {
+  margin: 0 0 0 2px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--font-weight-regular);
+  line-height: 1;
+  letter-spacing: -0.22px;
+  color: var(--text-body);
+  white-space: nowrap;
+  /* Optical center of letters sits on the L’s horizontal bar */
+  transform: translateY(50%);
+}
+
+/* Hover 3 — tip hangs left from “AI → build” */
+.hero-meta-tip--end {
+  left: auto;
+  right: 50%;
+  flex-direction: row-reverse;
+}
+
+.hero-meta-tip--end .hero-meta-tip-line {
+  margin-left: 0;
+  margin-right: -0.5px;
+}
+
+.hero-meta-tip--end .hero-meta-tip-line img {
+  transform: scaleX(-1);
+}
+
+.hero-meta-tip--end .hero-meta-tip-text {
+  margin: 0 2px 0 0;
+  text-align: right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-meta-tip {
+    transition: none;
+  }
+}
+
+/* Figma Live Tag 1052:3361 — LA · time · temp — always one horizontal row */
 .live-tag {
   display: inline-flex;
   flex-wrap: nowrap;
@@ -788,14 +914,14 @@ a {
   max-width: none;
   height: auto;
   min-height: 0;
-  padding: 10px 12px;
+  padding: 8px 14px;
   border-radius: 20px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   background: rgba(0, 0, 0, 0.02);
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 11px;
   font-weight: var(--font-weight-regular);
-  letter-spacing: -0.28px;
+  letter-spacing: -0.22px;
   line-height: 1;
   white-space: nowrap;
   color: var(--color-black-normal);
@@ -806,7 +932,7 @@ a {
   flex-wrap: nowrap;
   align-items: center;
   flex-shrink: 0;
-  gap: 8px;
+  gap: 4px;
   white-space: nowrap;
   line-height: 1;
 }
@@ -819,8 +945,8 @@ a {
 }
 
 .live-tag-dot {
-  width: 3px;
-  height: 3px;
+  width: 2px;
+  height: 2px;
   flex-shrink: 0;
   background: var(--color-black-normal);
 }
@@ -1604,14 +1730,15 @@ svg.dog-ig-body {
   transition: opacity 0.28s ease 0.62s;
 }
 
+/* Figma 1052:3394 — Reddit Mono Regular 11 / Black normal */
 .dog-ig-notes-label {
   margin: 0;
-  font-family: var(--font-sans);
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: var(--font-weight-regular);
-  line-height: 16px;
-  letter-spacing: -0.24px;
-  color: var(--color-black-strong, #333);
+  line-height: normal;
+  letter-spacing: -0.22px;
+  color: var(--color-black-normal);
   white-space: nowrap;
 }
 
@@ -1619,17 +1746,18 @@ svg.dog-ig-body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  color: var(--color-black-strong, #333);
+  color: var(--color-black-normal);
 }
 
+/* Figma 1052:3397 — Reddit Mono Regular 11 underline */
 .dog-ig-notes-handle-text {
-  font-family: var(--font-sans);
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: var(--font-weight-regular);
-  line-height: 16px;
-  letter-spacing: -0.24px;
+  line-height: normal;
+  letter-spacing: -0.22px;
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-position: from-font;
   text-decoration-skip-ink: none;
   border-radius: 3px;
   padding: 1px 3px;
@@ -1646,9 +1774,9 @@ svg.dog-ig-body {
 
 .dog-ig-notes-handle img {
   display: block;
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2448,9 +2576,9 @@ svg.dog-ig-body {
   }
 
   .hero-title {
-    font-size: 40px;
-    font-weight: 600;
-    line-height: normal;
+    font-size: 28px;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.3;
   }
 
   .hero-devices,
