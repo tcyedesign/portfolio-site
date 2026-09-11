@@ -718,37 +718,35 @@ a {
   pointer-events: none;
 }
 
+/* Copy sits beside dog: flex centers the box, then top offsets fully downward
+   (margin/padding on a centered flex item only shifts by half). */
 .hero-copy {
   position: relative;
+  top: 40px;
   z-index: 2;
   flex: 0 1 600px;
   max-width: 600px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  padding-top: 60px;
+  justify-content: flex-start;
+  gap: 0;
+  padding-top: 0;
+  margin-top: 0;
   order: 2;
 }
 
 .hero-copy-text {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   max-width: 600px;
 }
 
 .hero-copy-intro {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
-}
-
-.hero-copy > .live-tag {
-  margin-top: 0;
-  align-self: flex-start;
-  width: fit-content;
-  max-width: none;
 }
 
 /* Figma 1052:3359 — Reddit Mono 16 Medium */
@@ -830,6 +828,17 @@ a {
   text-decoration: none;
   outline: none;
   white-space: nowrap;
+  padding-bottom: 2px;
+  /* Default dashed underline — match meta-hover-line stroke-dasharray="4 2" */
+  background-image: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-black-normal) 60%, transparent) 0 4px,
+    transparent 4px 6px
+  );
+  background-size: 6px 1px;
+  background-repeat: repeat-x;
+  /* 1px gap between text and underline */
+  background-position: 0 100%;
 }
 
 .hero-meta-term:focus-visible {
@@ -841,15 +850,11 @@ a {
 .hero-meta-item:focus-within .hero-meta-term {
   color: var(--text-strong);
   text-decoration: none;
-  /* Match meta-hover-line stroke-dasharray="4 2" */
   background-image: linear-gradient(
     to right,
     var(--color-black-normal) 0 4px,
     transparent 4px 6px
   );
-  background-size: 6px 1px;
-  background-repeat: repeat-x;
-  background-position: 0 calc(100% - 1px);
 }
 
 /* Figma Hover 1–3 — dashed L + tip under the active term */
@@ -874,7 +879,7 @@ a {
 .hero-meta-tip-line {
   display: block;
   width: 9px;
-  height: 17px;
+  height: 24px;
   margin-left: -0.5px;
   flex-shrink: 0;
   line-height: 0;
@@ -883,16 +888,16 @@ a {
 .hero-meta-tip-line img {
   display: block;
   width: 9px;
-  height: 17px;
+  height: 24px;
 }
 
 .hero-meta-tip-text {
   margin: 0 0 0 2px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--font-weight-regular);
   line-height: 1;
-  letter-spacing: -0.22px;
+  letter-spacing: -0.24px;
   color: var(--text-body);
   white-space: nowrap;
   /* Optical center of letters sits on the L’s horizontal bar */
@@ -942,9 +947,9 @@ a {
   border: 1px solid rgba(0, 0, 0, 0.06);
   background: rgba(0, 0, 0, 0.02);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--font-weight-regular);
-  letter-spacing: -0.22px;
+  letter-spacing: -0.24px;
   line-height: 1;
   white-space: nowrap;
   color: var(--color-black-normal);
@@ -1727,6 +1732,17 @@ a {
   width: 339px;
   height: 388px;
   overflow: visible;
+}
+
+/* Live Tag under dog — horizontally centered to the dog frame */
+.hero-visual > .live-tag {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 24px);
+  transform: translateX(-50%);
+  z-index: 3;
+  width: fit-content;
+  max-width: none;
 }
 
 .dog-ig {
@@ -2890,11 +2906,19 @@ svg.dog-ig-body {
     flex: 1 1 auto;
     max-width: none;
     padding-top: 0;
+    margin-top: 0;
+    top: 0;
     order: 2;
   }
 
-  .hero-copy > .live-tag {
-    margin-top: 0;
+  /* Mobile: keep live tag under dog in flow; center to dog column */
+  .hero-visual > .live-tag {
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+    display: flex;
+    margin: 24px 0 0;
   }
 
   .hero-title {
@@ -2922,11 +2946,16 @@ svg.dog-ig-body {
   /* Visual System & Craft mobile stack — final overrides live after desktop craft block */
 
   .hero-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 290px;
-    height: 333px;
+    height: auto;
     flex: none;
     margin: 0 auto;
     order: 1;
+    /* Space between LA pill and copy below */
+    padding-bottom: 24px;
   }
 
   .dog-ig {
@@ -3179,30 +3208,18 @@ svg.dog-ig-body {
   }
 }
 
-/* Visual System — cream #FFF3EC @ 50% on white; covers 340; gap 32.
-   Full-bleed wash via ::before (page is max 1440 centered). */
+/* Visual System — same page wash as Featured product work (body #fff + 20% #FFF3EC).
+   Covers 340; gap 32. No section fill — let body show through like .section-product. */
 #visual.section {
   position: relative;
   z-index: 1;
-  padding: 120px 178px;
+  padding: 120px 178px 200px;
   overflow: visible;
   background: transparent;
 }
 
 #visual.section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(50% - 50vw);
-  width: 100vw;
-  z-index: 0;
-  pointer-events: none;
-  background-color: #fff;
-  background-image: linear-gradient(
-    rgba(255, 243, 236, 0.5),
-    rgba(255, 243, 236, 0.5)
-  );
+  content: none;
 }
 
 #visual.section .section-header-centered {
@@ -3264,9 +3281,9 @@ svg.dog-ig-body {
   background: var(--color-black-background);
 }
 
-/* Global Icon System cover — Figma 1070:6444: white @ 20% over section wash */
+/* Global Icon System cover — Figma 1070:6444: cream @ 40% on white */
 .craft-card-media--icon {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 243, 236, 0.4);
 }
 
 .craft-card-media img {
