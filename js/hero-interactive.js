@@ -803,15 +803,11 @@
       // Clouds — barely drift + idle loop
       { sel: ".hero-cloud", speed: 0.08, maxPush: 1.6, pushScale: 0.022, hitPad: 28, idleAmp: 6.56, idleMs: 8200, idlePhase: 0.2 },
       { sel: ".hero-cloud-2", speed: 0.14, maxPush: 1.4, pushScale: 0.024, hitPad: 24, idleAmp: 5.74, idleMs: 9600, idlePhase: 1.7 },
-      { sel: ".deco-cloud-3", speed: 0.1, maxPush: 1.2, pushScale: 0.022, hitPad: 22, idleAmp: 5.33, idleMs: 8800, idlePhase: 3.1 },
       // Hero stars — float + scroll parallax
       { sel: ".hero-star-a", speed: 0.07, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
       { sel: ".hero-star-b", speed: 0.09, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
       { sel: ".hero-star-c", speed: 0.11, maxPush: 1.2, pushScale: 0.022, hitPad: 18 },
       { sel: ".hero-star-d", speed: 0.06, maxPush: 1.2, pushScale: 0.022, hitPad: 18 },
-      // Project stars — float only
-      { sel: ".project-star-3", speed: 0, maxPush: 1.4, pushScale: 0.024, hitPad: 20 },
-      { sel: ".project-star-4", speed: 0, maxPush: 1.2, pushScale: 0.022, hitPad: 16 },
       // Arrow 1 (hero path) — float + parallax
       { sel: ".hero-arrow-path", speed: 0.07, maxPush: 1.5, pushScale: 0.02, hitPad: 32 },
       // Flower — soft float only (no scroll parallax)

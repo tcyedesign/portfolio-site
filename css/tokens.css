@@ -63,37 +63,38 @@
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+  /* Site uses Medium only — keep token name for legacy refs, resolve to 500 */
+  --font-weight-semibold: var(--font-weight-medium);
+  --font-weight-bold: var(--font-weight-medium);
 
   /* ——— Text styles (from Figma Google Sans Flex) ——— */
 
-  /* Hero title — 64 Semibold / -1.28 */
+  /* Hero title — 64 Medium / -1.28 */
   --text-hero-size: clamp(40px, 4.5vw, 64px);
-  --text-hero-weight: var(--font-weight-semibold);
+  --text-hero-weight: var(--font-weight-medium);
   --text-hero-line: 1.19;
   --text-hero-tracking: -1.28px;
 
-  /* Name accent (Tc) — Capriola Semibold / -2% */
+  /* Name accent (Tc) — Capriola Medium / -2% */
   --text-name-family: var(--font-display);
-  --text-name-weight: var(--font-weight-semibold);
+  --text-name-weight: var(--font-weight-medium);
   --text-name-tracking: -0.8px;
 
-  /* Page title (project h1) — 40 Semibold / -0.8 / lh ~1.252 */
+  /* Page title (project h1) — 40 Medium / -0.8 / lh ~1.252 */
   --text-display-size: 40px;
-  --text-display-weight: var(--font-weight-semibold);
+  --text-display-weight: var(--font-weight-medium);
   --text-display-line: 1.252;
   --text-display-tracking: -0.8px;
 
-  /* Section header (h2) — 32 Semibold / -0.64 / lh ~1.252 */
+  /* Section header (h2) — 32 Medium / -0.64 / lh ~1.252 */
   --text-title-lg-size: 32px;
-  --text-title-lg-weight: var(--font-weight-semibold);
+  --text-title-lg-weight: var(--font-weight-medium);
   --text-title-lg-line: 1.252;
   --text-title-lg-tracking: -0.64px;
 
-  /* Subhead / project card title — 24 Semibold / -0.48 / lh ~1.252 */
+  /* Subhead / project card title — 24 Medium / -0.48 / lh ~1.252 */
   --text-title-md-size: 24px;
-  --text-title-md-weight: var(--font-weight-semibold);
+  --text-title-md-weight: var(--font-weight-medium);
   --text-title-md-line: 1.252;
   --text-title-md-tracking: -0.48px;
 
@@ -145,6 +146,8 @@
   --text-note-tracking: -0.28px;
 
   --max: 1440px;
+  /* Sticky header: py 20 + logo (40 × 32/39) + 1px border */
+  --site-header-height: calc(40px + (40px * 32 / 39) + 1px);
 }
 
 /* ——— Text style utilities ——— */

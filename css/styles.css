@@ -11,7 +11,7 @@ html {
   overflow-x: clip;
   max-width: 100%;
   /* Overscroll / rubber-band below footer matches footer fill (not bare white). */
-  background-color: color-mix(in srgb, var(--color-cream) 40%, #fff);
+  background-color: var(--color-black-strong, #333);
 }
 
 body {
@@ -404,6 +404,10 @@ a {
   width: 100vw;
   max-width: 100vw;
   margin-left: calc(50% - 50vw);
+  /* Sit under the sticky header so hide/show-on-scroll never flashes body white
+     between nav and hero (header still occupies flow height above this band). */
+  margin-top: calc(-1 * var(--site-header-height));
+  padding-top: var(--site-header-height);
   /* Figma 848:7376 Noise — #FFF9F5 + fractalNoise tile (rgba(56,56,56,0.2)) */
   background-color: #fff9f5;
   background-image: url("../assets/hero/v2/hero-noise.png?v=figma-848-7376-20260809");
@@ -770,6 +774,7 @@ a {
 }
 
 /* Figma 1052:3483 + 1061:3737 — Reddit Mono 13 meta · hover tips */
+/* Figma 1062:4992 / 4995 / 4998 — Reddit Mono Medium 13 / -2% */
 .hero-meta {
   margin: 0;
   display: flex;
@@ -778,10 +783,18 @@ a {
   gap: 12px;
   font-family: var(--font-mono);
   font-size: 13px;
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-medium);
   line-height: normal;
   letter-spacing: -0.26px;
   color: var(--text-body);
+}
+
+.hero-meta-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
 }
 
 .hero-meta-dot {
@@ -792,18 +805,28 @@ a {
   border-radius: 0;
   background: var(--text-body);
   flex-shrink: 0;
+  transition: opacity 0.15s ease;
 }
 
-.hero-meta-item {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
+/* Dim the rest of the tagline while one term is active */
+.hero-meta:has(.hero-meta-item:hover) .hero-meta-item,
+.hero-meta:has(.hero-meta-item:focus-within) .hero-meta-item,
+.hero-meta:has(.hero-meta-item:hover) .hero-meta-dot,
+.hero-meta:has(.hero-meta-item:focus-within) .hero-meta-dot {
+  opacity: 0.4;
+}
+
+.hero-meta:has(.hero-meta-item:hover) .hero-meta-item:hover,
+.hero-meta:has(.hero-meta-item:focus-within) .hero-meta-item:focus-within {
+  opacity: 1;
 }
 
 .hero-meta-term {
   cursor: default;
   color: inherit;
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.26px;
   text-decoration: none;
   outline: none;
   white-space: nowrap;
@@ -951,20 +974,28 @@ a {
   background: var(--color-black-normal);
 }
 
+/* Tag — Figma 1069:5847 / component 375:1787
+   Pad 6 / 12; type 12 Medium / -2%; hug height 28 (line-box 16).
+   Inset 1px stroke so border doesn’t add to layout size (Figma INSIDE). */
 .chip {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  height: auto;
+  box-sizing: border-box;
+  height: 28px;
   padding: 6px 12px;
+  border: 0;
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
   background: rgba(0, 0, 0, 0.03);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -0.28px;
-  line-height: 1.2;
-  color: var(--text-strong);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium, 500);
+  letter-spacing: -0.24px;
+  line-height: 16px;
+  color: var(--color-black-strong, #333);
+  text-align: center;
   white-space: nowrap;
 }
 
@@ -973,19 +1004,26 @@ a {
   gap: 0;
 }
 
+/* Figma filled tag — AI Workflow */
+.chip--filled {
+  background: var(--color-black-normal, #4d4d4d);
+  box-shadow: none;
+  color: #fff;
+}
+
 .chip-design {
   background: rgba(254, 163, 219, 0.1);
-  border-color: rgba(254, 163, 219, 0.8);
+  box-shadow: inset 0 0 0 1px rgba(254, 163, 219, 0.8);
 }
 
 .chip-code {
   background: rgba(169, 143, 252, 0.1);
-  border-color: rgba(169, 143, 252, 0.8);
+  box-shadow: inset 0 0 0 1px rgba(169, 143, 252, 0.8);
 }
 
 .chip-play {
   background: rgba(254, 220, 0, 0.1);
-  border-color: rgba(255, 190, 53, 0.8);
+  box-shadow: inset 0 0 0 1px rgba(255, 190, 53, 0.8);
 }
 
 /* CF1 “AI-Augmented Workflow” — red→pink + yellow tracers along gray border */
@@ -998,7 +1036,7 @@ a {
 .chip--ai {
   position: relative;
   isolation: isolate;
-  border-color: var(--border);
+  border: 1px solid var(--border);
   box-shadow: none;
   /* Soft blush fill — #FFA2DB at 6% */
   background: rgba(255, 162, 219, 0.06);
@@ -1370,6 +1408,35 @@ a {
   text-align: center;
 }
 
+/* Home Featured / Visual — Figma: title 16 Medium; body 14 Regular / #808080 / -0.07 */
+.section-header.section-header-centered {
+  gap: 8px;
+  max-width: 600px;
+  margin: 0 auto 80px;
+  padding: 8px 0;
+}
+
+.section-header.section-header-centered h2 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.32px;
+  line-height: normal;
+  color: var(--text-strong);
+}
+
+.section-header.section-header-centered p {
+  margin: 0;
+  max-width: 600px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: var(--font-weight-regular);
+  line-height: 1.45;
+  letter-spacing: -0.07px;
+  color: var(--color-black-subtle, #808080);
+}
+
 .section-header-inline {
   flex-direction: row;
   align-items: center;
@@ -1446,7 +1513,7 @@ a {
 .section-header h2 {
   margin: 0;
   font-size: var(--text-title-lg-size);
-  font-weight: var(--text-title-lg-weight);
+  font-weight: 500;
   letter-spacing: var(--text-title-lg-tracking);
   color: var(--text-strong);
 }
@@ -1484,26 +1551,74 @@ a {
 .project-block .project {
   margin: 0;
   gap: 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
   box-shadow: none;
-  transition: box-shadow 0.25s ease;
 }
 
-/* Figma Drop Shadow/400 — product card hover */
-.project-block .project:hover,
-.project-block .project:focus-within {
-  box-shadow:
-    0 4px 4px -4px rgba(12, 12, 13, 0.05),
-    0 16px 32px -4px rgba(12, 12, 13, 0.1);
+/* Home Featured — Figma side-by-side text + cover (960 content, 60 gap) */
+.project-block .project.project--split {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 60px;
+  max-width: 960px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .project-block .project {
-    transition: none;
-  }
+.project-block .project.project--split-reverse {
+  flex-direction: row-reverse;
+}
+
+.project-block .project.project--split .project-meta {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0;
+  gap: 48px;
+}
+
+.project-block .project.project--split .project-copy {
+  gap: 16px;
+  max-width: none;
+}
+
+.project-block .project.project--split .project-cover-link {
+  flex: 0 0 460px;
+  width: 460px;
+  max-width: 48%;
+}
+
+.project-block .project.project--split .project-image {
+  width: 100%;
+  max-width: 460px;
+  aspect-ratio: 1;
+  border-radius: 0;
+  border: 0;
+  border-bottom: 0;
+  box-shadow: none;
+  background: transparent;
+  overflow: visible;
+}
+
+.project-block .project.project--split .project-cover-frame,
+.project-block .project.project--split .project-cover-picture {
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+}
+
+.project-block .project.project--split .project-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 0;
+}
+
+/* WARP Figma Image is slightly taller than square */
+.project-block-warp .project.project--split .project-image {
+  aspect-ratio: 460 / 486;
 }
 
 .section-product > .project + .project {
@@ -1580,21 +1695,28 @@ a {
   pointer-events: none;
 }
 
-/* WARP stars — filled + outline sparkle pair above top-right of cover */
-.project-star-3 {
-  right: 76px;
-  top: -46px;
-  width: 58px;
-  height: 58px;
+/* WARP Star group — Figma 1073:7367 @ (1316.84, 1366.79) / 75×72;
+   WARP project @ (240, 1008) → offset (1076.84, 358.79) from .project-block-warp;
+   pushed to the right edge so it stays out of the project content */
+.project-star-group {
+  left: 1077px;
+  right: auto;
+  top: 359px;
+  width: 75px;
+  height: 72px;
   will-change: translate;
 }
 
-.project-star-4 {
-  right: 47px;
-  top: -68px;
-  width: 24px;
-  height: 24px;
-  will-change: translate;
+@media (min-width: 701px) and (max-width: 1100px) {
+  .project-star-group {
+    left: calc(100% + 24px);
+    top: 320px;
+  }
+
+  .deco-cloud-3 {
+    left: -120px;
+    top: -36px;
+  }
 }
 
 /* Dog+IG — Asset_Dog 339×388 (308×353 ×1.1); body 488×460 aligned via −147/−51 */
@@ -1819,9 +1941,22 @@ svg.dog-ig-body {
 
 .section-product {
   position: relative;
-  overflow-x: clip;
-  overflow-y: visible;
+  z-index: 2;
+  /* Allow full-bleed divider + left/right deco (html/body still clip page scroll) */
+  overflow: visible;
   padding: 120px 240px;
+  /* Edge-to-edge rule via ::after — page is max 1440 centered */
+  border-bottom: none;
+}
+
+.section-product::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 50vw);
+  bottom: 0;
+  width: 100vw;
+  border-bottom: 1px solid var(--border);
+  pointer-events: none;
 }
 
 /* Home sections below hero: real HTML copy must be selectable */
@@ -1847,8 +1982,25 @@ svg.dog-ig-body {
   user-select: none;
 }
 
-.section-product .section-header {
-  margin-bottom: 40px;
+.section-product .section-header.section-header-centered {
+  margin-bottom: 80px;
+}
+
+@media (min-width: 701px) and (max-width: 1100px) {
+  .project-block .project.project--split {
+    gap: 40px;
+  }
+
+  .project-block .project.project--split .project-cover-link {
+    flex: 0 0 42%;
+    width: 42%;
+    max-width: 42%;
+  }
+
+  .project-block .project.project--split .project-meta h3 {
+    font-size: 32px;
+    letter-spacing: -0.64px;
+  }
 }
 
 /* Match the Work frame: first cover begins 644px into this section. */
@@ -1876,11 +2028,13 @@ svg.dog-ig-body {
 
 /* Arrow 2 placement: see `.hero-band > .deco-arrow-2` (hero-band child). */
 
-/* Figma Cloud 3 at (163,530); cover at (240,200) → left -77, top 330 on cover */
+/* Cloud 3 — Figma 1062:4344 @ (13.37, 345.52) / 93×56;
+   CF1 project @ (240, 388) → offset (−226.63, −42.48) from .project-block-cf1;
+   pushed to the left margin so it stays out of the project content */
 .deco-cloud-3 {
   position: absolute;
-  left: -77px;
-  top: 330px;
+  left: -227px;
+  top: -42px;
   margin: 0;
   width: 93px;
   height: 56px;
@@ -1889,18 +2043,18 @@ svg.dog-ig-body {
   will-change: translate;
 }
 
-/* Arrow above Visual System — center of screen */
+/* Arrow above Visual System — center; hangs into #visual, must stack above its fill */
 .deco-arrow-3 {
   position: absolute;
   left: 50%;
   right: auto;
-  bottom: -100px;
+  bottom: -80px;
   top: auto;
   width: 141px;
   height: 139px;
   transform: translateX(-50%);
   pointer-events: none;
-  z-index: 2;
+  z-index: 5;
 }
 
 
@@ -1925,6 +2079,11 @@ svg.dog-ig-body {
   margin-top: 0;
 }
 
+/* Product work — Figma: 24px between description and tags (16px copy gap + 8px) */
+.section-product .project-copy .tag-group {
+  margin-top: 8px;
+}
+
 .project-copy {
   display: flex;
   flex-direction: column;
@@ -1933,11 +2092,25 @@ svg.dog-ig-body {
   width: 100%;
 }
 
+/* Figma 1066:5119 / 1066:5335 — Reddit Mono Regular 14 / #808080 / -0.28
+   Must beat `.project-meta p` (body 16 / #4d4d4d) and mobile `.section-product .project-meta p`. */
+.project-meta .project-eyebrow,
+.project-copy .project-eyebrow,
+.section-product .project-meta .project-eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: var(--font-weight-regular, 400);
+  letter-spacing: -0.28px;
+  line-height: normal;
+  color: var(--color-black-subtle, #808080);
+}
+
 .project-meta h3 {
   margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: -0.48px;
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: -0.72px;
   line-height: normal;
   color: var(--text-strong);
 }
@@ -1948,6 +2121,126 @@ svg.dog-ig-body {
   line-height: 1.45;
   letter-spacing: -0.08px;
   color: var(--text-body);
+}
+
+.project-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.28px;
+  line-height: normal;
+  color: var(--color-black-subtle, #808080);
+  text-decoration: none;
+}
+
+.project-cta:hover,
+.project-cta:focus-visible {
+  color: var(--text-strong);
+}
+
+.project-cta-arrow {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transform: translateX(0);
+  filter: none;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* Match About “Drop a message” — arrow eases 2px right on hover */
+.project-cta:hover .project-cta-arrow,
+.project-cta:focus-visible .project-cta-arrow,
+.project-meta:hover .project-cta-arrow,
+.project-meta:focus-within .project-cta-arrow {
+  transform: translateX(2px);
+  filter: brightness(0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-cta-arrow {
+    transition: none;
+  }
+}
+
+/* Custom cover cursor — Figma 1078:8711: eyes + VIEW (~108% scale) */
+.cover-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10050;
+  display: inline-flex;
+  align-items: center;
+  gap: 2.16px;
+  padding: 0 2.16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-black-strong, #333);
+  font-family: var(--font-mono);
+  font-size: 12.96px;
+  font-weight: var(--font-weight-medium, 500);
+  letter-spacing: -0.259px;
+  line-height: normal;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+  will-change: transform;
+}
+
+.cover-cursor-eyes {
+  display: block;
+  width: 15.552px;
+  height: 12.442px;
+  flex-shrink: 0;
+}
+
+.cover-cursor-label {
+  display: block;
+  line-height: normal;
+  text-align: center;
+}
+
+.cover-cursor.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Dark covers (WARP, Animation) — white cursor for contrast */
+.cover-cursor--light {
+  color: #fff;
+}
+
+.cover-cursor--light .cover-cursor-eyes-sclera {
+  fill: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-cover-link,
+  .project-cover-link *,
+  .craft-card-media-link,
+  .craft-card-media-link * {
+    cursor: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover-cursor {
+    transition: none;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cover-cursor {
+    display: none !important;
+  }
 }
 
 /* Visual system */
@@ -2004,7 +2297,7 @@ svg.dog-ig-body {
 .visual-card h3 {
   margin: 0 0 16px;
   font-size: var(--text-title-md-size);
-  font-weight: var(--text-title-md-weight);
+  font-weight: 500;
   letter-spacing: var(--text-title-md-tracking);
   color: var(--text-strong);
 }
@@ -2062,7 +2355,7 @@ svg.dog-ig-body {
 .about-experiences h2 {
   margin: 0 0 40px;
   font-size: var(--text-title-lg-size);
-  font-weight: var(--text-title-lg-weight);
+  font-weight: 500;
   letter-spacing: var(--text-title-lg-tracking);
   color: var(--text-strong);
 }
@@ -2173,11 +2466,18 @@ svg.dog-ig-body {
   margin: 0;
   font-family: var(--font-sans);
   font-size: var(--text-display-size);
-  font-weight: var(--text-display-weight);
+  font-weight: 500;
   letter-spacing: var(--text-display-tracking);
   line-height: var(--text-display-line);
   color: var(--text-strong);
   white-space: pre-line;
+}
+
+/* All case-study titles/subheads stay Medium — never UA bold / semibold */
+.project-page :is(h1, h2, h3, h4),
+.project-page .case-subhead,
+.project-page .case-callout-label {
+  font-weight: 500;
 }
 
 .case-header .lede {
@@ -2316,7 +2616,7 @@ svg.dog-ig-body {
   margin: 0;
   font-family: var(--font-sans);
   font-size: var(--text-title-lg-size);
-  font-weight: var(--text-title-lg-weight);
+  font-weight: 500;
   line-height: var(--text-title-lg-line);
   letter-spacing: var(--text-title-lg-tracking);
   color: var(--text-strong);
@@ -2452,10 +2752,9 @@ svg.dog-ig-body {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   padding: 24px 40px;
-  /* Solid mix so mobile overscroll (html bg) matches the footer exactly */
-  background: color-mix(in srgb, var(--color-cream) 40%, #fff);
-  border-top: 1px solid var(--border);
-  color: var(--color-black-subtle); /* Figma Black subtle #808080 */
+  background: var(--color-black-strong, #333);
+  border-top: 1px solid var(--color-black-border, #e6e6e6);
+  color: var(--color-black-border, #e6e6e6);
 }
 
 .footer-left {
@@ -2464,13 +2763,25 @@ svg.dog-ig-body {
   align-items: center;
   gap: 16px;
   font-size: 14px; /* Figma Note/footer */
-  letter-spacing: var(--text-body-tracking);
+  letter-spacing: -0.07px;
+  line-height: 1.45;
+  opacity: 0.8;
+}
+
+.footer-left a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-left a:hover,
+.footer-left a:focus-visible {
+  opacity: 1;
 }
 
 .footer-left .sep {
   width: 1px;
   height: 16px;
-  background: var(--border);
+  background: rgba(230, 230, 230, 0.35);
 }
 
 .footer-item {
@@ -2492,6 +2803,17 @@ svg.dog-ig-body {
 .footer-social {
   display: flex;
   gap: 20px;
+  opacity: 0.8;
+}
+
+.footer-social a {
+  display: inline-flex;
+  color: inherit;
+}
+
+.footer-social a:hover,
+.footer-social a:focus-visible {
+  opacity: 1;
 }
 
 .footer-social img {
@@ -2628,12 +2950,34 @@ svg.dog-ig-body {
   }
 
   .section-product .project-meta {
-    padding: 24px;
+    padding: 0;
+    gap: 32px;
+  }
+
+  .section-product .project-block .project.project--split {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 32px;
+  }
+
+  .section-product .project-block .project.project--split-reverse {
+    flex-direction: column;
+  }
+
+  .section-product .project-block .project.project--split .project-cover-link {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    order: -1;
+  }
+
+  .section-product .project-block .project.project--split .project-image {
+    max-width: 100%;
   }
 
   .section-product .project-meta h3 {
-    font-size: 20px;
-    letter-spacing: -0.4px;
+    font-size: 28px;
+    letter-spacing: -0.56px;
   }
 
   .section-product .project-meta p {
@@ -2643,16 +2987,11 @@ svg.dog-ig-body {
   .section-product .project-meta .chip,
   #visual.section .craft-card-meta .chip {
     flex-shrink: 0;
-    font-size: 14px;
-    letter-spacing: -0.24px;
   }
 
   /*
-    One-line chip row (Featured + Craft on ≤700px):
-    - Cancel meta side padding only so the scroll track spans the card width.
-    - Default: left pad aligns with card copy; no right pad → chips crop flush
-      at the card’s right edge (card overflow:hidden clips; no viewport bleed).
-    - .is-scrolling (JS): no left/right pad on the scroll track.
+    One-line chip row on ≤700px:
+    Default: chips can scroll horizontally when needed.
   */
   .section-product .project-meta .tag-group,
   #visual.section .craft-card-meta .tag-group {
@@ -2662,9 +3001,9 @@ svg.dog-ig-body {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     scrollbar-width: none;
-    margin-left: -24px;
-    margin-right: -24px;
-    padding-left: 24px;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
     padding-right: 0;
     box-sizing: border-box;
   }
@@ -2680,15 +3019,30 @@ svg.dog-ig-body {
     display: none;
   }
 
-  /* Figma Mobile cover (827:4259) — square 1:1 frames on ≤700px */
+  /* Figma Mobile cover — square 1:1 frames on ≤700px */
   .project-image,
-  .project-block-cf1 .project-image,
-  .project-block-warp .project-image {
+  .project-block-cf1 .project-image {
     aspect-ratio: 1;
+  }
+
+  /* WARP cover is taller than square — keep full phones (status bar + bottom CTAs) */
+  .project-block-warp .project-image,
+  .project-block-warp .project.project--split .project-image {
+    aspect-ratio: 964 / 1051;
+  }
+
+  .project-block-warp .project-cover,
+  .project-block-warp .project.project--split .project-cover {
+    object-fit: cover;
+    object-position: center;
   }
 
   .project-page .case-header .case-media:not(.case-media--video) {
     aspect-ratio: 1;
+  }
+
+  .project-page .case-header .case-media.case-media--warp:not(.case-media--video) {
+    aspect-ratio: 964 / 1051;
   }
 
   .project-page .case-header .case-media picture {
@@ -2705,7 +3059,8 @@ svg.dog-ig-body {
 
   .deco-arrow-2,
   .deco-arrow-3,
-  .deco-cloud-3 {
+  .deco-cloud-3,
+  .project-star-group {
     display: none;
   }
 
@@ -2824,114 +3179,71 @@ svg.dog-ig-body {
   }
 }
 
-/* Visual System & Craft — full-bleed track; cards start at 240px and crop at screen edge */
+/* Visual System — cream #FFF3EC @ 50% on white; covers 340; gap 32.
+   Full-bleed wash via ::before (page is max 1440 centered). */
 #visual.section {
-  padding: 120px 0;
-  overflow: visible;
-}
-
-#visual.section .section-header {
-  padding-left: 240px;
-  padding-right: 64px;
-  /* Icon + title: bottom-align (scoped; other inline headers stay centered) */
-  align-items: flex-end;
-}
-
-.craft-carousel {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  width: 100%;
+  z-index: 1;
+  padding: 120px 178px;
   overflow: visible;
+  background: transparent;
 }
 
-/*
-  Full-viewport clip window (same breakout as .hero-band).
-  Resting cards must share the .page content line: 240px inside the centered
-  --max frame. On viewports wider than --max, add the page’s side inset so the
-  left card lines up with #visual .section-header (not the raw viewport edge).
-  overflow:hidden crops the previous card at the screen edge.
-  Vertical padding (with matching negative margin) keeps Drop Shadow/400
-  from being clipped while preserving carousel spacing.
-*/
-.craft-viewport {
-  box-sizing: border-box;
+#visual.section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 50vw);
   width: 100vw;
-  max-width: none;
-  margin-left: calc(50% - 50vw);
-  margin-top: -8px;
-  margin-bottom: -40px;
-  padding-top: 8px;
-  padding-bottom: 40px;
-  padding-left: calc(240px + max(0px, (100vw - var(--max)) / 2));
-  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+  background-color: #fff;
+  background-image: linear-gradient(
+    rgba(255, 243, 236, 0.5),
+    rgba(255, 243, 236, 0.5)
+  );
 }
 
-.craft-track {
-  display: flex;
-  width: max-content;
-  gap: 32px;
-  transition: transform 0.35s ease;
-  will-change: transform;
+#visual.section .section-header-centered {
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 80px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
-/* Same inset as #visual .section-header (nav stays in .page; not full-bleed) */
-.craft-nav {
-  padding-left: 240px;
-}
-
-/*
-  Tablet gutters for craft MUST follow desktop #visual rules above.
-  Earlier tablet .section { 64px } does not win against #visual.section /
-  .section-header / .craft-viewport (higher specificity or later source order),
-  so Featured sat at 64px while Visual header + cards stayed at 240px.
-*/
-@media (min-width: 701px) and (max-width: 1100px) {
-  #visual.section .section-header {
-    padding-left: 64px;
-    padding-right: 40px;
-  }
-
-  .craft-viewport {
-    padding-left: calc(64px + max(0px, (100vw - var(--max)) / 2));
-  }
-
-  .craft-nav {
-    padding-left: 64px;
-  }
+.craft-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 340px));
+  justify-content: center;
+  gap: 40px 32px;
+  max-width: 1084px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .craft-card {
-  flex: 0 0 600px;
-  max-width: 600px;
-  width: 600px;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 32px;
   min-width: 0;
   text-decoration: none;
   color: inherit;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
   box-shadow: none;
-  transition: box-shadow 0.25s ease;
-}
-
-/* Figma Drop Shadow/400 — craft card hover */
-.craft-card:hover,
-.craft-card:focus-within {
-  box-shadow:
-    0 4px 4px -4px rgba(12, 12, 13, 0.05),
-    0 16px 32px -4px rgba(12, 12, 13, 0.1);
 }
 
 .craft-card-media-link {
   display: block;
   color: inherit;
-  border-radius: 0;
+  border-radius: 14px;
 }
 
 .craft-card-media-link:focus-visible {
@@ -2941,15 +3253,20 @@ svg.dog-ig-body {
 
 .craft-card-media {
   position: relative;
-  width: 600px;
-  max-width: 100%;
-  height: 375px;
-  border-radius: 0;
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1;
+  height: auto;
+  border-radius: 14px;
   overflow: hidden;
-  border: 0;
-  border-bottom: 1px solid var(--border);
+  /* Frame stroke stays on hover; image scale would clip any baked-in edge */
+  border: 1px solid var(--border);
   background: var(--color-black-background);
-  aspect-ratio: 600 / 375;
+}
+
+/* Global Icon System cover — Figma 1070:6444: white @ 20% over section wash */
+.craft-card-media--icon {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .craft-card-media img {
@@ -2961,6 +3278,8 @@ svg.dog-ig-body {
   border-radius: 0;
   transition: transform 0.4s ease;
   transform-origin: center center;
+  /* Nudge past the clip edge so Figma-baked cover strokes don’t double the CSS border */
+  transform: scale(1.01);
 }
 
 .craft-card-media picture {
@@ -2973,87 +3292,44 @@ svg.dog-ig-body {
 .craft-card:focus-within .craft-card-media img,
 .craft-card-media-link:hover .craft-card-media img,
 .craft-card-media-link:focus-visible .craft-card-media img {
-  transform: scale(1.01);
+  transform: scale(1.03);
 }
 
 .craft-card-meta {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 40px;
+  padding: 0;
   box-sizing: border-box;
   width: 100%;
-  background: var(--surface);
+  background: transparent;
 }
 
-/* Match Featured `.project-meta` tag→title (24px): meta gap stays 16 for title→body */
-.craft-card-meta .tag-group {
-  margin-bottom: 8px;
+.craft-card-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .craft-card-meta h3 {
   margin: 0;
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   line-height: normal;
-  letter-spacing: -0.48px;
-  color: rgba(0, 0, 0, 0.8);
+  letter-spacing: -0.32px;
+  color: var(--text-strong);
 }
 
 .craft-card-meta p {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1.45;
-  letter-spacing: -0.08px;
+  letter-spacing: -0.07px;
   color: var(--text-body);
 }
 
-.craft-nav {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.craft-nav-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: transparent;
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.craft-nav-btn:hover:not(:disabled) {
-  background: var(--chip);
-  border-color: color-mix(in srgb, var(--text-muted) 35%, var(--border));
-}
-
-.craft-nav-btn:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.craft-nav-btn img {
-  display: block;
-  width: 24px;
-  height: 24px;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .craft-track {
-    transition: none;
-  }
-
-  .craft-card {
-    transition: none;
-  }
-
   .craft-card-media img {
     transition: none;
   }
@@ -3062,7 +3338,19 @@ svg.dog-ig-body {
   .craft-card:focus-within .craft-card-media img,
   .craft-card-media-link:hover .craft-card-media img,
   .craft-card-media-link:focus-visible .craft-card-media img {
-    transform: none;
+    transform: scale(1.01);
+  }
+}
+
+@media (min-width: 701px) and (max-width: 1100px) {
+  #visual.section {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+
+  .craft-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px 20px;
   }
 }
 
@@ -3074,71 +3362,32 @@ svg.dog-ig-body {
     overflow-y: visible;
   }
 
-  #visual.section .section-header {
-    padding-left: 0;
-    padding-right: 0;
+  #visual.section .section-header-centered {
+    margin-bottom: 40px;
   }
 
-  .craft-carousel {
-    gap: 0;
-  }
-
-  .craft-viewport {
-    width: 100%;
+  .craft-grid {
+    grid-template-columns: 1fr;
+    gap: 64px;
     max-width: 100%;
-    margin-left: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-  }
-
-  .craft-nav {
-    padding-left: 0;
-  }
-
-  .craft-track {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 960px;
-    margin: 0 auto;
-    gap: 80px;
-    transform: none !important;
-    transition: none;
-    will-change: auto;
   }
 
   .craft-card {
-    flex: none;
-    max-width: 100%;
-    width: 100%;
-    gap: 0;
+    gap: 32px;
   }
 
   .craft-card-media {
-    width: 100%;
     max-width: 100%;
-    height: auto;
-    aspect-ratio: 1;
-  }
-
-  .craft-card-meta {
-    padding: 24px;
   }
 
   #visual.section .craft-card-meta h3 {
-    font-size: 20px;
-    letter-spacing: -0.4px;
+    font-size: 16px;
+    letter-spacing: -0.32px;
   }
 
   #visual.section .craft-card-meta p {
     font-size: 14px;
-  }
-
-  .craft-nav {
-    display: none;
+    letter-spacing: -0.07px;
   }
 }
 
@@ -3401,7 +3650,7 @@ svg.dog-ig-body {
   margin: 0;
   font-family: var(--font-sans);
   font-size: var(--text-title-md-size);
-  font-weight: var(--text-title-md-weight);
+  font-weight: 500;
   letter-spacing: var(--text-title-md-tracking);
   line-height: var(--text-title-md-line);
   color: var(--text-strong);
@@ -3473,7 +3722,7 @@ svg.dog-ig-body {
 .project-page .case-phase-head h3 {
   margin: 0;
   font-size: 20px;
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   line-height: normal;
   letter-spacing: -0.4px;
   color: var(--text-strong);
@@ -3844,7 +4093,7 @@ svg.dog-ig-body {
 .project-page .case-metric-value {
   margin: 0;
   font-size: var(--text-title-md-size);
-  font-weight: var(--text-title-md-weight);
+  font-weight: 500;
   letter-spacing: var(--text-title-md-tracking);
   color: var(--text-strong);
 }

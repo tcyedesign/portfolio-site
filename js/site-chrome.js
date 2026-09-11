@@ -79,11 +79,11 @@
               <div class="nav-work-panel">
                 <a role="menuitem" href="${href("index.html")}">All Projects</a>
                 <div class="nav-work-sep" role="separator"></div>
-                <p class="nav-work-label">Selected product work</p>
+                <p class="nav-work-label">Featured product work</p>
                 <a role="menuitem" href="${href("projects/cloudflare-one-client.html")}">Cloudflare One Client</a>
                 <a role="menuitem" href="${href("projects/warp.html")}">WARP</a>
                 <div class="nav-work-sep" role="separator"></div>
-                <p class="nav-work-label">Visual System &amp; Craft</p>
+                <p class="nav-work-label">Visual System</p>
                 <a role="menuitem" href="${href("projects/what-is-cloudflare.html")}">What is Cloudflare Animation</a>
                 <a role="menuitem" href="${href("projects/global-icon-system.html")}">Global Icon System</a>
                 <a role="menuitem" href="${href("projects/b2b-illustration-system.html")}">B2B Illustration System</a>
@@ -213,29 +213,29 @@
         <a href="mailto:tcyedesign@gmail.com">tcyedesign@gmail.com</a>
         <span class="sep" aria-hidden="true"></span>
         <span class="footer-item">
-          <img src="${asset("assets/icons/island-footer.svg")}" alt="">
+          <img src="${asset("assets/icons/footer-island-light.svg")}" alt="">
           Los Angeles
         </span>
         <span class="sep" aria-hidden="true"></span>
         <span class="footer-item">
-          <img src="${asset("assets/icons/clock.svg")}" alt="">
+          <img src="${asset("assets/icons/footer-clock-light.svg")}" alt="">
           <time data-la-clock datetime=""></time>
         </span>
         <span class="sep" aria-hidden="true"></span>
         <span class="footer-item">
-          <img class="sm" src="${asset("assets/icons/copyright.svg")}" alt="">
+          <img class="sm" src="${asset("assets/icons/footer-copyright-light.svg")}" alt="">
           2026
         </span>
       </div>
       <div class="footer-social">
         <a href="https://www.linkedin.com/in/tianchanye" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
-          <img src="${asset("assets/icons/linkedin.svg")}" alt="">
+          <img src="${asset("assets/icons/footer-linkedin-light.svg")}" alt="">
         </a>
         <a href="https://www.instagram.com/noodle.the.aussie/" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-          <img src="${asset("assets/icons/instagram.svg")}" alt="">
+          <img src="${asset("assets/icons/footer-instagram-light.svg")}" alt="">
         </a>
         <a href="mailto:tcyedesign@gmail.com" aria-label="Email">
-          <img src="${asset("assets/icons/envelope.svg")}" alt="">
+          <img src="${asset("assets/icons/footer-envelope-light.svg")}" alt="">
         </a>
       </div>
     `;
@@ -769,4 +769,74 @@
     syncParallax();
     layers.forEach(applyLayer);
     requestAnimationFrame(animate);
+  })();
+
+  // Custom cursor — Figma 1078:8711: logo eyes + VIEW (desktop pointer only).
+  (function initCoverCursor() {
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+    if (!finePointer.matches) return;
+
+    const targets = document.querySelectorAll(
+      '.project-cover-link, .craft-card-media-link'
+    );
+    if (!targets.length) return;
+
+    const cursor = document.createElement('div');
+    cursor.className = 'cover-cursor';
+    cursor.setAttribute('aria-hidden', 'true');
+    cursor.innerHTML =
+      '<svg class="cover-cursor-eyes" width="14" height="12" viewBox="0 0 14.4 11.5201" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">' +
+      '<path class="cover-cursor-eyes-sclera" d="M4.01075 0.480469C4.91726 0.48053 5.78793 1.00721 6.45216 1.96094C7.11526 2.91329 7.54098 4.25514 7.54103 5.75977C7.54103 7.26448 7.1153 8.6062 6.45216 9.55859C5.7879 10.5125 4.91736 11.04 4.01075 11.04C3.10404 11.04 2.23268 10.5127 1.56837 9.55859C0.905293 8.60621 0.480479 7.26441 0.480479 5.75977C0.480524 4.25514 0.905267 2.91329 1.56837 1.96094C2.23267 1.00696 3.1041 0.480469 4.01075 0.480469Z" fill="white" stroke="currentColor" stroke-width="0.96"/>' +
+      '<path d="M4.882 2.97644C4.82195 2.60374 4.2857 2.60374 4.22565 2.97644L4.15264 3.42956C4.0074 4.33101 3.4466 5.11164 2.63867 5.53702C2.45885 5.6317 2.45885 5.88919 2.63867 5.98387C3.4466 6.40925 4.0074 7.18988 4.15264 8.09133L4.22565 8.54445C4.2857 8.91715 4.82195 8.91715 4.882 8.54445L4.95501 8.09133C5.10025 7.18988 5.66105 6.40925 6.46898 5.98387C6.6488 5.88919 6.6488 5.6317 6.46898 5.53702C5.66105 5.11164 5.10025 4.33101 4.95501 3.42956L4.882 2.97644Z" fill="currentColor"/>' +
+      '<path class="cover-cursor-eyes-sclera" d="M10.3895 0.480539C11.2961 0.4806 12.1667 1.00728 12.831 1.96101C13.4941 2.91336 13.9198 4.25521 13.9198 5.75984C13.9198 7.26455 13.4941 8.60627 12.831 9.55866C12.1667 10.5126 11.2962 11.04 10.3895 11.0401C9.48284 11.0401 8.61148 10.5127 7.94717 9.55866C7.28409 8.60628 6.85928 7.26447 6.85928 5.75984C6.85932 4.25521 7.28406 2.91336 7.94717 1.96101C8.61146 1.00703 9.48289 0.480539 10.3895 0.480539Z" fill="white" stroke="currentColor" stroke-width="0.96"/>' +
+      '<path d="M11.2609 2.97644C11.2008 2.60374 10.6646 2.60374 10.6045 2.97644L10.5315 3.42956C10.3863 4.33101 9.82548 5.11164 9.01754 5.53702C8.83772 5.6317 8.83772 5.88919 9.01754 5.98387C9.82548 6.40925 10.3863 7.18988 10.5315 8.09133L10.6045 8.54445C10.6646 8.91715 11.2008 8.91715 11.2609 8.54445L11.3339 8.09133C11.4791 7.18988 12.0399 6.40925 12.8479 5.98387C13.0277 5.88919 13.0277 5.6317 12.8479 5.53702C12.0399 5.11164 11.4791 4.33101 11.3339 3.42956L11.2609 2.97644Z" fill="currentColor"/>' +
+      '</svg>' +
+      '<span class="cover-cursor-label">VIEW</span>';
+    document.body.appendChild(cursor);
+
+    let active = false;
+
+    function setPosition(nextX, nextY) {
+      cursor.style.transform =
+        'translate3d(' + nextX.toFixed(1) + 'px,' + nextY.toFixed(1) + 'px,0) translate(-50%,-50%)';
+    }
+
+    function setTone(target) {
+      cursor.classList.toggle(
+        'cover-cursor--light',
+        target?.getAttribute('data-cover-cursor') === 'light'
+      );
+    }
+
+    function show(event) {
+      if (event.pointerType && event.pointerType !== 'mouse') return;
+      setPosition(event.clientX, event.clientY);
+      setTone(event.currentTarget);
+      active = true;
+      cursor.classList.add('is-active');
+    }
+
+    function hide() {
+      active = false;
+      cursor.classList.remove('is-active');
+      cursor.classList.remove('cover-cursor--light');
+    }
+
+    targets.forEach((target) => {
+      target.addEventListener('pointerenter', show);
+      target.addEventListener('pointerleave', hide);
+      target.addEventListener(
+        'pointermove',
+        (event) => {
+          if (!active) return;
+          setPosition(event.clientX, event.clientY);
+        },
+        { passive: true }
+      );
+    });
+
+    window.addEventListener('blur', hide);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) hide();
+    });
   })();

@@ -500,7 +500,7 @@
   margin: 0;
   font-family: var(--font-sans);
   font-size: var(--text-title-lg-size);
-  font-weight: var(--text-title-lg-weight);
+  font-weight: 500;
   line-height: normal;
   letter-spacing: var(--text-title-lg-tracking);
   color: var(--text-strong);
