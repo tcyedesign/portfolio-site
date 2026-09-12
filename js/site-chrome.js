@@ -840,3 +840,160 @@
       if (document.hidden) hide();
     });
   })();
+
+  // WARP Final Design — horizontal phone strip carousel (scroll-snap + arrows)
+  (function initWarpCarousel() {
+    document.querySelectorAll('[data-warp-carousel]').forEach((root) => {
+      const track = root.querySelector('[data-warp-carousel-track]');
+      const prev = root.querySelector('[data-warp-carousel-prev]');
+      const next = root.querySelector('[data-warp-carousel-next]');
+      if (!track) return;
+
+      const slides = () => [...track.querySelectorAll('[data-warp-slide]')];
+      const reducedMotion =
+        window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function maxScroll() {
+        return Math.max(0, track.scrollWidth - track.clientWidth);
+      }
+
+      function syncButtons() {
+        const left = track.scrollLeft;
+        const max = maxScroll();
+        const atStart = left <= 2;
+        const atEnd = left >= max - 2;
+        if (prev) prev.disabled = atStart;
+        if (next) next.disabled = atEnd || max <= 0;
+      }
+
+      function slideStep() {
+        const first = slides()[0];
+        if (!first) return track.clientWidth * 0.4;
+        const styles = getComputedStyle(track);
+        const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+        return first.offsetWidth + gap;
+      }
+
+      function scrollBySlide(dir) {
+        const delta = slideStep() * dir;
+        track.scrollBy({
+          left: delta,
+          behavior: reducedMotion ? 'auto' : 'smooth',
+        });
+      }
+
+      if (prev) {
+        prev.addEventListener('click', () => scrollBySlide(-1));
+      }
+      if (next) {
+        next.addEventListener('click', () => scrollBySlide(1));
+      }
+
+      track.addEventListener('scroll', syncButtons, { passive: true });
+      window.addEventListener('resize', syncButtons);
+
+      // Pointer drag-to-scroll (desktop); touch already natively scrolls.
+      let dragPointerId = null;
+      let dragStartX = 0;
+      let dragStartScroll = 0;
+      let dragged = false;
+
+      track.addEventListener('pointerdown', (event) => {
+        if (event.pointerType !== 'mouse' || event.button !== 0) return;
+        dragPointerId = event.pointerId;
+        dragStartX = event.clientX;
+        dragStartScroll = track.scrollLeft;
+        dragged = false;
+        track.classList.add('is-dragging');
+        try {
+          track.setPointerCapture(event.pointerId);
+        } catch (_) {
+          /* ignore */
+        }
+      });
+
+      track.addEventListener('pointermove', (event) => {
+        if (dragPointerId !== event.pointerId) return;
+        const dx = event.clientX - dragStartX;
+        if (Math.abs(dx) > 3) dragged = true;
+        track.scrollLeft = dragStartScroll - dx;
+      });
+
+      function endDrag(event) {
+        if (dragPointerId !== event.pointerId) return;
+        dragPointerId = null;
+        track.classList.remove('is-dragging');
+        // Settle to the nearest slide once snap is restored.
+        const step = slideStep();
+        if (step > 0) {
+          const nearest = Math.round(track.scrollLeft / step) * step;
+          track.scrollTo({
+            left: Math.max(0, Math.min(nearest, maxScroll())),
+            behavior: reducedMotion ? 'auto' : 'smooth',
+          });
+        }
+        requestAnimationFrame(syncButtons);
+      }
+
+      track.addEventListener('pointerup', endDrag);
+      track.addEventListener('pointercancel', endDrag);
+
+      track.addEventListener('click', (event) => {
+        if (dragged) {
+          event.preventDefault();
+          event.stopPropagation();
+          dragged = false;
+        }
+      }, true);
+
+      track.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          scrollBySlide(-1);
+        } else if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          scrollBySlide(1);
+        } else if (event.key === 'Home') {
+          event.preventDefault();
+          track.scrollTo({ left: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+        } else if (event.key === 'End') {
+          event.preventDefault();
+          track.scrollTo({
+            left: maxScroll(),
+            behavior: reducedMotion ? 'auto' : 'smooth',
+          });
+        }
+      });
+
+      // Images can alter scrollWidth after decode.
+      track.querySelectorAll('img').forEach((img) => {
+        if (img.complete) return;
+        img.addEventListener('load', syncButtons, { once: true });
+      });
+
+      syncButtons();
+    });
+  })();
+
+  // Flower petal spin — hover on desktop; click/tap everywhere (mobile has no hover).
+  (function initFlowerSpin() {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) return;
+
+    document.querySelectorAll('.hero-flower, .play-flower').forEach((flower) => {
+      const bloom = flower.querySelector('.hero-flower-bloom, .play-flower-bloom');
+      if (!bloom) return;
+
+      flower.addEventListener('click', () => {
+        flower.classList.remove('is-spinning');
+        // Restart keyframes when tapping again mid-spin or after sticky hover.
+        void bloom.offsetWidth;
+        flower.classList.add('is-spinning');
+      });
+
+      bloom.addEventListener('animationend', () => {
+        flower.classList.remove('is-spinning');
+      });
+    });
+  })();

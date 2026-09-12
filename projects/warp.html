@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="WARP: Consumer Privacy Overhaul — case study by Tc.">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Tc">
@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;0,6..144,700;1,6..144,400&family=Reddit+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css?v=titles-medium-20260911">
-    <link rel="stylesheet" href="../css/styles.css?v=titles-medium-20260911">
+    <link rel="stylesheet" href="../css/styles.css?v=warp-carousel-noshadow-20260912">
     <title>WARP — Tc</title>
 </head>
 <body>
@@ -39,23 +39,78 @@
                 <p>WARP is the complete redesign of <a class="case-ext-link" href="https://one.one.one.one/" target="_blank" rel="noopener noreferrer">1.1.1.1</a>—Cloudflare’s flagship consumer mobile app, built to democratize internet privacy. </p>
 <p>At the time, the app was already operating at massive global scale with over 15 million installs and nearly 7 million Daily Active Users. But its user base was almost entirely technical—mostly software engineers and site owners. Cloudflare’s vision was much bigger: we wanted to protect privacy for everyday users, for free. </p>
 <p>Embedded in the small product team, I was fortunate to run a true &#x27;dream design process&#x27;. I worked alongside one PM and one Engineer to bridge that gap—transforming a bare-bones technical utility into an accessible, intuitive mobile experience for a broad global audience</p>
-                <figure class="case-figure">
-                    <div class="case-media case-media--warp">
-                        <picture>
-                            <source
-                                media="(max-width: 700px)"
-                                type="image/webp"
-                                srcset="../assets/projects/cover-warp-home-v2-460w.webp?v=warp-full-20260911 460w, ../assets/projects/cover-warp-home-v2-920w.webp?v=warp-full-20260911 920w, ../assets/projects/cover-warp-home-v2.webp?v=warp-full-20260911 1051w"
-                                sizes="100vw"
+                <figure class="case-figure case-figure--warp-carousel">
+                    <div
+                        class="case-media case-media--warp case-carousel case-carousel--warp"
+                        data-warp-carousel
+                    >
+                        <div class="case-carousel__stage">
+                            <div
+                                class="case-carousel__track"
+                                data-warp-carousel-track
+                                tabindex="0"
+                                role="region"
+                                aria-roledescription="carousel"
+                                aria-label="WARP final design phone screens"
                             >
-                            <source
-                                media="(max-width: 700px)"
-                                srcset="../assets/projects/cover-warp-home-v2.png?v=warp-full-20260911"
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/01-privacy.png?v=edge-flush" alt="Onboarding — Privacy" width="406" height="880" loading="eager" decoding="async" draggable="false">
+                                </div>
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/02-speed.png?v=edge-flush" alt="Onboarding — Speed" width="406" height="880" loading="lazy" decoding="async" draggable="false">
+                                </div>
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/03-trust.png?v=edge-flush" alt="Onboarding — Trust" width="406" height="880" loading="lazy" decoding="async" draggable="false">
+                                </div>
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/04-vpn.png?v=edge-flush" alt="Permissions — VPN" width="406" height="880" loading="lazy" decoding="async" draggable="false">
+                                </div>
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/05-disconnected.png?v=edge-flush" alt="Main — Disconnected" width="407" height="880" loading="lazy" decoding="async" draggable="false">
+                                </div>
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/06-basic.png?v=edge-flush" alt="Main — Basic" width="407" height="880" loading="lazy" decoding="async" draggable="false">
+                                </div>
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/07-full.png?v=edge-flush" alt="Main — Full" width="407" height="880" loading="lazy" decoding="async" draggable="false">
+                                </div>
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/08-warp-plus.png?v=edge-flush" alt="Main — WARP+" width="407" height="880" loading="lazy" decoding="async" draggable="false">
+                                </div>
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/09-insights-1.png?v=edge-flush" alt="Insights 1" width="407" height="880" loading="lazy" decoding="async" draggable="false">
+                                </div>
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/10-insights-2.png?v=edge-flush" alt="Insights 2" width="407" height="880" loading="lazy" decoding="async" draggable="false">
+                                </div>
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/11-settings-1.png?v=edge-flush" alt="Settings 1" width="407" height="880" loading="lazy" decoding="async" draggable="false">
+                                </div>
+                                <div class="case-carousel__slide" data-warp-slide>
+                                    <img src="../assets/projects/warp/final-carousel/12-settings-2.png?v=edge-flush" alt="Settings 2" width="407" height="880" loading="lazy" decoding="async" draggable="false">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="case-carousel__actions" role="group" aria-label="Carousel controls">
+                            <button
+                                type="button"
+                                class="case-carousel__btn case-carousel__btn--prev"
+                                data-warp-carousel-prev
+                                aria-label="Previous phone screen"
+                                disabled
                             >
-                            <img src="../assets/projects/warp/cover.png" alt="WARP final design" width="1920" height="1200" loading="lazy" decoding="async">
-                        </picture>
+                                <img src="../assets/projects/warp/final-carousel/arrow-right.svg" alt="" width="18" height="15" decoding="async">
+                            </button>
+                            <button
+                                type="button"
+                                class="case-carousel__btn case-carousel__btn--next"
+                                data-warp-carousel-next
+                                aria-label="Next phone screen"
+                            >
+                                <img src="../assets/projects/warp/final-carousel/arrow-right.svg" alt="" width="18" height="15" decoding="async">
+                            </button>
+                        </div>
                     </div>
-                    <figcaption class="case-caption">Final Design</figcaption>
                 </figure>
             </header>
             <dl class="case-meta">
@@ -122,7 +177,7 @@ Visual &amp; UI design</dd>
                 </div>
             </section>
             <section class="case-section">
-                <h2>1. Onboarding</h2>
+                <h2>01. Onboarding</h2>
                 <p>The legacy 1.1.1.1 app dropped new users directly onto a single toggle button with zero context, forcing them to guess what the product actually did.</p>
                 <p>To establish clear expectations around privacy, speed, and trust before asking for system permissions, we designed an approachable 3-step onboarding flow to highlight the value propositions.</p>
                 <p>After exploring multiple illustration directions, internal feedback showed that literal concepts were significantly more intuitive. Based on these insights, I pivoted away from abstract metaphors toward clear, human-relatable illustrations.</p>
@@ -147,7 +202,7 @@ Visual &amp; UI design</dd>
                 </figure>
             </section>
             <section class="case-section">
-                <h2>2. Protection Modes</h2>
+                <h2>02. Protection Modes</h2>
                 <p>In the legacy design, protection modes were hidden behind a hamburger menu and used product names like 1.1.1.1 and WARP that meant nothing to everyday users.</p>
                 <p>Working with Content Design, we translated complex network concepts (DNS resolvers vs. encrypted tunnels) into simple mental models: Basic Protection and Full Protection, supported by an bottom sheet for details.</p>
                 <div class="case-callout">
@@ -172,7 +227,7 @@ Visual &amp; UI design</dd>
                 </figure>
             </section>
             <section class="case-section">
-                <h2>3. Insights</h2>
+                <h2>03. Insights</h2>
                 <p>One of the biggest challenge from the user the &#x27;Invisible Value&#x27;. Because the application run quietly in the background, users couldn&#x27;t tell whether the app was actively protecting them.</p>
 <p>To solve this, I designed the Insights tab to provide real-time, tangible &#x27;proof of work&#x27;. While engineering had data pipelines for dozens of metrics, surfeiting them all would have created massive cognitive overload. I collaborated with PM and Engineering to select the most intuitive, high-value metrics for MVP—ensuring we provided clear proof of protection without overwhelming the user.</p>
                 <figure class="case-figure">
@@ -183,7 +238,7 @@ Visual &amp; UI design</dd>
                 </figure>
             </section>
             <section class="case-section">
-                <h2>4. Error &amp; Feedback</h2>
+                <h2>04. Error &amp; Feedback</h2>
                 <p>Whenever a bug or network drop occurred, users lost connection. In the legacy app, error screens were cold and vague, making users assume the app was broken—which led directly to high drop-offs and uninstalls.</p>
                 <p>To fix this, I collaborated with Engineering to establish a 4-level error system with background auto-retry logic, and partnered with a Content Designer to rewrite error messages in plain, human language. If a user taps &#x27;retry&#x27;, we rotate the illustration so they know the app is not broken.</p>
                 <p>To soften the moment of failure, I picked a series of playful &#x27;guilty dog&#x27; characters to eases user frustration and asks for forgiveness—giving users a reason to granting the app one more chance to recover rather than immediately rage-quitting or uninstalling.</p>
@@ -216,36 +271,46 @@ Visual &amp; UI design</dd>
                 </figure>
             </section>
 
-            <section class="case-section case-result">
-                <h2>Result &amp; Reflection</h2>
-                <div class="case-result-stack">
-                    <div class="case-result-row">
-                        <article class="case-result-card">
-                            <h3 class="case-label">User Validation</h3>
-                            <p>Conducted 8 rounds of moderated and unmoderated testing, proving measurable gains in usability and clarity across onboarding, connections, insights, and errors.</p>
-                        </article>
-                        <article class="case-result-card">
-                            <h3 class="case-label">Operational Readiness</h3>
-                            <p>Structured feedback forms and FAQ deflection reduced ticket noise, allowing support teams to triage incoming reports effortlessly.</p>
-                        </article>
+            <section class="case-section case-section--gap-40">
+                <div class="case-section-intro">
+                    <h2>Outcome &amp; Reflection</h2>
+                    <p>Making privacy feel simple, approachable, and trustworthy. The redesign made WARP easier to understand and use, from onboarding to everyday protection. It also established a new visual and interaction foundation for Cloudflare’s consumer experience.</p>
+                </div>
+
+                <div class="case-metrics" role="list">
+                    <div class="case-metric" role="listitem">
+                        <p class="case-metric-value">7M+</p>
+                        <p class="case-metric-label">Daily active users</p>
                     </div>
-                    <div class="case-result-row">
-                        <article class="case-result-card">
-                            <h3 class="case-label">Production Handoff</h3>
-                            <p>Shipped a production-ready TestFlight build with full component libraries and edge-case documentation.</p>
-                        </article>
-                        <article class="case-result-card">
-                            <h3 class="case-label">Brand &amp; mobile UI</h3>
-                            <p>Defined the visual style and mobile UI pattern for the only consumer mobile product at Cloudflare.</p>
-                        </article>
+                    <div class="case-metric" role="listitem">
+                        <p class="case-metric-value">8 Rounds</p>
+                        <p class="case-metric-label">User testings</p>
                     </div>
-                    <aside class="case-takeaway">
-                        <div class="case-takeaway-heading">
-                            <img src="../assets/icons/star-four.svg?v=outline-1" width="32" height="32" alt="" aria-hidden="true">
-                            <h3 class="case-label">My Takeaway</h3>
-                        </div>
-                        <p>Craft and moments of delight truly matter. When working in B2B security, it’s easy to get buried in complex technical flows or standard design systems. But introducing thoughtful micro-interactions and visual craft reminds us that behind every complex B2B interface is a human user—and a little delight goes a long way in turning technical friction into trust.</p>
-                    </aside>
+                    <div class="case-metric" role="listitem">
+                        <p class="case-metric-value">7 Sec</p>
+                        <p class="case-metric-label">Onboarding completion</p>
+                    </div>
+                    <div class="case-metric" role="listitem">
+                        <p class="case-metric-value">0 Misclick</p>
+                        <p class="case-metric-label">Protection mode</p>
+                    </div>
+                </div>
+
+                <div class="case-outcome-block">
+                    <h3 class="case-outcome-title">Beyond the user experience</h3>
+                    <div class="case-reflection-body">
+                        <p>Beyond the user experience, the redesign also improved the experience behind the scenes. Structured feedback and FAQ deflection helped reduce low-value support tickets, while a production-ready component library and edge-case documentation gave engineering a scalable foundation for launch.</p>
+                        <p>Most importantly, WARP established a new consumer visual and interaction language for Cloudflare—making a complex security product feel approachable without hiding the technology underneath.</p>
+                    </div>
+                </div>
+
+                <div class="case-outcome-block">
+                    <h3 class="case-outcome-title">What I took away</h3>
+                    <div class="case-reflection-body">
+                        <p>Simplifying technology doesn’t mean hiding the complexity. It means making it understandable and trustworthy.</p>
+                        <p>WARP taught me how much small details—language, feedback, states, and visual craft—can influence whether people feel confident using a technical product.</p>
+                        <p>It reinforced what I enjoy most about product design: turning complex technology into simple, human experiences.</p>
+                    </div>
                 </div>
             </section>
 
@@ -272,7 +337,7 @@ Visual &amp; UI design</dd>
 
         <footer class="site-footer" data-site-footer></footer>
     </div>
-    <script src="../js/site-chrome.js?v=work-nav-medium-20260817" data-base="../"></script>
+    <script src="../js/site-chrome.js?v=warp-carousel-960-20260912" data-base="../"></script>
     <script src="../js/case-progress.js?v=work-nav-medium-20260817"></script>
 </body>
 </html>

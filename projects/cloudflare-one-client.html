@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Cloudflare One Client: Redesigning Enterprise Security — case study by Tc.">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Tc">
@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;0,6..144,700;1,6..144,400&family=Reddit+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css?v=titles-medium-20260911">
-    <link rel="stylesheet" href="../css/styles.css?v=titles-medium-20260911">
+    <link rel="stylesheet" href="../css/styles.css?v=progress-pill-20260912">
     <title>Cloudflare One Client — Tc</title>
 </head>
 <body>
@@ -52,14 +52,14 @@
                             <source
                                 media="(max-width: 700px)"
                                 type="image/webp"
-                                srcset="../assets/projects/cover-cf1-square-400w.webp?v=mobile-2x-20260911 400w, ../assets/projects/cover-cf1-square-800w.webp?v=mobile-2x-20260911 800w, ../assets/projects/cover-cf1-square-1028w.webp?v=mobile-2x-20260911 1028w"
+                                srcset="../assets/projects/cover-cf1-square-400w.webp?v=cover-473-7732-20260912 400w, ../assets/projects/cover-cf1-square-800w.webp?v=cover-473-7732-20260912 800w, ../assets/projects/cover-cf1-square-1028w.webp?v=cover-473-7732-20260912 1028w"
                                 sizes="100vw"
                             >
                             <source
                                 media="(max-width: 700px)"
-                                srcset="../assets/projects/cover-cf1-square.png?v=mobile-2x-20260911"
+                                srcset="../assets/projects/cover-cf1-square.png?v=cover-473-7732-20260912"
                             >
-                            <img src="../assets/projects/cf1/cover.png?v=no-outline-20260808" alt="Cloudflare One Client cover" width="1920" height="1200" loading="lazy" decoding="async">
+                            <img src="../assets/projects/cf1/cover.png?v=cover-473-7732-20260912" alt="Cloudflare One Client cover" width="1920" height="1200" loading="lazy" decoding="async">
                         </picture>
                     </div>
                     <figcaption class="case-caption">GA Release</figcaption>
@@ -101,7 +101,7 @@ Mobile (Android &amp; iOS)</dd>
                 <h2>The Aggressive Timeline &amp; AI-Driven Workflow</h2>
                 <div class="case-section--gap-40">
                     <div class="case-section-intro">
-                        <h3 class="case-subhead">1. The Challenge</h3>
+                        <h3 class="case-subhead">01. The Challenge</h3>
                         <p>I joined late in the process when engineering was already 80% done with an MVP based on an outdated 2-year-old design. The app suffered from severe UX debt—missing user flows, edge cases, error states, and an outdated design system and visual.</p>
                     </div>
                     <figure class="case-figure">
@@ -113,7 +113,7 @@ Mobile (Android &amp; iOS)</dd>
                 </div>
                 <div class="case-section--gap-40">
                     <div class="case-section-intro">
-                        <h3 class="case-subhead">2. Designing with AI, from Research to Code</h3>
+                        <h3 class="case-subhead">02. Designing with AI, from Research to Code</h3>
                         <p>With an aggressive timeline and a design system that lived primarily in code, AI became a practical part of my day-to-day workflow—not just for prototyping. I used it to brainstorm, synthesize research, capture team discussions, and understand technical requirements. With Claude Code, I could quickly prototype interactions, build UI with Kumo (our new design system), and create interactive demos for the team. I also used Figma MCP to sync Kumo tokens back to Figma, keeping design and implementation aligned as the system evolved.</p>
                         <p>This helped me move faster from understanding → exploring → testing → building.</p>
                     </div>
@@ -198,26 +198,27 @@ Mobile (Android &amp; iOS)</dd>
             </section>
 
             <section class="case-section">
-                <h2>MVP Feature Highlight: Re-Architecting Error &amp; Recovery</h2>
-                <p>During MVP, we discovered that backend connection failures were being grouped under standard &quot;Disconnected&quot; states with temporary banners.</p>
+                <h2>Feature Highlight: Re-Architecting Critical Error Recovery</h2>
+                <p>During the MVP phase, we discovered that backend connection failures were miscategorized as standard &quot;Disconnected&quot; states paired with a warning banner.</p>
                 <div class="case-callout">
                     <h3 class="case-callout-label">
                         <img src="../assets/icons/smiley-sad.svg" alt="" width="24" height="24">
-                        The Problem
+                        The Challenge
                     </h3>
-                    <p>In the legacy and mvp design, system errors were treated as a standard &quot;Disconnected&quot; state with an error banner. This was conceptually inaccurate and caused users to assume the app was simply turned off rather than experiencing an active connection failure.</p>
+                    <p>Backend connection failures were getting grouped under standard &quot;Disconnected&quot; states with red banners. That was a logic flaw in our state model: treating a critical, breaking error like a passive warning toast. Users just assumed the app was turned off, completely missing that this was a system failure and they needed to take action right now.</p>
                 </div>
                 <div class="case-callout">
                     <h3 class="case-callout-label">
                         <img src="../assets/icons/seal-check.svg" alt="" width="24" height="24">
                         The Solution
                     </h3>
-                    <p>I re-architected the application’s state model to establish Error as a primary connection status. By explicitly separating &quot;Disconnected by choice&quot; from &quot;Error due to system failure,&quot; we provided immediate visual clarity through a prominent, unmissable status indicator right at the core focal point.</p>
-                    <p>Additionally, I partnered with Content Design to audit, consolidate, and categorize 40+ disparate error messages into 4 structured tiers, creating a single, scalable UI template to handle all error states consistently.</p>
+                    <p>To fix this, I re-architected the application’s state model so that critical connection failures became a main, primary status. By explicitly separating intentional disconnections from system-breaking errors, we gave users immediate visual clarity with a prominent, unmissable indicator right at the core focal point.</p>
+                    <p>Meanwhile, other non-breaking errors are still gonna be handled in the standard error banner, keeping the hierarchy clean and intentional.</p>
+                    <p>I also partnered with Content Design to audit, consolidate, and categorize 40+ disparate error messages into 4 structured tiers. This created a single, scalable UI template to handle all error states consistently, ensuring nobody misses a critical failure again.</p>
                 </div>
                 <figure class="case-figure">
                     <div class="case-media">
-                        <img src="../assets/projects/cf1/error-messaging.png" alt="Error and recovery" loading="lazy">
+                        <img src="../assets/projects/cf1/error-messaging.png?v=figma-488-4641-20260912" alt="Updated connectivity failure status versus legacy disconnected error banner" loading="lazy" width="1920" height="1200">
                     </div>
                     <figcaption class="case-caption">Error &amp; Recovery</figcaption>
                 </figure>
@@ -305,7 +306,7 @@ Mobile (Android &amp; iOS)</dd>
             </section>
 
             <section class="case-section">
-                <h3 class="case-subhead">1. Adopting to new design system with AI</h3>
+                <h3 class="case-subhead">01. Adopting to new design system with AI</h3>
                 <p>Kumo is our company’s new design system. Because Kumo lived natively in code and evolved weekly without a Figma library, keeping static design files synced was impossible. Since engineers didn&#x27;t have bandwidth to build a new workflow pipeline together, I built my own bridge.</p>
 <p>I used Windsurf to vibe-code an interactive UI prototype locally, pulling live tokens directly from the Kumo repo. While building, I caught dark-mode token mapping bugs—fixing simple button borders directly via MRs and documenting systemic issues for the core design system team.</p>
 <p>To supply engineering with required design assets, I used Figma MCP to sync live tokens back into Figma. One month before GA, I ran a final sync for design QA, ensuring a polished, modern launch</p>
@@ -324,7 +325,7 @@ Mobile (Android &amp; iOS)</dd>
             </section>
 
             <section class="case-section">
-                <h3 class="case-subhead">2. Visual Craft &amp; Motion</h3>
+                <h3 class="case-subhead">02. Visual Craft &amp; Motion</h3>
                 <p>Finally, we elevated the visual craft. The MVP relied on static placeholder graphics that didn&#x27;t reflect an enterprise security app.</p>
 <p>I reached out to our brand team to design on-brand visual asset. To ensure smooth implementation, I coordinated the motion handoff between our animator and frontend developers. This delivered a lightweight, responsive connection state that builds immediate trust with enterprise clients.</p>
                 <figure class="case-figure">
@@ -336,19 +337,62 @@ Mobile (Android &amp; iOS)</dd>
                 </figure>
             </section>
 
-            <section class="case-section">
+            <section class="case-section case-section--grouped">
                 <h2>Outcome and Reflection</h2>
-                <p>Together, we hit our launch target on an aggressive timeline while completely elevating the core product experience.</p>
-                <ol class="case-outcome-list">
-                    <li>On-Time Delivery: Successfully shipped to Public GA across macOS, Windows, and mobile within the 5-month timeline.</li>
-                    <li>Interaction based on real user feedback: Completely eliminated friction points for GA and influenced the roadmap for post GA releases.</li>
-                    <li>Leadership Takeaway: Demonstrated how an embedded designer can step into a late-stage engineering build, establish product structure under aggressive constraints, and deliver enterprise-grade craft.</li>
-                </ol>
-                <p>Looking back, if I had more time, I’d focus on two key areas:</p>
-                <ol class="case-outcome-list">
-                    <li>Testing net-new users: Our beta relied on internal users with legacy habits. I want to study first-time users without muscle memory to measure intuitive onboarding and unmoderated troubleshooting.</li>
-                    <li>Establishing a formal code-level design contribution workflow: Having proved that vibe-coding can bridge design and engineering, I want to establish a process to push production-ready token and component code directly, saving developer time and pushing UI craft even further.</li>
-                </ol>
+
+                <div class="case-outcome-stack">
+                    <div class="case-outcome-metrics">
+                        <p class="case-section-kicker">Outcome</p>
+                        <div class="case-metrics case-metrics--trio" role="list">
+                            <div class="case-metric" role="listitem">
+                                <p class="case-metric-value">65%</p>
+                                <p class="case-metric-label">Easy to use</p>
+                            </div>
+                            <div class="case-metric" role="listitem">
+                                <p class="case-metric-value">3.8 / 5</p>
+                                <p class="case-metric-label">Usability score</p>
+                            </div>
+                            <div class="case-metric" role="listitem">
+                                <p class="case-metric-value">34%</p>
+                                <p class="case-metric-label">Zero day-to-day issues</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="case-outcome-block">
+                        <h3 class="case-outcome-title">01. Easier to use</h3>
+                        <div class="case-outcome-points">
+                            <p>User testing showed that the core experience became clearer and easier to navigate</p>
+                            <p>“I think the core experience is very clear.”</p>
+                            <p>27% of users encountered issues found them easy to troubleshoot.</p>
+                        </div>
+                    </div>
+
+                    <div class="case-outcome-block">
+                        <h3 class="case-outcome-title">02. More reliable</h3>
+                        <div class="case-outcome-points case-outcome-points--loose">
+                            <p>Users noticed improvements in everyday connectivity and stability.</p>
+                            <p>Users specifically noticed improvements in stability and captive portal experiences</p>
+                            <p>“I didn't have to turn off the client because of connectivity issues with this latest version.”</p>
+                        </div>
+                    </div>
+
+                    <div class="case-outcome-block">
+                        <h3 class="case-outcome-title">03. Built to scale</h3>
+                        <div class="case-outcome-points">
+                            <p>The redesign established a stronger foundation across desktop and mobile — from information architecture and error patterns to the design system and design-to-code workflow.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-reflection-stack">
+                    <p class="case-section-kicker">Reflection</p>
+                    <h3 class="case-outcome-title">Looking back, if I had more time, I woud...</h3>
+                    <div class="case-reflection-body">
+                        <p>Testing net-new users: Our beta relied on internal users with legacy habits. I want to study first-time users without muscle memory to measure intuitive onboarding and unmoderated troubleshooting.</p>
+                        <p>Establishing a formal code-level design contribution workflow: Having proved that vibe-coding can bridge design and engineering, I want to establish a process to push production-ready token and component code directly, saving developer time and pushing UI craft even further.</p>
+                    </div>
+                </div>
             </section>
 
 

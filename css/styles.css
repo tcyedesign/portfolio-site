@@ -10,6 +10,7 @@ html {
      `clip` still blocks horizontal bleed but keeps sticky working. */
   overflow-x: clip;
   max-width: 100%;
+  min-height: 100%;
   /* Overscroll / rubber-band below footer matches footer fill (not bare white). */
   background-color: var(--color-black-strong, #333);
 }
@@ -18,6 +19,8 @@ body {
   margin: 0;
   width: 100%;
   max-width: 100%;
+  min-height: 100%;
+  min-height: 100dvh;
   overflow-x: clip;
   overscroll-behavior-x: none;
   font-family: var(--font-sans);
@@ -40,9 +43,13 @@ a {
 
 .page {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: var(--max);
   margin: 0 auto;
+  min-height: 100%;
+  min-height: 100dvh;
   /* Do NOT set overflow-x here — it forces overflow-y to auto and breaks sticky header. */
 }
 
@@ -399,7 +406,8 @@ a {
    unaffected. */
 .hero-band {
   position: relative;
-  z-index: 2;
+  /* Above .section-product (also z-index 2) so overhanging flower/arrow stay tappable */
+  z-index: 3;
   /* 100vw breakout; overflow-x clip so flower/arrow overhang can't widen the page */
   width: 100vw;
   max-width: 100vw;
@@ -691,13 +699,30 @@ a {
   transform: rotate(360deg);
 }
 
+/* Tap / click re-spin (mobile has no sticky hover; desktop click also works) */
+@keyframes hero-flower-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hero-band > .hero-flower.is-spinning .hero-flower-bloom {
+  transition: none;
+  animation: hero-flower-spin 0.6s ease-in-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-band > .hero-flower .hero-flower-bloom {
     transition: none;
   }
 
-  .hero-band > .hero-flower:hover .hero-flower-bloom {
+  .hero-band > .hero-flower:hover .hero-flower-bloom,
+  .hero-band > .hero-flower.is-spinning .hero-flower-bloom {
     transform: rotate(0deg);
+    animation: none;
   }
 }
 
@@ -1383,6 +1408,26 @@ a {
   object-fit: cover;
 }
 
+/* WARP Final Design carousel: 960 content column; phones 203×440 (Figma 310:148) */
+.project-page .case-header .case-media.case-carousel--warp {
+  aspect-ratio: auto;
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+}
+
+.project-page .case-header .case-media.case-carousel--warp .case-carousel__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-page .case-header .case-media.case-carousel--warp .case-carousel__btn img {
+  width: 18px;
+  height: 15px;
+  object-fit: contain;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -1499,13 +1544,20 @@ a {
   transform: rotate(360deg);
 }
 
+.play-flower.is-spinning .play-flower-bloom {
+  transition: none;
+  animation: hero-flower-spin 0.6s ease-in-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .play-flower-bloom {
     transition: none;
   }
 
-  .play-flower:hover .play-flower-bloom {
+  .play-flower:hover .play-flower-bloom,
+  .play-flower.is-spinning .play-flower-bloom {
     transform: rotate(0deg);
+    animation: none;
   }
 }
 
@@ -1619,6 +1671,23 @@ a {
   object-fit: contain;
   object-position: center;
   border-radius: 0;
+}
+
+/* CF1 — Figma frame 1115:10834 exported PNG (native aspect) */
+.project-block-cf1 .project.project--split .project-image {
+  aspect-ratio: 991 / 894;
+  overflow: hidden;
+  background: transparent;
+}
+
+.project-block-cf1 .project.project--split .project-cover-frame,
+.project-block-cf1 .project.project--split .project-cover-picture {
+  overflow: hidden;
+}
+
+.project-block-cf1 .project.project--split .project-cover {
+  object-fit: contain;
+  object-position: center center;
 }
 
 /* WARP Figma Image is slightly taller than square */
@@ -2575,24 +2644,34 @@ svg.dog-ig-body {
   position: relative;
   display: block;
   width: 12px;
-  height: 2px;
-  padding: 4px 0;
-  box-sizing: content-box;
+  height: 10px;
+  padding: 0;
   border: 0;
-  background: #c8c8c8;
-  background-clip: content-box;
-  border-radius: 99px;
+  background: transparent;
   opacity: 1;
   pointer-events: auto;
   cursor: pointer;
 }
 
-.case-progress-tick:hover,
-.case-progress-tick:focus-visible {
+/* Pill line (fully rounded caps) — separate from the hit target */
+.case-progress-tick::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 12px;
+  height: 2px;
+  border-radius: 999px;
+  background: #c8c8c8;
+  transform: translateY(-50%);
+}
+
+.case-progress-tick:hover::before,
+.case-progress-tick:focus-visible::before {
   background-color: var(--text-muted);
 }
 
-.case-progress-tick.is-active {
+.case-progress-tick.is-active::before {
   background-color: var(--text-strong);
 }
 
@@ -2696,6 +2775,147 @@ svg.dog-ig-body {
   background: transparent;
 }
 
+/* WARP Final Design — interactive phone strip (Figma 310:148 Image carousel)
+   Content column 960 · phones 203.2×440 · gap 20 · actions at y=464, right-aligned to 4th phone */
+.project-page .case-figure--warp-carousel {
+  gap: 0;
+  width: 100%;
+  max-width: 960px;
+}
+
+.project-page .case-carousel--warp {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  overflow: visible;
+  background: transparent;
+  /* Action hangs ~11px past the 493 cover (y=464 + 40) */
+  margin-bottom: calc(11 / 960 * 100%);
+}
+
+.project-page .case-carousel--warp .case-carousel__stage {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  /* Cover 960×493 — phones 440 + space so drop shadow isn’t cropped */
+  aspect-ratio: 960 / 493;
+  border-radius: 0;
+  overflow: hidden;
+  background: transparent;
+  background-image: none;
+}
+
+.project-page .case-carousel--warp .case-carousel__track {
+  display: flex;
+  align-items: flex-start;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  gap: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  cursor: grab;
+}
+
+.project-page .case-carousel--warp .case-carousel__track::-webkit-scrollbar {
+  display: none;
+}
+
+.project-page .case-carousel--warp .case-carousel__track.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.project-page .case-carousel--warp .case-carousel__slide {
+  flex: 0 0 auto;
+  /* Figma phone 203.2×440 inside 960×493 cover */
+  width: calc(203.2 / 960 * 100%);
+  height: calc(440 / 493 * 100%);
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+.project-page .case-carousel--warp .case-carousel__slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: top center;
+  pointer-events: none;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.project-page .case-carousel--warp .case-carousel__actions {
+  position: absolute;
+  left: 0;
+  /* Figma Action y=464 within Cover 493 (= 24px below phone bottom) */
+  top: calc(464 / 493 * 100%);
+  /* Right edge aligns with 4th phone: 4×203.2 + 3×20 */
+  width: calc((203.2 * 4 + 20 * 3) / 960 * 100%);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  z-index: 2;
+}
+
+.project-page .case-carousel--warp .case-carousel__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  margin: 0;
+  border: 1px solid var(--color-black-border, #e6e6e6);
+  border-radius: 4px;
+  background: var(--color-black-background, #f7f7f7);
+  color: var(--color-black-normal, #4d4d4d);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: opacity 0.15s ease;
+}
+
+.project-page .case-carousel--warp .case-carousel__btn img {
+  display: block;
+  width: 18px;
+  height: 15px;
+  max-width: none;
+}
+
+.project-page .case-carousel--warp .case-carousel__btn--prev img {
+  transform: scaleX(-1);
+}
+
+.project-page .case-carousel--warp .case-carousel__btn:hover:not(:disabled) {
+  background: #fff;
+}
+
+.project-page .case-carousel--warp .case-carousel__btn:focus-visible {
+  outline: 2px solid var(--color-black-normal, #4d4d4d);
+  outline-offset: 2px;
+}
+
+.project-page .case-carousel--warp .case-carousel__btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .case-media img {
   display: block;
   width: 100%;
@@ -2761,14 +2981,21 @@ svg.dog-ig-body {
 }
 
 .site-footer {
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
   width: 100vw;
   margin-left: calc(50% - 50vw);
+  margin-top: auto;
+  /* Fill leftover viewport on short pages so cream never shows under the footer. */
+  flex: 1 0 auto;
   padding: 24px 40px;
+  padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
   background: var(--color-black-strong, #333);
+  /* Rubber-band below the doc stays footer-dark (shadow doesn't extend scroll height). */
+  box-shadow: 0 100vh 0 0 var(--color-black-strong, #333);
   border-top: 1px solid var(--color-black-border, #e6e6e6);
   color: var(--color-black-border, #e6e6e6);
 }
@@ -3070,8 +3297,32 @@ svg.dog-ig-body {
     aspect-ratio: 1;
   }
 
-  .project-page .case-header .case-media.case-media--warp:not(.case-media--video) {
+  .project-page .case-header .case-media.case-media--warp:not(.case-media--video):not(.case-carousel--warp) {
     aspect-ratio: 964 / 1051;
+  }
+
+  /* Interactive Final Design carousel — scale with content column */
+  .project-page .case-header .case-media.case-carousel--warp {
+    aspect-ratio: auto;
+  }
+
+  .project-page .case-carousel--warp .case-carousel__stage {
+    border-radius: 0;
+  }
+
+  .project-page .case-carousel--warp .case-carousel__slide img {
+    border-radius: 8px;
+  }
+
+  .project-page .case-carousel--warp .case-carousel__btn {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+  }
+
+  .project-page .case-carousel--warp .case-carousel__btn img {
+    width: 16px;
+    height: 13px;
   }
 
   .project-page .case-header .case-media picture {
@@ -3501,6 +3752,10 @@ svg.dog-ig-body {
   gap: 16px;
   max-width: 960px;
   width: 100%;
+}
+
+.project-page .case-figure.case-figure--warp-carousel {
+  margin-block: 40px;
 }
 
 .project-page .case-media--placeholder {
@@ -4094,11 +4349,17 @@ svg.dog-ig-body {
   max-width: 960px;
 }
 
+/* Figma 166:872 Outcome — three metric cards @ max 800 */
+.project-page .case-metrics--trio {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 800px;
+}
+
 .project-page .case-metric {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 24px;
+  padding: 25px;
   border: 0;
   border-radius: 8px;
   background: var(--surface);
@@ -4109,19 +4370,119 @@ svg.dog-ig-body {
 
 .project-page .case-metric-value {
   margin: 0;
-  font-size: var(--text-title-md-size);
+  font-size: 28px;
   font-weight: 500;
-  letter-spacing: var(--text-title-md-tracking);
+  letter-spacing: -0.56px;
+  line-height: normal;
   color: var(--text-strong);
+}
+
+.project-page .case-metrics--trio .case-metric-value {
+  font-size: 28px;
+  letter-spacing: -0.56px;
+  line-height: normal;
 }
 
 .project-page .case-metric-label {
   margin: 0;
-  font-size: var(--text-tag-size);
-  font-weight: var(--text-tag-weight);
-  letter-spacing: var(--text-tag-tracking);
-  line-height: 1.25;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.07px;
+  line-height: 1.45;
+  color: var(--text-body);
+}
+
+.project-page .case-metrics--trio .case-metric-label {
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  letter-spacing: var(--text-body-tracking);
+  line-height: var(--text-body-line);
+  color: var(--text-body);
+}
+
+/* Figma 166:872 numbered outcome blocks */
+.project-page .case-section-kicker {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.32px;
+  line-height: normal;
+  color: var(--text-muted);
+}
+
+.project-page .case-outcome-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+}
+
+.project-page .case-outcome-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.project-page .case-outcome-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.project-page .case-outcome-title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.4px;
+  line-height: normal;
   color: var(--text-strong);
+}
+
+.project-page .case-outcome-points {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 32px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.project-page .case-outcome-points--loose {
+  gap: 16px;
+}
+
+.project-page .case-outcome-points p {
+  margin: 0;
+  max-width: none;
+  white-space: normal;
+  color: var(--text-body);
+}
+
+.project-page .case-reflection-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.project-page .case-reflection-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 800px;
+}
+
+.project-page .case-reflection-body p {
+  margin: 0;
+  max-width: none;
+  white-space: normal;
+  color: var(--text-body);
 }
 
 @media (max-width: 700px) {
@@ -4147,5 +4508,9 @@ svg.dog-ig-body {
   .project-page .case-result-row,
   .project-page .case-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .project-page .case-outcome-points {
+    padding-left: 16px;
   }
 }
