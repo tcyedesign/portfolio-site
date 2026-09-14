@@ -3297,6 +3297,16 @@ svg.dog-ig-body {
     aspect-ratio: 1;
   }
 
+  /* CF1 GA cover — keep full 960×600 composition on mobile (no square crop) */
+  .project-page .case-header .case-media.case-media--cf1-cover:not(.case-media--video) {
+    aspect-ratio: 960 / 600;
+  }
+
+  .project-page .case-header .case-media.case-media--cf1-cover img {
+    object-fit: cover;
+    object-position: center;
+  }
+
   .project-page .case-header .case-media.case-media--warp:not(.case-media--video):not(.case-carousel--warp) {
     aspect-ratio: 964 / 1051;
   }
@@ -3304,14 +3314,41 @@ svg.dog-ig-body {
   /* Interactive Final Design carousel — scale with content column */
   .project-page .case-header .case-media.case-carousel--warp {
     aspect-ratio: auto;
+    margin-bottom: 0;
   }
 
   .project-page .case-carousel--warp .case-carousel__stage {
     border-radius: 0;
+    aspect-ratio: auto;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+
+  .project-page .case-carousel--warp .case-carousel__track {
+    height: auto;
+    gap: 16px;
+  }
+
+  /* Phones 69% larger than desktop proportion (30% then +30% again); keep 203.2∶440 aspect */
+  .project-page .case-carousel--warp .case-carousel__slide {
+    width: calc(203.2 * 1.69 / 960 * 100%);
+    height: auto;
+    aspect-ratio: 203.2 / 440;
   }
 
   .project-page .case-carousel--warp .case-carousel__slide img {
     border-radius: 8px;
+    height: 100%;
+  }
+
+  .project-page .case-carousel--warp .case-carousel__actions {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    margin-top: 16px;
+    justify-content: flex-end;
   }
 
   .project-page .case-carousel--warp .case-carousel__btn {
