@@ -4056,6 +4056,49 @@ svg.dog-ig-body {
   margin-top: auto;
 }
 
+.project-page .case-code {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  width: 100%;
+  scroll-margin-top: 96px;
+}
+
+.project-page .case-code-label {
+  margin: 0;
+  max-width: none;
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line);
+  letter-spacing: var(--text-body-tracking);
+  color: var(--text-body);
+  text-align: center;
+}
+
+.project-page .case-code-block {
+  margin: 0;
+  padding: 24px;
+  border-radius: 16px;
+  background: var(--color-black-background);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: var(--text-strong);
+  tab-size: 2;
+}
+
+.project-page .case-code-block code {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: pre;
+}
+
 .project-page .case-callout {
   display: flex;
   flex-direction: column;

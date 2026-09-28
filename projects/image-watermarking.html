@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;0,6..144,700;1,6..144,400&family=Reddit+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/tokens.css?v=titles-medium-20260911">
-    <link rel="stylesheet" href="../css/styles.css?v=watermark-decisions-align-20260927">
+    <link rel="stylesheet" href="../css/styles.css?v=watermark-code-caption-center-20260927">
     <title>Image Watermarking — Tc</title>
 </head>
 <body>
@@ -118,16 +118,7 @@
                 </div>
                 <div class="case-decision-grid">
                     <article class="case-decision">
-                        <h3>01. Use precise inputs to align with code</h3>
-                        <p>I used numeric inputs for values like opacity and scale rather than draggable controls. Developers need precise values, and these inputs also map more naturally to the way the same settings are represented in code.</p>
-                        <figure class="case-figure">
-                            <div class="case-media">
-                                <img src="../assets/projects/watermark/decision-inputs.png?v=figma-1239-12825-helper" alt="Watermark settings using numeric inputs for opacity, scale, position, and rotation." width="920" height="880">
-                            </div>
-                        </figure>
-                    </article>
-                    <article class="case-decision">
-                        <h3>02. Prioritize configuration over preview</h3>
+                        <h3>01. Prioritize configuration over preview</h3>
                         <p>I made the preview smaller and gave more space to the controls. This is a developer tool, so the preview needs to help users verify the result, not provide an image-editing canvas. The extra configuration space made the experience easier to scan and use.</p>
                         <figure class="case-figure">
                             <div class="case-media">
@@ -135,7 +126,34 @@
                             </div>
                         </figure>
                     </article>
+                    <article class="case-decision">
+                        <h3>02. Use precise inputs to align with code</h3>
+                        <p>I used numeric inputs for values like opacity and scale rather than draggable controls. Developers need precise values, and these inputs also map more naturally to the way the same settings are represented in code.</p>
+                        <figure class="case-figure">
+                            <div class="case-media">
+                                <img src="../assets/projects/watermark/decision-inputs.png?v=figma-1239-12825-helper" alt="Watermark settings using numeric inputs for opacity, scale, position, and rotation." width="920" height="880">
+                            </div>
+                        </figure>
+                    </article>
                 </div>
+                <figure class="case-code" id="same-values">
+                    <pre class="case-code-block"><code>fetch(imageURL, {
+  cf: {
+    image: {
+      draw: [
+        {
+          url: "https://example.com/watermark.png",
+          bottom: 16,
+          right: 16,
+          width: 120,
+          opacity: 0.8,
+        },
+      ],
+    },
+  },
+});</code></pre>
+                    <p class="case-code-label"><a class="case-ext-link" href="https://developers.cloudflare.com/images/optimization/draw-overlays/" target="_blank" rel="noopener noreferrer">The same values in code.</a></p>
+                </figure>
             </section>
 
             <section class="case-section">
