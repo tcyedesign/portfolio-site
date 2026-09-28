@@ -1703,29 +1703,11 @@ a {
   object-position: center center;
 }
 
-/* Cover_Watermark — Figma 1239:6019 is a 460 square.
-   Drop shadow renders to 512.03×460, starting 26.015 left of the frame. */
+/* Cover_Watermark — Figma 1255:24303, panel and code exported as one square. */
 .project-block-watermark .project.project--split .project-image {
   aspect-ratio: 1;
-  overflow: visible;
+  overflow: hidden;
   background: transparent;
-}
-
-.project-block-watermark .project.project--split .project-cover-frame,
-.project-block-watermark .project.project--split .project-cover-picture {
-  position: relative;
-  overflow: visible;
-}
-
-.project-block-watermark .project.project--split .project-cover {
-  position: absolute;
-  top: 0;
-  left: calc(-26.015 / 460 * 100%);
-  width: calc(512.03 / 460 * 100%);
-  height: 100%;
-  max-width: none;
-  object-fit: fill;
-  object-position: left center;
 }
 
 /* WARP Figma Image is slightly taller than square */
