@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Designed a simple way for developers to add and configure watermarks within image variants.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Tc">
+    <meta property="og:url" content="https://tcyedesign.com/projects/image-watermarking.html">
+    <meta property="og:title" content="Image Watermarking — Tc">
+    <meta property="og:description" content="Designed a simple way for developers to add and configure watermarks within image variants.">
+    <meta property="og:image" content="https://tcyedesign.com/assets/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="1200">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Image Watermarking — Tc">
+    <meta name="twitter:description" content="Designed a simple way for developers to add and configure watermarks within image variants.">
+    <meta name="twitter:image" content="https://tcyedesign.com/assets/og-image.png">
+    <link rel="icon" href="../assets/icons/favicon.svg?v=favicon-transparent-20260805" type="image/svg+xml">
+    <link rel="icon" href="../assets/icons/favicon-32.png?v=favicon-transparent-20260805" type="image/png" sizes="32x32">
+    <link rel="shortcut icon" href="../favicon.ico?v=favicon-transparent-20260805">
+    <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png?v=favicon-transparent-20260805">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Capriola&family=Google+Sans+Flex:ital,opsz,wght@0,6..144,400;0,6..144,500;0,6..144,600;0,6..144,700;1,6..144,400&family=Reddit+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/tokens.css?v=titles-medium-20260911">
+    <link rel="stylesheet" href="../css/styles.css?v=watermark-decisions-align-20260927">
+    <title>Image Watermarking — Tc</title>
+</head>
+<body>
+    <div class="page">
+        <header class="site-header" data-site-header></header>
+
+        <article class="project-page case-study">
+            <header class="case-header">
+                <h1>Image Watermarking</h1>
+                <div class="tag-group">
+                    <span class="chip">Developer Platform</span>
+                    <span class="chip">Dashboard</span>
+                    <span class="chip">New feature</span>
+                    <span class="chip">0 → 1</span>
+                </div>
+                <p>Cloudflare Images helps developers store, transform, and deliver images. Developers could already add watermarks to remote images in code, with limited capabilities, but not to images stored in Cloudflare Images or in the UI.</p>
+                <p>The ask was to bring watermarking into the dashboard and add it to the existing image variant workflow.</p>
+                <figure class="case-figure">
+                    <div class="case-media">
+                        <img src="../assets/projects/watermark/cover.png?v=figma-1239-11734" alt="Watermark settings beside a live preview of an image with a Cloudflare logo watermark." width="1920" height="1200">
+                    </div>
+                </figure>
+            </header>
+
+            <dl class="case-meta">
+                <div>
+                    <dt>Timeline <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
+                    <dd>3 weeks (2025)</dd>
+                </div>
+                <div>
+                    <dt>Team <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
+                    <dd>1 Designer (Me)<br>1 Product manager<br>1 Engineer</dd>
+                </div>
+                <div>
+                    <dt>Scope <img src="../assets/icons/arrow-down.svg" alt="" width="16" height="16"></dt>
+                    <dd>End-to-end product design</dd>
+                </div>
+            </dl>
+
+            <section class="case-section case-section--grouped">
+                <div class="case-section--gap-40">
+                    <div class="case-section-intro">
+                        <h2>Finding the workflow</h2>
+                        <p>I started by auditing the existing Create Variant flow and mapping out where watermarking should live.</p>
+                    </div>
+                    <figure class="case-figure">
+                        <div class="case-media">
+                            <img src="../assets/projects/watermark/variant-flow.png?v=figma-1243-13098" alt="The existing Create Variant flow, from choosing a variant to reviewing the result." width="1920" height="1200">
+                        </div>
+                        <figcaption class="case-caption">Existing variant creation flow</figcaption>
+                    </figure>
+                </div>
+                <div class="case-section--gap-40">
+                    <div class="case-section-intro">
+                        <p>Then I explored a few directions:</p>
+                        <ul class="case-bullet-list">
+                            <li>Should watermarking be part of the existing variant settings or a separate step?</li>
+                            <li>How should it relate to resizing and other image transformations?</li>
+                            <li>How can developers configure the watermark while still seeing the result?</li>
+                        </ul>
+                        <p>For the first phase, we focused on adding a watermark to individual predefined variants. Applying one watermark across multiple variants was left for a later phase.</p>
+                    </div>
+                    <figure class="case-figure">
+                        <div class="case-media">
+                            <img src="../assets/projects/watermark/workflow.png?v=figma-1234-4602-update" alt="Workflow map of where watermarking sits inside the variant creation flow." width="1920" height="800">
+                        </div>
+                        <figcaption class="case-caption">Workflow</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section class="case-section">
+                <div class="case-section-intro">
+                    <h2>Making the configuration clear</h2>
+                    <p>Once the workflow was defined, I explored different layouts and ways of grouping the existing settings with the new watermark settings.</p>
+                    <p>The key question was: how can developers quickly understand what settings belong to the image variant, and what controls the watermark?</p>
+                    <p>Through the explorations, I found that keeping all configuration in one place made the relationship easiest to understand. I paired that with a preview that updates as the settings change, so developers can immediately see how each parameter affects the result.</p>
+                </div>
+                <figure class="case-figure">
+                    <div class="case-media">
+                        <img src="../assets/projects/watermark/explorations.png?v=figma-1239-12744" alt="Layout explorations for grouping variant settings with watermark settings." width="1920" height="1080">
+                    </div>
+                    <figcaption class="case-caption">Explorations</figcaption>
+                </figure>
+            </section>
+
+            <section class="case-section case-section--gap-64">
+                <div class="case-section-intro">
+                    <h2>Two decisions</h2>
+                    <p>Some controls were straightforward, but some were more complex. For example, position was more complex because the watermark could be positioned relative to different edges of the image.</p>
+                </div>
+                <div class="case-decision-grid">
+                    <article class="case-decision">
+                        <h3>01. Use precise inputs to align with code</h3>
+                        <p>I used numeric inputs for values like opacity and scale rather than draggable controls. Developers need precise values, and these inputs also map more naturally to the way the same settings are represented in code.</p>
+                        <figure class="case-figure">
+                            <div class="case-media">
+                                <img src="../assets/projects/watermark/decision-inputs.png?v=figma-1239-12825-helper" alt="Watermark settings using numeric inputs for opacity, scale, position, and rotation." width="920" height="880">
+                            </div>
+                        </figure>
+                    </article>
+                    <article class="case-decision">
+                        <h3>02. Prioritize configuration over preview</h3>
+                        <p>I made the preview smaller and gave more space to the controls. This is a developer tool, so the preview needs to help users verify the result, not provide an image-editing canvas. The extra configuration space made the experience easier to scan and use.</p>
+                        <figure class="case-figure">
+                            <div class="case-media">
+                                <img src="../assets/projects/watermark/decision-preview.png?v=figma-1239-12794" alt="An earlier layout with a large preview that felt like an image editor." width="920" height="880">
+                            </div>
+                        </figure>
+                    </article>
+                </div>
+            </section>
+
+            <section class="case-section">
+                <div class="case-section-intro">
+                    <h2>The final experience</h2>
+                    <p>The final workflow lets developers add a watermark to a variant, configure its settings, preview the result, and edit or remove it later. A small feature, but a good example of how I approach developer tools: keep the experience simple without hiding the control developers need.</p>
+                </div>
+                <figure class="case-figure">
+                    <div class="case-media">
+                        <img src="../assets/projects/watermark/interaction.png?v=figma-1248-22806" alt="The interaction for adding, configuring, and removing a watermark on a variant." width="1920" height="962">
+                    </div>
+                    <figcaption class="case-caption">Interaction</figcaption>
+                </figure>
+                <figure class="case-figure">
+                    <div class="case-media">
+                        <img src="../assets/projects/watermark/final.png?v=figma-1248-22799" alt="The final watermark configuration next to a live preview." width="1920" height="1200">
+                    </div>
+                    <figcaption class="case-caption">Final design</figcaption>
+                </figure>
+            </section>
+
+            <a class="case-next" href="global-icon-system.html">
+                <div class="case-next-flowers" aria-hidden="true">
+                    <div class="case-next-flower">
+                        <img class="case-next-flower-bloom" src="../assets/hero/v2/flower-bloom.webp?v=case-next-flower-20260805" alt="" width="41" height="40" decoding="async">
+                        <img class="case-next-flower-center" src="../assets/hero/v2/flower-center.svg?v=case-next-flower-20260805" alt="" width="41" height="40" decoding="async">
+                    </div>
+                    <div class="case-next-flower">
+                        <img class="case-next-flower-bloom" src="../assets/hero/v2/flower-bloom.webp?v=case-next-flower-20260805" alt="" width="41" height="40" decoding="async">
+                        <img class="case-next-flower-center" src="../assets/hero/v2/flower-center.svg?v=case-next-flower-20260805" alt="" width="41" height="40" decoding="async">
+                    </div>
+                    <div class="case-next-flower">
+                        <img class="case-next-flower-bloom" src="../assets/hero/v2/flower-bloom.webp?v=case-next-flower-20260805" alt="" width="41" height="40" decoding="async">
+                        <img class="case-next-flower-center" src="../assets/hero/v2/flower-center.svg?v=case-next-flower-20260805" alt="" width="41" height="40" decoding="async">
+                    </div>
+                </div>
+                <p>You made it to the bottom!</p>
+                <p>Keep exploring: <span class="case-next-title">Global Icon System.</span></p>
+            </a>
+        </article>
+
+        <footer class="site-footer" data-site-footer></footer>
+    </div>
+    <script src="../js/site-chrome.js?v=watermark-case-20260927" data-base="../"></script>
+    <script src="../js/case-progress.js?v=work-nav-medium-20260817"></script>
+</body>
+</html>

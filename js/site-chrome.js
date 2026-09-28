@@ -82,6 +82,7 @@
                 <p class="nav-work-label">Featured product work</p>
                 <a role="menuitem" href="${href("projects/cloudflare-one-client.html")}">Cloudflare One Client</a>
                 <a role="menuitem" href="${href("projects/warp.html")}">WARP</a>
+                <a role="menuitem" href="${href("projects/image-watermarking.html")}">Image Watermarking</a>
                 <div class="nav-work-sep" role="separator"></div>
                 <p class="nav-work-label">Visual System</p>
                 <a role="menuitem" href="${href("projects/what-is-cloudflare.html")}">What is Cloudflare Animation</a>
@@ -777,7 +778,7 @@
     if (!finePointer.matches) return;
 
     const targets = document.querySelectorAll(
-      '.project-cover-link, .craft-card-media-link'
+      'a.project-cover-link, a.craft-card-media-link'
     );
     if (!targets.length) return;
 

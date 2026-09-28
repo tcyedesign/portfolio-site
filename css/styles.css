@@ -15,6 +15,19 @@ html {
   background-color: var(--color-black-strong, #333);
 }
 
+/* Pulling the home hero down reveals the root background above the page.
+   Paint the top of the viewport with the hero fill (#fff9f5). The bottom
+   stays footer-dark so the bounce under the footer does not turn cream. */
+@media (min-width: 701px) {
+  html:has(.hero-band) {
+    background-image: linear-gradient(#fff9f5, #fff9f5);
+    background-repeat: no-repeat;
+    background-size: 100% 50vh;
+    background-position: top center;
+    background-attachment: fixed;
+  }
+}
+
 body {
   margin: 0;
   width: 100%;
@@ -1688,6 +1701,31 @@ a {
 .project-block-cf1 .project.project--split .project-cover {
   object-fit: contain;
   object-position: center center;
+}
+
+/* Cover_Watermark — Figma 1239:6019 is a 460 square.
+   Drop shadow renders to 512.03×460, starting 26.015 left of the frame. */
+.project-block-watermark .project.project--split .project-image {
+  aspect-ratio: 1;
+  overflow: visible;
+  background: transparent;
+}
+
+.project-block-watermark .project.project--split .project-cover-frame,
+.project-block-watermark .project.project--split .project-cover-picture {
+  position: relative;
+  overflow: visible;
+}
+
+.project-block-watermark .project.project--split .project-cover {
+  position: absolute;
+  top: 0;
+  left: calc(-26.015 / 460 * 100%);
+  width: calc(512.03 / 460 * 100%);
+  height: 100%;
+  max-width: none;
+  object-fit: fill;
+  object-position: left center;
 }
 
 /* WARP Figma Image is slightly taller than square */
@@ -3936,6 +3974,11 @@ svg.dog-ig-body {
   gap: 40px;
 }
 
+/* Figma 1239:12789 — 64px between the intro and the two decision titles */
+.project-page .case-section--gap-64 {
+  gap: 64px;
+}
+
 .project-page .case-section-intro {
   display: flex;
   flex-direction: column;
@@ -3963,6 +4006,54 @@ svg.dog-ig-body {
   letter-spacing: var(--text-title-md-tracking);
   line-height: var(--text-title-md-line);
   color: var(--text-strong);
+}
+
+.project-page .case-bullet-list {
+  margin: 0;
+  padding-left: 1.4em;
+  max-width: 800px;
+  list-style: disc;
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line);
+  letter-spacing: var(--text-body-tracking);
+  color: var(--text-body);
+}
+
+.project-page .case-bullet-list li + li {
+  margin-top: 0.5em;
+}
+
+.project-page .case-decision-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  width: 100%;
+}
+
+.project-page .case-decision {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.project-page .case-decision h3 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-title-md-size);
+  font-weight: 500;
+  letter-spacing: var(--text-title-md-tracking);
+  line-height: var(--text-title-md-line);
+  color: var(--text-strong);
+}
+
+.project-page .case-decision p {
+  max-width: none;
+}
+
+.project-page .case-decision .case-figure {
+  margin-top: auto;
 }
 
 .project-page .case-callout {
@@ -4543,7 +4634,8 @@ svg.dog-ig-body {
 
   .project-page .case-insight-grid,
   .project-page .case-result-row,
-  .project-page .case-metrics {
+  .project-page .case-metrics,
+  .project-page .case-decision-grid {
     grid-template-columns: 1fr;
   }
 
